@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "EditingManager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Content/Other/Search.css" />
+<link rel="stylesheet" href="~/Content/RedactorTools/EditingManger.css" />
+<script src="~/Scripts/RedactorTools/EditingManger.js"></script>
+<script>
+    var isModerator = @Json.Encode(ViewBag.IsModerator)
+</script>
+<h2>EditingManager</h2>
+<div>
+    <div class="search-card mdl-card mdl-cell mdl-cell--10-col mdl-shadow--2dp">
+        <div class="mdl-textfield mdl-js-textfield">
+            <i class="material-icons">search</i>
+            <input class="mdl-textfield__input" type="text" id="search" />
+        </div>
+        <div id="filter-bar">
+            <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checking-filter">
+                <input type="checkbox" id="checking-filter" group="checking" class="mdl-checkbox__input group">
+                <span class="mdl-checkbox__label checking">На проверке</span>
+            </label>
+            <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="confirmed-filter">
+                <input type="checkbox" id="confirmed-filter" group="confirmed" class="mdl-checkbox__input group">
+                <span class="mdl-checkbox__label confirmed">Прошло проверку</span>
+            </label>
+            <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="rejected-filter">
+                <input type="checkbox" id="rejected-filter" group="rejected" class="mdl-checkbox__input group">
+                <span class="mdl-checkbox__label rejected">Отклонено</span>
+            </label>
+        </div>
+    </div>
+    <div id="item-table">
+        @{Html.RenderAction("GetSortTable");}
+    </div>
+</div>
+<script>
+    GroupRequest('.group');
+    SearchRequest('#search');
+</script>

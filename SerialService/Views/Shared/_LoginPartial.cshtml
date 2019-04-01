@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    if (User.IsInRole("Redactor"))
+    {
+        <button id="motus-tools" title="Инструменты"
+                class="mdl-button motus-tools mdl-js-button mdl-button--icon">
+            <i class="material-icons">more_horiz</i>
+        </button>
+        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+            for="motus-tools">
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="mdl-menu__item" onclick="location.href='@Url.Action("Index","AdminTools")'">Администрирование</li>
+            }
+            <li class="mdl-menu__item" onclick="location.href='@Url.Action("EditingManager","RedactorTools")'">Список материалов</li>
+        </ul>
+    }
+    <button id="motus-tools" title="Профиль @User.Identity.GetUserName()"
+            onclick="location.href='@Url.Action("PersonalAccount", "User",routeValues: null)'"
+            class="mdl-button motus-tools mdl-js-button mdl-button--icon">
+        <i class="material-icons">account_circle</i>
+    </button>
+    using (Html.BeginForm("LogOff", "Account", new { returnUrl = ViewBag.CurrentURL }, FormMethod.Post, new { id = "logoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <a class="mdl-navigation__link" href="javascript:document.getElementById('logoutForm').submit()">Выйти</a>
+    }
+}
+else
+{
+    @Html.ActionLink(
+                                    "Регистрация", "Register", "Account",
+                                    routeValues: null,
+                                    htmlAttributes: new { id = "registerLink", @class = "mdl-navigation__link" })
+
+    @Html.ActionLink(
+                                    "Войти", "Login", "Account",
+                                    routeValues: new { returnUrl = ViewBag.CurrentURL },
+                                    htmlAttributes: new { id = "loginLink", @class = "mdl-navigation__link" })
+}

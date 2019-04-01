@@ -1,0 +1,31 @@
+﻿<div class="device-short-info mdl-grid mdl-cell--12-col mdl-cell--hide-desktop">
+    @if ((bool)ViewData["poster"])
+    {
+        <div id="poster" style="min-width:0!important" class="mdl-cell--2-col-tablet mdl-cell--12-col-phone">
+            <img style="width:100%;min-width:0!important;min-height:0!important" src="@Model.PosterURL" alt="Постер @Model.Title" />
+        </div>
+    }
+    <div style="min-width:0!important" class="device-short-info-panel mdl-cell--12-col-phone mdl-cell--6-col-tablet">
+        <div>
+            <h1 class="title-text-phone">@Model.Title</h1>
+            @if ((bool)ViewData["originalTitle"])
+            {
+                <p>@Model.OriginalTitle</p>
+            }
+        </div>
+        <div class="like-bar">
+            <div class="thumb">
+                <button id="ThumbUpBtnShort" class="mdl-button motus-tools mdl-js-button mdl-button--icon">
+                    <i class="material-icons">thumb_up</i>
+                </button>
+                <span id="ThumbUpTxtShort"></span>
+            </div>
+            <div class="thumb">
+                <button id="ThumbDownBtnShort" class="mdl-button motus-tools mdl-js-button mdl-button--icon">
+                    <i class="material-icons">thumb_down</i>
+                </button>
+                <span id="ThumbDownTxtShort"></span>
+            </div>
+        </div>
+    </div>
+</div>

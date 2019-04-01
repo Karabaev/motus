@@ -1,0 +1,207 @@
+﻿@model SerialService.ViewModels.VideoMaterialDetailsViewModel
+@using SerialService.Infrastructure.Helpers;
+@using System.Web.Mvc;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/Other/UserContent.css" rel="stylesheet" />
+<link href="~/Content/mdl-v1.1.2/material.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/User/DetailPage.css" rel="stylesheet" />
+@{
+    bool originalTitleHasValue = !string.IsNullOrEmpty(Model.OriginalTitle);
+    bool posterUrlHasValue = !string.IsNullOrEmpty(Model.PosterURL);
+}
+
+@Html.HiddenFor(m => m.ID, new { id = "VideoMaterialIDHdn" })
+<div class="content">
+    <div class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card player-container">
+        <div class="player">
+            <div id="motus-info-bar" class="mdl-cell--hide-phone mdl-cell--hide-tablet">
+                <div id="title">
+                    <h1 class="title-text">@Model.Title</h1>
+                    @if (originalTitleHasValue)
+                    {
+                        <p>@Model.OriginalTitle</p>
+                    }
+                </div>
+                <div class="like-bar">
+                    <div class="thumb">
+                        <button id="ThumbUpBtn" class="mdl-button motus-tools mdl-js-button mdl-button--icon">
+                            <i class="like-icon material-icons">thumb_up</i>
+                        </button>
+                        <span id="ThumbUpTxt" class="thump-count"></span>
+                    </div>
+                    <div class="thumb">
+                        <button id="ThumbDownBtn" class="mdl-button motus-tools mdl-js-button mdl-button--icon">
+                            <i class="like-icon material-icons">thumb_down</i>
+                        </button>
+                        <span id="ThumbDownTxt" class="thump-count"></span>
+                    </div>
+                </div>
+            </div>
+            <div id="yohoho" data-kinopoisk="@Model.KinopoiskID" data-player="moonwalk,hdgo"></div>
+        </div>
+    </div>
+    <div class="mdl-grid mdl-shadow--2dp info-container mdl-card mdl-cell--12-col" style="overflow:visible">
+        <div class="mdl-grid">
+            <div class="mdl-cell--3-col-desktop mdl-cell--hide-phone mdl-cell--hide-tablet">
+                <div id="poster" style="position:sticky;top:10px">
+                    <img style="width:100%;min-width:0!important;min-height:0!important" src="@Model.PosterURL" alt="Постер @Model.Title" />
+                </div>
+            </div>
+            @Html.Partial("DetailPage/DeviceShortInfo", Model, new ViewDataDictionary { { "poster", posterUrlHasValue }, { "originalTitle", originalTitleHasValue } })
+            <div class="info-table mdl-cell--8-col-desktop mdl-cell--6">
+                <div class="info-item shot-info">
+                    <span class="mdl-chip motus-year-chip" value="@Model.ReleaseDate.Value">
+                        <span class="mdl-chip__text">@Model.ReleaseDate.Value</span>
+                    </span>
+                    @foreach (var genre in Model.GenreTitles)
+                    {
+                        <span class="mdl-chip motus-genre-chip" value="@genre">
+                            <span class="mdl-chip__text">@genre</span>
+                        </span>
+                    }
+                    @foreach (var country in Model.CountryNames)
+                    {
+                        <span class="mdl-chip motus-county-chip" value="@country">
+                            <span class="mdl-chip__text">@country</span>
+                        </span>
+                    }
+                </div>
+                @if (!string.IsNullOrEmpty(Model.Text))
+                {
+                    <div class="info-item description"><div style="margin:-5px 0 0 0"><i class="material-icons">format_quote</i></div><q><i>@Model.Text</i></q><cite class="kinopoisk-ref"><a href="https://www.kinopoisk.ru/">Кинопоиск</a></cite></div>
+                }
+                @if (Model.LastEpisodeTime.HasValue)
+                {
+                    <div class="info-item">
+                        <h2>Новый эпизод</h2>
+                        <span class="mdl-chip motus-actor-chip" value="@Model.LastEpisodeTranslator">
+                            <span class="mdl-chip__text">@Model.LastEpisodeTranslator (@Model.LastEpisodeTime.Value.ToString("yy.MM.dd")) </span>
+                        </span>
+                    </div>
+                }
+                <div class="film-makers info-item">
+                    <h2>Режиссёры</h2>
+                    @foreach (var filmMaker in Model.FilmMakerNames)
+                    {
+                        <span class="mdl-chip motus-fm-chip" value="@filmMaker">
+                            <span class="mdl-chip__text">@filmMaker</span>
+                        </span>
+                    }
+                </div>
+                <div class="roles info-item">
+                    <h2>Актёры</h2>
+                    @foreach (var actor in Model.ActorNames)
+                    {
+                        <span class="mdl-chip motus-actor-chip" value="@actor">
+                            <span class="mdl-chip__text">@actor</span>
+                        </span>
+                    }
+                </div>
+                @if (Model.TranslationTitles.Any() && !string.IsNullOrEmpty(Model.TranslationTitles[0]))
+                {
+                    <div class="translations info-item">
+                        <h2>Озвучка</h2>
+                        @foreach (var translation in Model.TranslationTitles)
+                        {
+                            <span class="mdl-chip motus-actor-chip" value="@translation">
+                                <span class="mdl-chip__text">@translation</span>
+                            </span>
+                        }
+                    </div>
+                }
+                <div class="film-params info-item">
+                    @if (Model.Imdb != null)
+                    {
+                        <div class="param"><div class="r-title">IMDb </div>@Model.Imdb</div>
+                    }
+                    @if (Model.KinopoiskRating != null)
+                    {
+                        <div class="param"><div class="r-title">KP </div>@Model.KinopoiskRating</div>
+                    }
+                    @if (Model.Duration != 0)
+                    {
+                        <div class="duration param">
+                            <div class="mdl-list__item-icon">
+                                <i class="watch-icon material-icons">access_time</i>
+                            </div>
+                            <div>
+                                @Model.Duration <span id="time">min</span>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.LastEpisodeTime.HasValue)
+                    {
+                        <button id="UnSubscribeBtn"
+                                class="mdl-button motus-tools mdl-js-button mdl-button--mini-icon">
+                            <i class="material-icons">unsubscribe</i><span>отписаться</span>
+                        </button>
+                        <button id="SubscribeBtn"
+                                class="mdl-button motus-tools mdl-js-button mdl-button--mini-icon">
+                            <i class="material-icons">playlist_add</i><span>подписаться</span>
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+        @if (Model.Similar != null && Model.Similar.Any())
+        {
+            <div class="mdl-cell--12-col" style="width:100%">
+                <h2 class="mdl-cell">Рекомендуем</h2>
+                <div class="mdl-cell--12-col" id="recommendations">
+                    @foreach (var item in Model.Similar)
+                    {
+                        if (item != null && !string.IsNullOrEmpty(item.PosterURL))
+                        {
+                            <div class="mini-poster mdl-card mdl-shadow--2dp mdl-cell--2-col" onclick="location.href='@Url.Action("VideoMaterialDetailPage", new { id = item.ID })'">
+                                <img class="mini-poster-image" src="@item.PosterURL" alt="Постер @item.Title" />
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+        <script src="//yohoho.czx.to/yo.js"></script>
+    </div>
+    <div style="margin-bottom:10px" class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card">
+        <div style="width:100%" id="mc-container"></div>
+        <script type="text/javascript">
+            cackle_widget = window.cackle_widget || [];
+            cackle_widget.push({
+                widget: 'Comment', id: 65217, ssoAuth: '@ViewBag.UserToken', msg:
+                {
+                    placeholder: 'Поделитесь своим мнением',
+                    submit: 'Оставить',
+                    sort: 'Порядок',
+                    social: "Авторизуйтесь на сайте"
+                },
+                stream: true, // автообновление комментов при появлении новых
+                ssoPrimary: true, // приоритет авторизации на сайте
+               // shareSocial: [] // соц. сети, куда можно расшарить
+                callback: {
+                //    create: [function (comment) { console.log(comment); }],
+                //    edit: [function (comment) { console.log(comment); }],
+                //    status: [function (comment) { console.log(comment); }],
+                //    vote: [function (comment) { console.log(comment); }],
+                //    submit: [function (comment) { console.log(comment); }],
+                //    ready: [function (comment) { console.log(comment); }]
+                    vote: [function (comment) { alert("лайк коммента");}]
+                },
+                channel: "films" + @Model.ID
+               });
+                (function () {
+                    var mc = document.createElement('script');
+                    mc.type = 'text/javascript';
+                    mc.async = true;
+                    mc.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cackle.me/widget.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+                })();
+        </script>
+    </div>
+</div>
+
+
+<script src="~/Scripts/User/Mark.js"></script>
+<script src="~/Scripts/User/Subscribe.js"></script>
+<script src="~/Scripts/User/DetailPage.js"></script>

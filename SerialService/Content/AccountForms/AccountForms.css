@@ -1,0 +1,32 @@
+﻿.acc-form-container {
+    margin: auto;
+}
+
+body {
+    background-color: #f5f5f5;
+}
+
+.acc-button {
+    float: right;
+    color: #1a237e;
+}
+
+.acc-card {
+    margin: 30px auto auto auto;
+}
+
+.error {
+    color: #d50000;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.forget-password {
+    margin: 0;
+}
+
+.forget-password-link {
+    float: right;
+    color: rgb(63,81,181);
+    font-size: 16px;
+}

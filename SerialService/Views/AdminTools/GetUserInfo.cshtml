@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "GetUserInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .mdl-card__supporting-text {
+        display: inline-flex;
+    }
+
+    .toolsbar {
+        display: grid;
+    }
+
+    button {
+        margin: 10px auto 10px auto !important;
+        float: right;
+    }
+
+    .roles-table {
+        margin: 10px auto 10px auto;
+        display: grid;
+    }
+</style>
+<link rel="stylesheet" href="~/Content/Tables.css" />
+<script> var id = '@Model.PersonalUserData.ID'</script>
+<div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--2dp mdl-grid">
+    <div class="mdl-card__title">
+        <h3>Информация о ползователе @Model.PersonalUserData.CurrentUserName</h3>
+    </div>
+    <div class="mdl-card__supporting-text">
+        <div class="mdl-cell mdl-cell--4-col mdl-card mdl-shadow--2dp">
+            <div class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp" style="margin:auto">
+                <figure style="width:100%;">
+                    <img src="@Model.PersonalUserData.CurrentAvatarURL" alt="аватар" style="width:100%;height:auto" />
+                </figure>
+            </div>
+            <div>
+                <ul class="demo-list-item mdl-list">
+                    <li class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content">
+                            @Model.PersonalUserData.CurrentEmail
+                        </span>
+                    </li>
+                    @if (!string.IsNullOrEmpty(@Model.PersonalUserData.CurrentPublicName))
+                    {
+                        <li class="mdl-list__item">
+                            <span class="mdl-list__item-primary-content">
+                                @Model.PersonalUserData.CurrentPublicName
+                            </span>
+                        </li>
+                    }
+                    <li class="mdl-list__item">
+                        @if (ViewBag.IsLocked && !ViewBag.IsAdmin)
+                        {
+                            <button onclick="location.href='@Url.Action("LockManageUser", new { userId = Model.PersonalUserData.ID })'" class="mdl-button lock-manage mdl-js-button mdl-button--raised">
+                                Разблокировать
+                            </button>
+                            <button onclick="DeleteUser('@Model.PersonalUserData.ID')" class="mdl-button mdl-js-button mdl-button--raised">
+                                Удалить
+                            </button>
+                        }
+                        else
+                        {
+                            <button onclick="location.href='@Url.Action("LockManageUser", new { userId = Model.PersonalUserData.ID })'" class="mdl-button lock-manage mdl-js-button mdl-button--raised">
+                                Заблокировать
+                            </button>
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="mdl-cell mdl-cell--3-col mdl-card mdl-shadow--2dp">
+            @if (!ViewBag.IsAdmin)
+            {
+                @Html.Partial("RolesEditor")
+            }
+        </div>
+    </div>
+</div>
+<script>
+    function DeleteUser(id) {
+        $.ajax({
+            type: 'post',
+            url: '/AdminTools/DeleteUser',
+            data: { userId: id },
+            success: function (result) {
+                alert(result.result)
+            }
+        })
+    }
+</script>

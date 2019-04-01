@@ -1,0 +1,174 @@
+﻿.player-container, .info-container {
+    margin: 10px auto 10px auto;
+}
+
+.player {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+    width: 100%;
+}
+
+#yohoho, #yohoho-iframe {
+    height: 100% !important;
+}
+
+#motus-info-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    margin: 30px;
+}
+
+#title {
+    color: white;
+    font-family: 'Montserrat' !important, sans-serif;
+}
+
+.like-bar {
+    display: inline-flex;
+}
+
+.like-icon {
+    color: white;
+}
+
+.thump-count {
+    color: white;
+    font-size: small;
+    margin: auto;
+}
+
+.thumb {
+    display: grid;
+}
+
+.description {
+    padding: 10px 10px 40px 10px;
+    border-radius: 4px;
+    display: inline-flex;
+    position: relative;
+}
+
+.description, .mdl-chip {
+    background-color: #eeeeee;
+}
+
+.mdl-chip {
+    cursor: pointer;
+}
+
+.info-container, .mdl-chip {
+    color: #707070 !important;
+}
+
+.info-table {
+    margin: 10px auto 10px auto;
+}
+
+a {
+    color: rgb(66, 66, 66) !important;
+}
+
+.kinopoisk-ref {
+    margin-right: 20px;
+    margin-bottom: 10px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.mdl-chip {
+    font-weight: 800;
+}
+
+.info-item {
+    margin-bottom: 10px;
+}
+
+h1, h2 {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.title-text, h2 {
+    font-size: x-large;
+}
+
+.title-text-phone {
+    font-size: larger;
+}
+
+#poster {
+    margin: 12px auto auto auto;
+}
+
+.device-short-info {
+    display: inline-flex;
+}
+
+.film-params, .param {
+    display: inline-flex;
+}
+
+.film-params {
+    margin-top: 10px;
+}
+
+.r-title, #time {
+    font-size: 0.95rem;
+}
+
+.watch-icon {
+    font-size: 1.3rem;
+}
+
+.r-title {
+    margin-right: 0.75rem;
+}
+
+.param {
+    font-size: medium;
+    margin-right: 7px !important;
+    display: inline-flex;
+    padding: 7px 10px 7px 10px;
+    background-color: #eeeeee;
+    border-radius: 4px;
+}
+
+#recommendations {
+    display: inline-flex;
+    cursor: grab;
+    overflow: scroll;
+    white-space: nowrap;
+    width: 100%;
+}
+
+    #recommendations::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    #recommendations::-webkit-scrollbar-track {
+        -webkit-box-shadow: none;
+    }
+
+    #recommendations::-webkit-scrollbar-thumb {
+        background-color: #707070;
+        border-radius: 6px !important;
+    }
+
+.active {
+    cursor: grabbing;
+}
+
+.mini-poster {
+    margin: 10px;
+    min-width: 16.666%;
+    min-height: 0 !important;
+}
+
+.mini-poster-image {
+    width: 100%;
+    height: 100% !important;
+}

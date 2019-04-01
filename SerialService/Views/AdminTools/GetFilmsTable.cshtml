@@ -1,0 +1,26 @@
+﻿<link rel="stylesheet" href="~/Content/RedactorTools/EditingManger.css" />
+<table id="item-list" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+    <thead>
+        <tr>
+            <th class="sort">Название</th>
+            <th>Год</th>
+            <th class="sort">Статус</th>
+            <th class="sort">Добавлено</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var film in Model)
+        {
+            var status = film.CheckStatus.ToString().ToLower();
+            <tr baseid="@film.ID" class="film-item">
+                <td class="mdl-data-table__cell--non-numeric">@film.Title</td>
+                <td class="mdl-data-table__cell--non-numeric">@film.ReleaseDate</td>
+                <td class="@status">@status</td>
+                <td class="mdl-data-table__cell--non-numeric">@film.AddDateTime</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    GoToPage('.film-item', true);
+</script>

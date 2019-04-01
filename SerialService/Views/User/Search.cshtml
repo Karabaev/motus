@@ -1,0 +1,36 @@
+﻿@model List<SerialService.ViewModels.VideoMaterialListViewModel>
+@using PagedList.Mvc;
+@using SerialService.Infrastructure.Helpers;
+
+@{
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+<h2>Результаты поиска (найдено @Model.Count совп.)</h2>
+<div>
+    @foreach (var item in Model)
+    {
+        <div>
+            <img src=@item.PosterURL width="200" height="211"/>
+        </div>
+        <div>
+            @Html.ActionLink(@Html.DisplayFor(modelItem => item.Title).ToString(), "VideoMaterialDetailPage", new { id = item.ID })   
+        </div>
+        <div>
+            Страна: @Html.CreateEnumeration(item.CountryNames)  
+        </div>
+        <div>
+            Жанр: @Html.CreateEnumeration(item.GenreTitles) 
+        </div>
+        <div> @*Закинуть в спойлер*@
+            @Html.DisplayFor(modelItem => item.Text)
+        </div>
+        <div>
+            Лайков: @item.PositiveMarkCount / Дизлайков: @item.NegativeMarkCount
+        </div>
+
+    }
+</div>
+
+
+

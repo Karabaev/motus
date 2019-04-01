@@ -1,0 +1,11 @@
+﻿<h1 class="mdl-dialog__title">Добавить фильм</h1>
+<div class="mdl-dialog__content">
+    <div id="redactor-menu-content">
+        @Html.Partial("AddForm")
+    </div>
+</div>
+<div class="mdl-dialog__actions">
+    <button type="button" id="close-redactor-menu" class="mdl-button">Отмена</button>
+    <button type="button" id="send-film-form" disabled class="mdl-button">Отправить</button>
+</div>
+<script src="~/Scripts/RedactorTools/ForSendToServer.js"></script>

@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialService", "SerialService\SerialService.csproj", "{7015BBCB-33E3-4A52-BA03-9F9C0384168A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KPParser", "KinoPoiskParser\KPParser.csproj", "{62B78F87-8AAB-42FE-B086-5ADEFADB9A16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoAgent", "InfoAgent\InfoAgent.csproj", "{1A57A926-D37D-45DE-8216-6E1271B2F568}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Spammer\Updater.csproj", "{47C7AAE4-65DF-4C65-9643-A0A83E42119B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7015BBCB-33E3-4A52-BA03-9F9C0384168A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7015BBCB-33E3-4A52-BA03-9F9C0384168A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7015BBCB-33E3-4A52-BA03-9F9C0384168A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7015BBCB-33E3-4A52-BA03-9F9C0384168A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62B78F87-8AAB-42FE-B086-5ADEFADB9A16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62B78F87-8AAB-42FE-B086-5ADEFADB9A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62B78F87-8AAB-42FE-B086-5ADEFADB9A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62B78F87-8AAB-42FE-B086-5ADEFADB9A16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A57A926-D37D-45DE-8216-6E1271B2F568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A57A926-D37D-45DE-8216-6E1271B2F568}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A57A926-D37D-45DE-8216-6E1271B2F568}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A57A926-D37D-45DE-8216-6E1271B2F568}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47C7AAE4-65DF-4C65-9643-A0A83E42119B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47C7AAE4-65DF-4C65-9643-A0A83E42119B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47C7AAE4-65DF-4C65-9643-A0A83E42119B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47C7AAE4-65DF-4C65-9643-A0A83E42119B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1D7FBDA0-9313-4C9F-82A4-BCEB5D76E903}
+	EndGlobalSection
+EndGlobal

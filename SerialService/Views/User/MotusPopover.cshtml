@@ -1,0 +1,46 @@
+﻿@using SerialService.Infrastructure.Helpers;
+@model SerialService.Models.ElasticVideoMaterial
+<div id="po-@Model.ID" class="motus-popover mdl-card mdl-shadow--2dp mdl-cell--3-col-desktop mdl-cell--hide-phone mdl-cell--4-col-tablet">
+    <div>
+        <div class="main-info">
+            <div class="popover-title">
+                @Html.DisplayFor(m => m.Title).ToString()
+            </div>
+            <div>
+                <p>Страны: @Html.CreateEnumeration(Model.CountryNames)</p>
+            </div>
+            <div>
+                <p>Жанры: @Html.CreateEnumeration(Model.GenreTitles)</p>
+            </div>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <div class="descriprion">
+                <p><q><i>@Html.DisplayFor(m => m.Description).ToString()...</i></q></p>
+            </div>
+        }
+
+        <div class="popover-info-bar">
+            @if (Model.Imdb != null)
+            {
+                <div class="info-item imdb-rating"><div class="r-title">IMDb </div>@Model.Imdb</div>
+            }
+            @if (Model.KinopoiskRating != null)
+            {
+                <div class="info-item kp-rating"><div class="r-title">KP </div>@Model.KinopoiskRating</div>
+            }
+            @if (Model.Duration>0)
+            {
+                <div class="info-item duration">
+                    <div class="mdl-list__item-icon">
+                        <i class="watch-icon material-icons">access_time</i>
+                    </div>
+                    <div>
+                        @Model.Duration <span id="time">min</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

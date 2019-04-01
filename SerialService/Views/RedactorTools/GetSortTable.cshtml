@@ -1,0 +1,27 @@
+﻿<table id="item-list" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp mdl-cell mdl-cell--10-col">
+    <thead>
+        <tr>
+            <th class="sort" name="@ViewBag.NameSortParm">Название</th>
+            <th>Год</th>
+            <th class="sort" name="@ViewBag.StatusSortParm">Статус</th>
+            <th class="sort" name="@ViewBag.DateSortParm">Добавлено</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var f in Model)
+        {
+            string[] editablesStatuses = { "checking", "rejected" };
+            var status = f.CheckStatus.ToString().ToLower();
+            <tr status="@status" baseid ="@f.ID" class="film-item">
+                <td class="mdl-data-table__cell--non-numeric">@f.Title</td>
+                <td>@f.ReleaseDate</td>
+                <td class="@status">@status</td>
+                <td>@f.AddDateTime</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    SortRequest('.sort');
+    GoToPage('.film-item', isModerator);
+</script>

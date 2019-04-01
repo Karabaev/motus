@@ -1,0 +1,7 @@
+﻿.selected-item {
+    background-color: #e0e0e0;
+}
+
+.search-result, .search-container {
+    width: 100% !important;
+}

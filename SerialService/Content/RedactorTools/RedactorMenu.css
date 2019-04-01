@@ -1,0 +1,12 @@
+﻿li{
+    display:inline
+}
+.chip-input:focus{
+    outline:none;
+}
+.chip-input{
+    border:0;
+}
+.chip-place{
+    border-bottom:1px solid;
+}

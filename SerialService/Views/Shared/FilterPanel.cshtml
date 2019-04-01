@@ -1,0 +1,123 @@
+﻿@{
+    var filterLists = Session["filter-lists"] as Dictionary<string, List<string>>;
+}
+<hr align="center" />
+<div class="mdl-cell--12-col mdl-grid filter-container">
+    <div class="filter-item mdl-cell--2-col-desktop mdl-cell--4-col" id="genres">
+        <span class="mdl-badge">Жанры</span>
+    </div>
+    <ul class="mdl-menu selectable-menu mdl-js-menu not-close-menu" for="genres">
+
+        @{
+            if (filterLists != null)
+            {
+                foreach (string genre in filterLists["genres"])
+                {
+                    if (!string.IsNullOrEmpty(genre))
+                    {
+                        <li class="selectable-criterion genres-item clear-selectable">
+                            <span class="filter-criterion">
+                                @genre
+                            </span>
+                        </li>
+                    }
+                }
+            }
+        }
+
+    </ul>
+    <div class="filter-item mdl-cell--2-col-desktop mdl-cell--4-col" id="countries">
+        <span class="mdl-badge">Страны</span>
+    </div>
+    <ul class="mdl-menu selectable-menu mdl-js-menu not-close-menu" for="countries">
+
+        @{
+            if (filterLists != null)
+            {
+                foreach (string country in filterLists["countries"])
+                {
+                    if (!string.IsNullOrEmpty(country))
+                    {
+                        <li class="selectable-criterion country-item clear-selectable">
+                            <span class="filter-criterion">
+                                @country
+                            </span>
+                        </li>
+                    }
+                }
+            }
+        }
+    </ul>
+    <div class="filter-item mdl-cell--2-col-desktop mdl-cell--4-col" id="translations">
+        <span class="mdl-badge">Студии озвучки</span>
+    </div>
+    <ul class="mdl-menu selectable-menu mdl-js-menu not-close-menu" for="translations">
+
+        @{
+            if (filterLists != null)
+            {
+                foreach (string translation in filterLists["translations"])
+                {
+                    if (!string.IsNullOrEmpty(translation))
+                    {
+                        <li class="selectable-criterion translation-item clear-selectable">
+                            <span class="filter-criterion">
+                                @translation
+                            </span>
+                        </li>
+                    }
+                }
+            }
+        }
+    </ul>
+    <div class="filter-item mdl-cell--2-col-desktop mdl-cell--4-col" id="year">
+        <span class="mdl-badge">Год</span>
+    </div>
+    <ul style="width:200px" class="mdl-menu mdl-menu--bottom-right mdl-js-menu not-close-menu" for="year">
+        <li>
+            <div class="year-menu">
+                <div class="year-field mdl-textfield mdl-js-textfield">
+                    <input min="1920" max="@DateTime.Now.Year" class="mdl-textfield__input" type="number" id="from">
+                    <label class="mdl-textfield__label" for="from">От...</label>
+                </div>
+                <div class="year-field mdl-textfield mdl-js-textfield">
+                    <input min="1920" max="@DateTime.Now.Year" class="mdl-textfield__input" type="number" id="to">
+                    <label class="mdl-textfield__label" for="to">До...</label>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div class="filter-item mdl-cell--2-col-desktop mdl-cell--4-col" id="kinopoisk">
+        <span class="mdl-badge">Рейтинг КиноПоиска</span>
+    </div>
+    <ul style="width:240px" class="mdl-menu mdl-menu--bottom-right mdl-js-menu not-close-menu" for="kinopoisk">
+        <li>
+            <div class="filter-rating-number">
+                0
+            </div>
+        </li>
+        <li>
+            <input class="rating-slider mdl-slider mdl-js-slider" id="kinopoisk-input" type="range"
+                   min="0" max="10" value="0" tabindex="0" step="0.5">
+        </li>
+    </ul>
+    <div class="filter-item mdl-cell--2-col-desktop mdl-cell--4-col" id="imdb">
+        <span class="mdl-badge">Рейтинг Imdb</span>
+    </div>
+    <ul style="width:240px" class="mdl-menu mdl-menu--bottom-right mdl-js-menu not-close-menu" for="imdb">
+        <li>
+            <div class="filter-rating-number">
+                0
+            </div>
+        </li>
+        <li>
+            <input class="rating-slider mdl-slider mdl-js-slider" id="imdb-input" type="range"
+                   min="0" max="10" value="0" tabindex="0" step="0.5">
+        </li>
+    </ul>
+</div>
+<div class="mdl-cell--12-col">
+    <button id="filter-btn" disabled class="mdl-button--mini-fab mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+        Фильтр
+    </button>
+</div>

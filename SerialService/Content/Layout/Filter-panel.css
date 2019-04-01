@@ -1,0 +1,82 @@
+﻿#filter-btn {
+    float:right;
+}
+
+.mdl-menu__container {
+    overflow-y: auto !important;
+    overflow-x:hidden!important;
+    max-height: 65% !important;
+}
+
+.mdl-menu__container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.mdl-menu__container::-webkit-scrollbar-track {
+    background-color: rgb(255,255,255);
+    border-color: rgb(255,255,255);
+}
+
+.mdl-menu__container::-webkit-scrollbar-thumb {
+    background-color: #707070;
+    border-radius: 6px !important;
+}
+
+.filter-panel {
+    background-color: #fafafa !important;
+    display: none;
+    padding: 10px;
+}
+
+.filter-container {
+    display: inline-flex;
+}
+
+.filter-item {
+    text-align:center;
+    height: 35px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.mdl-badge {
+    margin: auto;
+}
+
+.filter-criterion {
+    text-align: center;
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
+.filter-rating-number {
+    margin: auto;
+    width: min-content;
+}
+
+.year-field {
+    width: 80px !important;
+    margin: auto !important;
+}
+
+.year-menu {
+    width: 100%;
+    display: inline-flex;
+}
+
+.selectable-criterion {
+    cursor: pointer;
+    padding: 5px;
+}
+
+.clear-selectable:hover {
+    background-color: rgba(158,158,158, 0.20);
+}
+
+.selected {
+    background-color: rgba(158,158,158, 0.40);
+}
+
+.mdl-badge::after {
+    background: rgb(202,45,64) !important;
+}

@@ -1,0 +1,18 @@
+﻿<table id="item-list" class="mdl-data-table mdl-js-data-table mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+    <thead>
+        <tr>
+            <th class="sort">UserName</th>
+            <th class="sort">Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr userId="@user.Id" class="user-item" onclick="location.href='@Url.Action("GetUserInfo","AdminTools",new { uid = user.Id})'">
+                <td class="mdl-data-table__cell--non-numeric">@user.UserName</td>
+                @if (user.IsLocked) { <td class="mdl-data-table__cell--non-numeric">Заблокирован</td> }
+                else { <td class="mdl-data-table__cell--non-numeric">Активен</td> }
+            </tr>
+        }
+    </tbody>
+</table>

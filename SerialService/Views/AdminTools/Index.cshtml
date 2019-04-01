@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Content/Tables.css"/>
+<link rel="stylesheet" href="~/Content/AdminTools/MainPage.css"/>
+<link rel="stylesheet" href="~/Content/Other/Search.css"/>
+<link rel="stylesheet" href="~/Content/RedactorTools/EditingManger.css"/>
+<script src="~/Scripts/AdminTools/AdminMenu.js"></script>
+<script src="~/Scripts/RedactorTools/EditingManger.js"></script>
+<div class="mdl-card mdl-shadow--2dp mdl-cell--12-col">
+    <div class="mdl-card__title">
+        <h2>Панель администратора</h2>
+    </div>
+    <div class="mdl-grid mdl-cell--12-col">
+        <div class="mdl-cell mdl-card mdl-shadow--2dp mdl-cell--2-col">
+            <ul class="mdl-list">
+                <li class="mdl-list__item docs-layout" onclick="UsersSearch(this)">
+                    <span class="mdl-list__item-primary-content">
+                        Пользователи
+                    </span>
+                </li>
+                <li class="mdl-list__item" onclick="FilmSearch(this)">
+                    <span class="mdl-list__item-primary-content">
+                        Фильмы
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="mdl-cell mdl-grid search-area mdl-card mdl-shadow--2dp mdl-cell--10-col">
+        </div>
+        <div>
+            <button id="UpdateElasticBtn">Обновить индекс Эластика</button>
+        </div>
+    </div>
+</div>

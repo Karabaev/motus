@@ -1,0 +1,20 @@
+﻿.checking {
+    color: #45008b;
+}
+
+.confirmed {
+    color: #006400;
+}
+
+.rejected {
+    color: #8B0000;
+}
+
+.search-card {
+    min-height: 0;
+}
+
+#filter-bar {
+    margin: inherit;
+    display: flex;
+}

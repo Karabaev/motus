@@ -1,0 +1,50 @@
+﻿@model SerialService.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Регистрация";
+}
+<link rel="stylesheet" href="~/Content/AccountForms/AccountForms.css" />
+<div class="mdl-card mdl-shadow--2dp acc-card mdl-cell--4-col mdl-cell--12-col-phone mdl-grid">
+    <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Регистрация</h2>
+    </div>
+    <div class="mdl-card__supporting-text">
+        Зарегистрируйся, подписывайся на сериал и будь в курсе выхода новых серий.
+    </div>
+    <div class="acc-form-container mdl-cell--10-col mdl-cell--12-col-phone mdl-grid">
+        <form method="post" id="reg-form" class="mdl-cell--12-col" data-ajax="true">
+            @Html.AntiForgeryToken()
+            <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col">
+                <input class="mdl-textfield__input" name="UserName" required pattern="^[A-Za-z0-9_]{5,15}$" type="text" id="username">
+                <label class="mdl-textfield__label" for="username">Имя пользователя...</label>
+                <span class="mdl-textfield__error">Имя пользователя длиной не менее 5 символов, состоящий из букв и цифр</span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col">
+                <input class="mdl-textfield__input" name="Email" required type="email" id="email">
+                <label class="mdl-textfield__label" for="email">Email...</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col">
+                <input class="mdl-textfield__input" name="Password" required pattern="[A-Za-z0-9]{6,16}" type="password" id="password">
+                <label class="mdl-textfield__label" for="password">Пароль...</label>
+                <span class="mdl-textfield__error">Пароль длиной не менее 6 символов, состоящий из букв и цифр</span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col" id="confirm-password-conrainer">
+                <input class="mdl-textfield__input" name="ConfirmPassword" required pattern="[A-Za-z0-9]{6,16}" type="password" id="confitm-password">
+                <label class="mdl-textfield__label" for="confitm-password">Подтверждение пароля...</label>
+                <span class="mdl-textfield__error" id="conf-error">Пароль и его подтвержение не совпадают</span>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col">
+                <input class="mdl-textfield__input" name="Parole" required type="text" pattern="[a-zA-ZА-я]+" id="secret-word">
+                <label class="mdl-textfield__label" for="secret-word">Секретное слово...</label>
+                <span class="mdl-textfield__error">Слово должно состоять из букв</span>
+            </div>
+            <div class="mdl-cell--12-col"><span style="display:none" class="error"></span></div>
+        </form>
+    </div>
+    <div class="mdl-card__actions mdl-card--border">
+        <button type="button" disabled id="submit-btn" class="mdl-button mdl-js-button acc-button">
+            Отправить
+        </button>
+    </div>
+</div>
+<script src="~/Scripts/AccountForms/CommonForm.js"></script>
+<script src="~/Scripts/AccountForms/RegisterForm.js"></script>

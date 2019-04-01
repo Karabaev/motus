@@ -1,0 +1,199 @@
+﻿
+@{
+    ViewBag.Title = "FilmEditor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>FilmEditor</h2>
+<div>
+    <form id="form-for-manual">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label film-info-field">
+            <input type="text"
+                   id="title"
+                   maxlength="100"
+                   class="mdl-textfield__input"
+                   required />
+            <label class="mdl-textfield__label" for="title">Название...</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label film-info-field">
+            <input type="text"
+                   maxlength="100"
+                   id="origin-title"
+                   class="mdl-textfield__input"
+                   required />
+            <label class="mdl-textfield__label" for="origin-title">Оригинальное название...</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label film-info-field">
+            <input type="text"
+                   maxlength="250"
+                   id="tagline"
+                   class="mdl-textfield__input" />
+            <label class="mdl-textfield__label" for="origin-title">Слоган...</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label film-info-field">
+            <input type="url"
+                   id="poster"
+                   class="mdl-textfield__input"
+                   pattern="https?://.+"
+                   required />
+            <label class="mdl-textfield__label" for="poster">Постер...</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label film-info-field">
+            <input type="number"
+                   max="99999999"
+                   id="kinopoisk-id"
+                   class="mdl-textfield__input"
+                   required />
+            <label class="mdl-textfield__label" for="kinopoisk-id">Идентификатор КиноПоиска...</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label film-info-field">
+            <input type="number"
+                   id="year"
+                   class="mdl-textfield__input"
+                   maxlength="4"
+                   min="1900"
+                   max="2025"
+                   required />
+            <label class="mdl-textfield__label" for="year">Год производства...</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label film-info-field">
+            <input type="number"
+                   id="duration"
+                   class="mdl-textfield__input"
+                   min="1"
+                   max="600"
+                   required />
+            <label class="mdl-textfield__label" for="duration">Продолжительность...</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label film-info-field">
+            <input type="number"
+                   id="idmb"
+                   class="mdl-textfield__input"
+                   max="10"
+                   step="0.1"
+                   required />
+            <label class="mdl-textfield__label" for="idmb">IDMB...</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label film-info-field">
+            <input type="number"
+                   id="kinopoisk-rating"
+                   class="mdl-textfield__input"
+                   max="10"
+                   step="0.1"
+                   required />
+            <label class="mdl-textfield__label" for="idmb">Рейтинг КиноПоиск...</label>
+        </div>
+        <div class="chip-place">
+            <ul id="actors-list" class="mdl-list">
+                <li class="chip-input-item">
+                    <div>
+                        <input class="chip-input" type="text" maxlength="50" id="actor-name" placeholder="Имя актера..." />
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="chip-place">
+            <ul id="genre-list" class="mdl-list">
+                <li class="chip-input-item">
+                    <div>
+                        <input class="chip-input" type="text" maxlength="50" id="genre" placeholder="Жанр..." />
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="chip-place">
+            <ul id="countries-list" class="mdl-list">
+                <li class="chip-input-item">
+                    <div>
+                        <input class="chip-input" type="text" maxlength="50" id="country" placeholder="Страна..." />
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="chip-place">
+            <ul id="pictures-list" class="mdl-list">
+                <li class="chip-input-item">
+                    <div>
+                        <input class="chip-input" type="url" pattern="url" id="picture" placeholder="Ссылка на скриншот..." />
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="chip-place">
+            <ul id="filmMakers-list" class="mdl-list">
+                <li class="chip-input-item">
+                    <div>
+                        <input class="chip-input" type="text" maxlength="50" id="filmMaker" placeholder="Режиссер..." />
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="chip-place">
+            <ul id="themes-list" class="mdl-list">
+                <li class="chip-input-item">
+                    <div>
+                        <input class="chip-input" type="text" maxlength="50" id="theme" placeholder="Ключевая фраза..." />
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield">
+            <textarea class="mdl-textfield__input" maxlength="550" id="text"></textarea>
+            <label class="mdl-textfield__label" for="text">Краткое описание...</label>
+        </div>
+    </form>
+</div>
+<div>
+    <button id ="save" class="mdl-button mdl-js-button mdl-button--raised">
+        Сохранить
+    </button>
+    @if (ViewBag.IsModerator)
+    {
+        <button opinion="1" id="confirm" class="mdl-button mdl-js-button mdl-button--raised opinion-btn">
+            Подтвердить
+        </button>
+        <button opinion="2" id="reject" class="mdl-button mdl-js-button mdl-button--raised opinion-btn">
+            Отклонить
+        </button>
+    }
+</div>
+<dialog class="loader">
+    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</dialog>
+<script src="~/Scripts/loader.js"></script>
+<link rel="stylesheet" href="~/Content/RedactorTools/RedactorMenu.css" />
+<script src="~/Scripts/RedactorTools/RedactorMenu.js"></script>
+<script>var status = @ViewBag.MaterialStatus</script>
+<script>
+    var model = @Html.Raw(Json.Encode(Model));
+    var id = @ViewBag.Id;
+    function Opinion(id,choose){
+        ShowLoader();
+        $.ajax({
+            type: "POST",
+            data:{id:id,status:choose},
+            url: "/ModeratorTools/Opinion",
+            success: function (result) {
+                alert(result.message);
+                CloseLoader();
+            }
+        })
+    }
+
+    function RenderButtons(status){
+        if(status==1){
+            $("#confirm").hide();
+            $("#reject").text("Заблокировать");
+        }
+        if(status==2){
+            $("#reject").hide();
+            $("#confirm").text("Одобрить");
+        }
+    }
+    $('.opinion-btn').click(function(){
+        Opinion(id,$(this).attr("opinion"));
+    })
+    AutoFilling(model);
+    SaveUpdateMaterial(id);
+    RenderButtons(status);
+</script>

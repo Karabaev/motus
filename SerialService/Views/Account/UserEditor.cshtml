@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UserEditor</title>
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm("Search", "Account"))
+        {
+            @Html.TextBox("searchArg")
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Поиск" class="btn btn-default" />
+            </div>
+        }
+        @using (Html.BeginForm("ShowLockOutStore", "Account",FormMethod.Post))
+        {
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Заблокированные" class="btn btn-default" />
+            </div>
+        }
+    </div>
+    <div>
+        <table>
+            @if (Model != null)
+            {
+                foreach (var user in Model)
+                {
+                    <tr>
+                        <td>
+                            @user.UserName
+                        </td>
+                        <td>
+                            @user.Email
+                        </td>
+                        <td>
+                            @if (user.LockoutEnabled&&!user.IsLocked)
+                            {
+                                using (Html.BeginForm("LockOut", "Account"))
+                                {
+                                    <input name="id" type="hidden" value="@user.Id" />
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <input type="submit" value="Блокировать" class="btn btn-default" />
+                                    </div>
+                                }
+                            }
+                            else if (user.IsLocked)
+                            {
+                                using (Html.BeginForm("LetOff", "Account"))
+                                {
+                                    <input id="userId" name="id" type="hidden" value="@user.Id" />
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <input type="submit" value="Разблокировать" class="btn btn-default" />
+                                    </div>
+                                }
+
+                                using (Html.BeginForm("DeleteUser", "Account"))
+                                {
+                                    <input id="userId" name="id" type="hidden" value="@user.Id" />
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <input type="submit" value="Удалить" class="btn btn-default" />
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="col-md-offset-2 col-md-10">
+                                    <span>Admin</span>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+               <tr>
+                   <td>
+                       Список пуст...
+                   </td>
+               </tr> 
+            }
+        </table> 
+    </div>
+</body>
+</html>

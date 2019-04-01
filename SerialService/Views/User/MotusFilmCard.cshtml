@@ -1,0 +1,26 @@
+﻿@using SerialService.Infrastructure.Helpers;
+@model SerialService.Models.ElasticVideoMaterial
+<div id="@Model.ID" class="mdl-card motus-film-card mdl-cell mdl-cell--6-col-phone mdl-cell--4-col-tablet mdl-cell--2-col mdl-shadow--2dp"
+     onclick="location.href='@Url.Action("VideoMaterialDetailPage", new { id = Model.ID })'">
+    @if (!string.IsNullOrEmpty(Model.PosterURL))
+    {
+        <img style="width:100%;height:100%; min-width:0!important;min-height:0!important" src="@Model.PosterURL" alt="Постер @Model.Title" />
+    }
+    <div class="phone-info mdl-cell--hide-desktop mdl-cell--hide-tablet">
+        <div class="phone-title">
+            @if (Model.Title.Length < 30)
+            {
+                <p>@Html.DisplayFor(m => m.Title).ToString().</p>
+            }
+            else
+            {
+                <p>@Html.DisplayFor(m => m.Title).ToString().Substring(0, 25)...</p>
+            }
+        </div>
+        <div>
+            <p>
+                @Html.CreateEnumeration(Model.GenreTitles.Where(g => Model.GenreTitles.IndexOf(g) <= 1).ToList())
+            </p>
+        </div>
+    </div>
+</div>
