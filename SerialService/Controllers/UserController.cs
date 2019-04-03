@@ -51,11 +51,10 @@
             int pageNumber = (page ?? 1);
             List<ElasticVideoMaterial> videoMaterials = MotusElasticsearch.GetAll();
             RedirectHelper.SaveLocalURL(ViewBag, ControllerContext);
-			ViewBag.Title = "Домашняя страница Motus";
-			return View(videoMaterials.ToPagedList(pageNumber, PageSize));
+			ViewBag.Title = "Motus-cinema";
+            ViewBag.Description = "Любимые фильмы и сериалы в хорошем качестве. Новинки кино, постоянное обновление базы фильмов и многое другое";
+            return View(videoMaterials.ToPagedList(pageNumber, PageSize));
         }
-
-		 
 
 		/// <summary>
 		/// Страница видеоматериала.
@@ -76,7 +75,15 @@
             VideoMaterialDetailsViewModel dvm = Mapper.Map<VideoMaterial, VideoMaterialDetailsViewModel>(videoMaterial);
             ElasticVideoMaterial thisMaterial = Mapper.Map<VideoMaterial, ElasticVideoMaterial>(videoMaterial);
             dvm.Similar = MotusElasticsearch.GetSimilar(thisMaterial);
-			ViewBag.Title = "Смотреть онлайн " + dvm.Title;
+			ViewBag.Title = $"{dvm.Title} - cмотреть онлайн";
+            if (videoMaterial.SerialSeasons.Any())
+            {
+                ViewBag.Description = $"{dvm.Title}. Самые свежие серии в HD-качестве и озвучках от популярных студий онлайн.";
+            }
+            else
+            {
+                ViewBag.Description = $"{dvm.Title}. В HD-качестве и озвучках от популярных студий онлайн.";
+            }
             var user = unitOfWork.Users.Get(User.Identity.GetUserId());
 			string commentsApiKey = "V2vt2ul0QFpPnsa71RPNXnQ38gH5CWHkhKFJsQIFe9DCzHN2YLyiHZtU2UOIU4c4";
 
