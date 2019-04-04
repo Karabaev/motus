@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            <div id="yohoho" data-kinopoisk="@Model.KinopoiskID" data-player="moonwalk,hdgo"></div>
+            <div id="visearch"></div>
         </div>
     </div>
     <div class="mdl-grid mdl-shadow--2dp info-container mdl-card mdl-cell--12-col" style="overflow:visible">
@@ -162,7 +162,6 @@
                 </div>
             </div>
         }
-        <script src="//yohoho.czx.to/yo.js"></script>
     </div>
     <div style="margin-bottom:10px" class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card">
         <div style="width:100%" id="mc-container"></div>
@@ -203,3 +202,19 @@
 <script src="~/Scripts/User/Mark.js"></script>
 <script src="~/Scripts/User/Subscribe.js"></script>
 <script src="~/Scripts/User/DetailPage.js"></script>
+<script type="text/javascript">
+    var card = $('.player-container');
+    var width = card.width();
+    card.css('height', width * (9 / 17))
+    var moon_params = {
+        width: card.width(),
+        height: card.height(),
+        on_dom_ready: true,
+        kp_id: @int.Parse(Model.KinopoiskID),
+        year: @Model.ReleaseDate,
+    };
+    !function (e, n, t, r, a) {
+    r = e.createElement(n), a = e.getElementsByTagName(n)
+    [0], r.async = !0, r.src = t, a.parentNode.insertBefore(r, a)
+    }(document, "script", "//visearch.info/v2/find-player.min.js");
+</script>
