@@ -1,10 +1,4 @@
-﻿function RenderPlayerCard() {
-    var container = $('.player-container');
-    var width = container.width();
-    container.css('height', width * (9 / 17))
-}
-
-function Slide() {
+﻿function Slide() {
     const slider = document.getElementById('recommendations');
     let leftIsPress = false;
     let startX;
@@ -34,9 +28,6 @@ function Slide() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-
-    RenderPlayerCard();
-
     function RenderPlayerInfoBar() {
         var bar = $('#motus-info-bar');
         var player = $('.player');
@@ -60,7 +51,3 @@ document.addEventListener('DOMContentLoaded', function () {
 
     RenderPlayerInfoBar();
 })
-document.body.addEventListener('DOMNodeInserted', function () {
-    console.log($('.select2').length)
-    $('.select2').click(function () { $('#motus-info-bar').slideUp() })
-}, false);
