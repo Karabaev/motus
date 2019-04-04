@@ -41,7 +41,6 @@
 			.ForMember(dvm => dvm.UpdateDateTime, opt => opt.MapFrom(vm => vm.UpdateDateTime))
 			.ForMember(dvm => dvm.ReleaseDate, opt => opt.MapFrom(vm => vm.ReleaseDate))
 			.ForMember(dvm => dvm.KinopoiskID, opt => opt.MapFrom(vm => vm.KinopoiskID))
-			//.ForMember(dvm => dvm.TranslationTitles, opt => opt.MapFrom(vm => vm.SerialSeasons.Select(ss => ss.Translation.Name)))
 			.ForMember(dvm => dvm.TranslationTitles, opt => opt.MapFrom(vm => vm.SerialSeasons.GroupBy(ss => ss.Translation.Name).Select(ss => ss.Key)))
 			.ForMember(dvm => dvm.PictureURLs, opt => opt.MapFrom(vm => vm.Pictures.Where(p => !p.IsPoster).Select(c => c.URL)))
 			.ForMember(dvm => dvm.FilmMakerNames, opt => opt.MapFrom(vm => vm.FilmMakers.Select(c => c.FullName)))
@@ -53,11 +52,6 @@
 			.ForMember(dvm => dvm.SerialSeasonsCount, opt => opt.MapFrom(vm => vm.SerialSeasons.Count()))
 			.ForMember(dvm => dvm.LastEpisodeTime, opt => opt.MapFrom(vm => vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)))
 			.ForMember(dvm => dvm.LastEpisodeTranslator, opt => opt.MapFrom(vm => vm.SerialSeasons.FirstOrDefault(_vm => _vm.LastEpisodeTime == vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)).Translation.Name));
-
-			config += cfg => cfg.CreateMap<VideoMaterial, VideoMaterialRandomListViewModel>()
-            .ForMember(rlvm => rlvm.ID, opt => opt.MapFrom(vm => vm.ID))
-            .ForMember(rlvm => rlvm.Title, opt => opt.MapFrom(vm => vm.Title))
-            .ForMember(rlvm => rlvm.PosterURL, opt => opt.MapFrom(vm => vm.Pictures.FirstOrDefault(p => p.IsPoster).URL));
 
             config += cfg => cfg.CreateMap<RegisterViewModel, ApplicationUser>()
             .ForMember(rvm => rvm.UserName, opt => opt.MapFrom(vm => vm.UserName))

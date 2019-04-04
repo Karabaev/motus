@@ -17,8 +17,6 @@
 				viewBag.CurrentURL = string.Format("/{0}/{1}/{2}", routeDataValues["controller"].ToString(), routeDataValues["action"].ToString(), routeDataValues["id"].ToString());
 			else
 				viewBag.CurrentURL = string.Format("/{0}/{1}", context.RouteData.Values["controller"].ToString(), context.RouteData.Values["action"].ToString());
-			//viewBag.CurrentURL = string.Format("/{0}/{1}", context.RouteData.Values["controller"].ToString(), "Index");
-			//viewBag.CurrentURL = context.RouteData.Route.GetVirtualPath();
 		}
     }
 }

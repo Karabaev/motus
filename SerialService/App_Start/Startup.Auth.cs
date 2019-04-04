@@ -1,6 +1,4 @@
-﻿
-
-namespace SerialService
+﻿namespace SerialService
 {
     using System;
     using Microsoft.AspNet.Identity;

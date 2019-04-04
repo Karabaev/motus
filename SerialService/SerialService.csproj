@@ -268,7 +268,6 @@
   <ItemGroup>
     <Compile Include="App_Start\AppDbInitializer.cs" />
     <Compile Include="App_Start\AutoMapperConfig.cs" />
-    <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\CacheFiller.cs" />
     <Compile Include="App_Start\ElasticIndex.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -331,8 +330,6 @@
     <Compile Include="Infrastructure\CustomValidateAttributes\CustomRegexValidationAttribute.cs" />
     <Compile Include="Infrastructure\CustomValidateAttributes\EachRegexOfListAttribute.cs" />
     <Compile Include="Infrastructure\CustomValidateAttributes\EachLenthValidationAttribute.cs" />
-    <Compile Include="Infrastructure\ElasticSearch\ElascticStateCache.cs" />
-    <Compile Include="Infrastructure\ElasticSearch\ElasticIndexControll.cs" />
     <Compile Include="Infrastructure\ElasticSearch\FilterData.cs" />
     <Compile Include="Infrastructure\ElasticSearch\SearchWrapper.cs" />
     <Compile Include="Infrastructure\ElasticSearch\MotusElasticsearch.cs" />
@@ -384,17 +381,13 @@
     <Compile Include="Services\VideoMarkService.cs" />
     <Compile Include="Services\VideoMaterialService.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\SerialSeasonListViewModel.cs" />
     <Compile Include="ViewModels\VideoMaterialDetailsViewModel.cs" />
     <Compile Include="ViewModels\VideoMaterialListViewModel.cs" />
     <Compile Include="ViewModels\VideoMaterialPersonalAccountViewModel.cs" />
-    <Compile Include="ViewModels\VideoMaterialRandomListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\AccountForms\AccountForms.css" />
     <Content Include="Content\AdminTools\MainPage.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Layout\Filter-panel.css" />
     <Content Include="Content\Layout\Main-layout.css" />
     <Content Include="Content\Logo\20h\h20.png" />
@@ -425,8 +418,6 @@
     <Content Include="Scripts\AccountForms\LoginForm.js" />
     <Content Include="Scripts\AccountForms\RegisterForm.js" />
     <Content Include="Scripts\AdminTools\AdminMenu.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\mdl-v1.1.2\package.json" />
     <Content Include="Content\mdl-v1.1.2\material.min.js.map" />
     <Content Include="Content\mdl-v1.1.2\material.min.css.map" />
@@ -469,7 +460,6 @@
     <Content Include="Scripts\User\Mark.js" />
     <Content Include="Scripts\User\PersonalAccount.js" />
     <Content Include="Scripts\User\Subscribe.js" />
-    <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -481,32 +471,17 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\SendCode.cshtml" />
-    <Content Include="Views\Account\VerifyCode.cshtml" />
-    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
-    <Content Include="Views\Manage\ChangePassword.cshtml" />
-    <Content Include="Views\Manage\Index.cshtml" />
-    <Content Include="Views\Manage\ManageLogins.cshtml" />
-    <Content Include="Views\Manage\SetPassword.cshtml" />
-    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
-    <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Account\UserEditor.cshtml" />
     <Content Include="Views\Account\EmailForgotPassword.cshtml" />
     <Content Include="Views\Account\ParoleForgotPassword.cshtml" />
     <Content Include="Views\User\Index.cshtml" />

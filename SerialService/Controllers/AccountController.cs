@@ -1,6 +1,5 @@
 ﻿namespace SerialService.Controllers
 {
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -8,11 +7,7 @@
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
     using Models;
-    using System.Collections.Generic;
-    using App_Start;
     using System;
-    using Services;
-    using DAL.Context;
     using DAL.Entities;
     using Services.Interfaces;
     using AutoMapper;
@@ -27,7 +22,6 @@
         public AccountController(IUserService userService)
         {
             this.userService = userService;
-           // this.signInManager = ControllerContext.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
         }
 
         [Authorize(Roles = "Admin")]

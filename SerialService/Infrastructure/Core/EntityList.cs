@@ -214,7 +214,6 @@
             if (this.items.Length < min)
             {
                 int newCapacity = this.items.Length == 0 ? EntityList<T>.defaultCapacity : this.items.Length * 2;
-                //if ((uint)newCapacity > Array.MaxArrayLength) newCapacity = Array.MaxArrayLength;
                 if (newCapacity < min) newCapacity = min;
                 this.Capacity = newCapacity;
             }

@@ -23,11 +23,6 @@
 				json = JsonConvert.SerializeObject(new { id, name, email, avatar = avatarUrl });
 			}
 
-			//Dictionary<string, string> values = new Dictionary<string, string>
-			//{
-			//	{ "id", id }, { "name", name }, { "email", email }, { "avatar", avatarUrl },
-			//};
-			
 			UserTokenGenerator.logger.Info("Json параметро пользователя: {0}", json);
 			byte[] encodeBytes = Encoding.UTF8.GetBytes(json.ToString());
             string result = Convert.ToBase64String(encodeBytes);
@@ -52,7 +47,6 @@
         private static long GetCurrentDateTimeInMiliseconds()
         {
             return (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
-            //return (DateTime.UtcNow.Ticks - 621355968000000000) / 10000;
         }
 
         public static string GetUserSsoToken(string siteApiKey, string id = "", string name = "", string email = "", string avatarUrl = "")

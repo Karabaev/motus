@@ -19,7 +19,6 @@
 			AreaRegistration.RegisterAllAreas();
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
-			BundleConfig.RegisterBundles(BundleTable.Bundles);
 			NinjectDependencyResolver ninject = new NinjectDependencyResolver(new StandardKernel());
 			DependencyResolver.SetResolver(ninject);
 			AutoMapperConfig.AutoMapperInit();

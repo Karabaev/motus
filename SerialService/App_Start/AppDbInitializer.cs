@@ -1,6 +1,5 @@
 ﻿namespace SerialService.App_Start
 {
-    using System;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using System.Collections.Generic;
@@ -98,7 +97,6 @@
 				userManager.AddToRole(user2.Id, Resource.RedactorRoleName);
 				userManager.AddToRole(user2.Id, Resource.ModeratorRoleName);
 			}
-			//this.VideoMaterialBaseInit(context, userManager, admin.Id);
 			base.Seed(context);
         }
     }
