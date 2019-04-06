@@ -1,12 +1,10 @@
-﻿using SerialService.DAL;
-using SerialService.Infrastructure.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Caching;
-
-namespace SerialService.App_Start
+﻿namespace SerialService.App_Start
 {
+    using SerialService.DAL;
+    using SerialService.Infrastructure.Core;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public static class CacheFiller
     {
         public static void FilterFillCache()

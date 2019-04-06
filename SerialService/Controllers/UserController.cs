@@ -34,12 +34,6 @@
 			this.logger = LogManager.GetCurrentClassLogger();
 		}
 
-		protected override void OnException(ExceptionContext filterContext)
-		{
-			//this.View("~/Views/Error/BadRequest").ExecuteResult(this.ControllerContext);
-			//throw new EntryNotFoundException("Тестовое исключение");
-		}
-
 		/// <summary>
 		/// Домашняя страница.
 		/// </summary>

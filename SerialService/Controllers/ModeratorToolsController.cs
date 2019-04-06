@@ -1,16 +1,12 @@
-﻿using SerialService.DAL;
-using SerialService.DAL.Entities;
-using SerialService.Infrastructure;
-using SerialService.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
-namespace SerialService.Controllers
+﻿namespace SerialService.Controllers
 {
-	[ExceptionHandler]
+    using SerialService.DAL;
+    using SerialService.DAL.Entities;
+    using SerialService.Infrastructure;
+    using SerialService.Services.Interfaces;
+    using System.Web.Mvc;
+
+    [ExceptionHandler]
 	public class ModeratorToolsController : Controller
     {
         private readonly IVideoMaterialService videoMaterialService;

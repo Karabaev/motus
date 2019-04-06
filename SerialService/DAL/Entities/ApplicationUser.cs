@@ -23,22 +23,6 @@
             if (other == null)
                 return false;
 
-
-
-            //foreach (var item in this.GetType().GetProperties())
-            //{
-            //    if (item.PropertyType.IsValueType)
-            //    {
-            //        if (item.GetValue(this) != item.GetValue(user))
-            //            return false;
-            //    }
-            //    else
-            //    {
-            //        if (!item.GetValue(this).Equals(item.GetValue(user)))
-            //            return false;
-            //    }
-            //}
-
             return this.UserName == other.UserName &&
 				this.PublicName == other.PublicName &&
 				this.Email == other.Email &&

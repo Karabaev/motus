@@ -8,7 +8,6 @@
     using Interfaces;
     using Infrastructure.Exceptions;
     using Infrastructure.Core;
-    using Infrastructure.Core.Extensions;
     using DAL.Context;
 
     public class CountryService : ICountryService
@@ -57,41 +56,6 @@
             return this.Repository.GetAllEntities();
         }
 
-        public EntityList<Country> GetWithCondition(Func<Country, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public EntityList<Country> GetWithConditions(params Func<VideoMaterial, bool>[] predicates)
-        {
-            throw new NotImplementedException();
-        }
-
-        public EntityList<Country> GetWithConditions(params Func<Country, bool>[] predicates)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool MarkArchive(Country entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Remove(Country entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Country SearchByStringPropValue(string nameOfPropertie, string value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public EntityList<Country> SerchByStringPropPart(string nameOfPropertie, string value)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Получить один экземпляр объекта по заданному условию.
         /// </summary>
@@ -111,31 +75,6 @@
                 return null;
 
             return this.GetScalarWithCondition(vm => vm.Name.ToLower() == value.ToLower());
-        }
-
-        public bool UnmarkArchive(Country entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public EntityList<Country> GetAllUnmarkedArchive()
-        {
-            throw new NotImplementedException();
-        }
-
-        public EntityList<Country> GetUnmarkedArchiveWithCondition(Func<Country, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public EntityList<Country> GetUnmarkedArchiveWithConditions(params Func<Country, bool>[] predicates)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Country GetUnmarkedArchiveScalarWithCondition(Func<Country, bool> predicate)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -163,6 +102,46 @@
                 }
             }
             return result;
+        }
+
+        public bool MarkArchive(Country entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UnmarkArchive(Country entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public EntityList<Country> GetAllUnmarkedArchive()
+        {
+            throw new NotImplementedException();
+        }
+
+        public EntityList<Country> GetUnmarkedArchiveWithCondition(Func<Country, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public EntityList<Country> GetUnmarkedArchiveWithConditions(params Func<Country, bool>[] predicates)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Country GetUnmarkedArchiveScalarWithCondition(Func<Country, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(Country entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public EntityList<Country> GetWithCondition(Func<Country, bool> predicate)
+        {
+            throw new NotImplementedException();
         }
     }
 }

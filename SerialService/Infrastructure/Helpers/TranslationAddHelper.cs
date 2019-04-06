@@ -58,55 +58,5 @@
 				}
 			}
 		}
-
-
-		//public void SaveTranslations(FilmInfo data, VideoMaterial videoMaterial, ITranslationService translationService)
-  //      {
-  //          List<DAL.Entities.Translation> result = new List<DAL.Entities.Translation>();
-
-  //          foreach (var t in data.Translations)
-  //          {
-  //              DAL.Entities.Translation trn = translationService.GetByMainStringProperty(t.studioName);
-
-  //              if (trn == null)
-  //              {
-  //                  trn = new DAL.Entities.Translation
-  //                  {
-  //                      Name = t.studioName,
-  //                      SerialSeasons = new List<SerialSeason>(),
-		//			};
-  //              }
-
-  //              if ((bool)data.IsSerial)
-  //              {
-		//			//UpdateLabel update = new UpdateLabel  //todo: здесь был UpdateLabel
-		//			//{
-		//			//    lastEpisodeTime = t.lastEpisodeTime,
-		//			//    updateTime = t.updateTime,
-		//			//    Translation = trn,
-		//			//    VideoMaterial = videoMaterial,
-		//			//};
-
-		//			//trn.UpdateLabels.Add(update);
-		//			//videoMaterial.UpdateLabels.Add(update);
-		//		}
-
-		//		foreach (var s in t.listOfSeasons)
-  //              {
-  //                  SerialSeason season = new SerialSeason
-  //                  {
-  //                      EpisodesCount = s.episodesCount,
-  //                      SeasonNumber = (int)s.seasonNumber,
-  //                      VideoMaterial = videoMaterial,
-  //                      Translation = trn,
-  //                      IsArchived = false,
-  //                  };
-  //                  trn.SerialSeasons.Add(season);
-  //                  videoMaterial.SerialSeasons.Add(season);
-  //              }
-  //              result.Add(trn);
-  //          }
-  //          videoMaterial.Translations = result;
-  //      }
     }
 }
