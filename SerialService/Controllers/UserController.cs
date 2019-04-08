@@ -25,7 +25,7 @@
     {
 		private readonly Logger logger;
 		private readonly IAppUnitOfWork unitOfWork;
-        private const int PageSize = 50;
+        private const int PageSize = 54;
         private const int RandomVideoCount = 3;
 
 		public UserController(IAppUnitOfWork unitOfWork) // инициализировтаь нинжект

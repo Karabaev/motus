@@ -127,11 +127,5 @@ function SubmitFilter(selector, selectedClassName) {
         e.preventDefault();
         var dataObj = FilterDataCollect(selectedClassName);
         window.location.href = '/User/Filter?json=' + JSON.stringify(dataObj);
-       // window.location.href = '/films/filter/' + JSON.stringify(dataObj);
-
-        //$.get({
-        //    url: '/User/Filter',
-        //    data: dataObj
-        //});
     });
 }
