@@ -25,7 +25,7 @@
     {
 		private readonly Logger logger;
 		private readonly IAppUnitOfWork unitOfWork;
-        private const int PageSize = 54;
+        private const int PageSize = 50;
         private const int RandomVideoCount = 3;
 
 		public UserController(IAppUnitOfWork unitOfWork) // инициализировтаь нинжект
@@ -115,12 +115,12 @@
 						JsonRequestBehavior.AllowGet);
         }
 
+		[HttpPost]
         public JsonResult Subscribe(int? id)
         {
-            Task.Run(() => this.logger.Info("Вызов UserController.Subscribe(" + id + "). User ID: " + User.Identity.GetUserId()));
-
             if (!id.HasValue)
                 return Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." });
+
             ApplicationUser user = this.unitOfWork.Users.Get(User.Identity.GetUserId());
 
             if (user == null)
@@ -132,14 +132,35 @@
                 return Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." });
 
             if (!this.unitOfWork.VideoMaterials.AddSubscribedUser(id, user))
-            {
-                Task.Run(() => this.logger.Error("Не удалось добавить запись о подписке."));
                 return Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." });
-            }
 
-            Task.Run(() => this.logger.Info("Успешное завершение UserController.Subscribe(" + id + "). User ID: " + User.Identity.GetUserId()));
             return Json(new { Success = true });
         }
+
+		[HttpPost]
+		public JsonResult Unsubscribe(int? id)
+		{
+			if (!id.HasValue)
+				return Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." });
+
+			ApplicationUser user = this.unitOfWork.Users.Get(User.Identity.GetUserId());
+
+			if (user == null)
+				return Json(new { Success = false, Message = "Вы должны авторизоваться." });
+
+			VideoMaterial videoMaterial = this.unitOfWork.VideoMaterials.GetVisibleToUser(id);
+
+			if (videoMaterial == null)
+				return Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." });
+
+			if (!this.unitOfWork.VideoMaterials.RemoveSubscribedUser(id, user))
+			{
+				Task.Run(() => this.logger.Error("Не удалось добавить запись о подписке."));
+				return Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." });
+			}
+
+			return Json(new { Success = true });
+		}
 
         /// <summary>
         /// Страница с результатами поиска.
@@ -331,14 +352,14 @@
 
             if (this.unitOfWork.Users.CheckPassword(user.Id, account.CurrentPassword))
             {
-                if (!string.IsNullOrWhiteSpace(account.NewPublicName))
+                if (!string.IsNullOrWhiteSpace(account.NewUserName))
                 {
-                    IdentityResult result = this.unitOfWork.Users.SetPublicName(user.Id, account.NewPublicName);
+                    IdentityResult result = this.unitOfWork.Users.SetUserName(user.Id, account.NewUserName);
 
                     if (result.Succeeded)
-                        Task.Run(() => this.logger.Info(string.Format("Публичное имя пользователя успешно изменено на {0}.", account.NewPublicName)));
+                        Task.Run(() => this.logger.Info(string.Format("Имя пользователя успешно изменено на {0}.", account.NewUserName)));
                     else
-                        Task.Run(() => this.logger.Warn(string.Format("Ошибки при изменении публичного имени: {0}.", string.Join(", ", result.Errors))));
+                        Task.Run(() => this.logger.Warn(string.Format("Ошибки при изменении имени: {0}.", string.Join(", ", result.Errors))));
                 }
 
                 if (!string.IsNullOrWhiteSpace(account.NewAvatarURL))
@@ -394,8 +415,7 @@
                 //todo: вывести ошибку 
                 return Json(new
                 {
-                    Message = "Пароль для подтверждения не правильный.",
-                    Success = true
+					error = "Пароль для подтверждения не правильный.",
                 });
             }
             user = this.unitOfWork.Users.Get(account.ID);
@@ -403,12 +423,7 @@
 
             return Json(new
             {
-                CurrentUserName = user.UserName,
-                CurrentPublicName = user.PublicName,
-                CurrentEmail = user.Email,
-                CurrentAvatarURL = user.AvatarURL,
-                Message = "Настройки успешно изменены.",
-                Success = true
+				success = "Что то там"
             });
         }
 
@@ -473,13 +488,15 @@
                 AvatarPath = virtualAvatarPath
             });
         }
-        [HttpGet]
-        public ActionResult Filter(string json)
-        {
-            var data = JsonConvert.DeserializeObject<FilterData>(json);
-            var result = SearchWrapper.FilerResults(data).ToList();
-            return View("Index", result.ToPagedList(1, PageSize));
-        }
+
+		[HttpGet]
+		public ActionResult Filter(string json)
+		{
+			var data = JsonConvert.DeserializeObject<FilterData>(json);
+			var result = SearchWrapper.FilerResults(data).ToList();
+			return View("Index", result.ToPagedList(1, PageSize));
+		}
+
         [HttpPost]
         public JsonResult GetSuggest(string part)
         {

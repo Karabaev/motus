@@ -3,7 +3,7 @@
     $.ajax({
         method: 'post',
         data: formObj,
-        url: '../Account/Register',
+        url: 'registration',
         success: function (result) {
             if (result.error) {
                 $('.error').html(result.error)

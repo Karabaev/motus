@@ -4,7 +4,7 @@
 
 // Страница загрузилась.
 $(document).ready(function () {
-    $.getJSON("/User/GetMarks/" + $("#VideoMaterialIDHdn").val(), null, function (data) {
+    $.getJSON("get_marks/" + $("#VideoMaterialIDHdn").val(), null, function (data) {
         DisplayMarkCount(data.PositiveMarkCount, data.NegativeMarkCount);
     }).fail(function () { alert("Error"); });
 });
@@ -15,12 +15,15 @@ function SendRequest(value) {
         Value: value,
         VideoMaterialID: $("#VideoMaterialIDHdn").val()
     };
-    $.post("/User/AddMark",
-        mark,
-        function (data) {
+
+    $.ajax({
+        method: 'post',
+        data: mark,
+        url: '/User/AddMark',
+        success: function (data) {
             DisplayMarkCount(data.PositiveMarkCount, data.NegativeMarkCount);
-        },
-        "json");
+        }
+    });
 }
 
 // Привязка событий кнопок.

@@ -22,11 +22,11 @@
         <i class="material-icons">account_circle</i>
     </button>
     using (Html.BeginForm("LogOff", "Account", new { returnUrl = ViewBag.CurrentURL }, FormMethod.Post, new { id = "logoutForm" }))
-    {
-        @Html.AntiForgeryToken()
+        {
+            @Html.AntiForgeryToken()
 
-        <a class="mdl-navigation__link" href="javascript:document.getElementById('logoutForm').submit()">Выйти</a>
-    }
+            <a class="mdl-navigation__link" href="javascript:document.getElementById('logoutForm').submit()">Выйти</a>
+        }
 }
 else
 {

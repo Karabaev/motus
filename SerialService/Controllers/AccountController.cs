@@ -84,7 +84,7 @@
         }
 
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login(string returnUrl = "")
         {
             ViewBag.ReturnUrl = returnUrl;
             return View();
@@ -98,7 +98,7 @@
         {
             if (!ModelState.IsValid)
             {
-                return Json(new { success = "../../Account/Login"});
+                return Json(new { success = "login"});
             }
             this.signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             // Сбои при входе не приводят к блокированию учетной записи
@@ -109,11 +109,10 @@
                 model.Password, 
                 model.RememberMe, 
                 shouldLockout: false);
-            if (string.IsNullOrEmpty(model.ReturnUrl))
-            {
-                model.ReturnUrl = "../User/Index";
-            }
-            switch (result)
+
+			model.ReturnUrl = "films";
+
+			switch (result)
             {
                 case SignInStatus.Success:
                     return Json(new { success = model.ReturnUrl });
@@ -128,7 +127,15 @@
             }
         }
 
-        [AllowAnonymous]
+		//   [HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult LogOff()
+		{
+			AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+			return RedirectToAction("Index", "User");
+		}
+
+		[AllowAnonymous]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
         {
             // Требовать предварительный вход пользователя с помощью имени пользователя и пароля или внешнего имени входа
@@ -190,7 +197,7 @@
                     {
                         this.signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
                         await this.signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        return Json(new { success = "../User/Index" });
+                        return Json(new { success = "films" });
                     }
 
                     this.AddErrors(result);
@@ -441,14 +448,6 @@
 
             //ViewBag.ReturnUrl = returnUrl;
             return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
-        {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "User");
         }
 
         [AllowAnonymous]

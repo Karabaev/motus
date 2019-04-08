@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="~/Content/User/Profile.css" />
 <link rel="stylesheet" href="~/Content/AccountForms/AccountForms.css" />
 <div class="mdl-card mdl-shadow--2dp acc-card mdl-cell--7-col mdl-cell--12-col-phone mdl-grid">
+    @Html.HiddenFor(m => m.ID, new { id = "account-id" })
     <div class="mdl-card__title">
         <h2 class="mdl-card__title-text">@(Model.CurrentUserName ?? Model.CurrentEmail)</h2>
     </div>
