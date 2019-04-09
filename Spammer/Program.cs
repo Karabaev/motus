@@ -27,8 +27,18 @@
 							Program.LaunchUpdater();
 							return 1;
 						case 2:
-							Program.LaunchDownloader();
-							return 1;
+                            Console.WriteLine("1. Загрузить в интервале ID 2. Загрузить по url");
+                            switch (int.Parse(Console.ReadLine()))
+                            {
+                                case 1:
+                                    Program.LaunchRangeDownloader();
+                                    break;
+                                case 2:
+                                    Program.LaunchUrlDownloader();
+                                    Console.ReadLine();
+                                    break;
+                            }
+                            return 2;
 						case 0:
 							return 0;
 						default:
@@ -97,7 +107,7 @@
 			Task.Run(() => Program.Logger.Fatal("Потрачено времени на проверку обновлений: {0}", result));
 		}
 		
-		private static void LaunchDownloader()
+		private static void LaunchRangeDownloader()
 		{
 			int startID = -1;
 			int endID = -1;
@@ -134,7 +144,7 @@
 			catch(FormatException)
 			{
 				Console.WriteLine("Неверный формат ID");
-				Program.LaunchDownloader();
+				Program.LaunchRangeDownloader();
 			}
 
 			DateTime startDateTime = DateTime.Now;
@@ -161,6 +171,49 @@
 			Task.Run(() => Program.Logger.Fatal("Потрачено времени на проверку обновлений: {0}", result));
 		}
 
-		private static Logger Logger { get; set; } = LogManager.GetCurrentClassLogger();
+        private static void LaunchUrlDownloader()
+        {
+            ConfigManager configManager = ConfigManager.GetInstance(Program.Logger);
+            string authorMail = string.Empty;
+            try
+            {
+                authorMail = (string)configManager.Config[ConfigKeys.VIDEO_MATERIAL_AUTHOR_MAIL];
+            }
+            catch (NullReferenceException ex)
+            {
+                Task.Run(() => Program.Logger.Error(ex, "Файл конфигурациине не загружен"));
+                return;
+            }
+            catch (InvalidCastException ex)
+            {
+                Task.Run(() => Program.Logger.Error(ex, "Один из параметров имеет неверный формат"));
+                return;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                Task.Run(() => Program.Logger.Error(ex, "Неверный файл конфигурации"));
+                return;
+            }
+
+            const string selector = " js-film-list-item";
+            string url;
+
+            Console.WriteLine("Введи url списка фильмов:");
+
+            url = Console.ReadLine();
+            VideoMaterialDownloader downloader = VideoMaterialDownloader.GetInstance(new AppUnitOfWork(), Program.Logger);
+
+            try
+            {
+                downloader.DownloadListByUrl(url, selector, authorMail);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                LaunchUrlDownloader();
+            }
+        }
+
+        private static Logger Logger { get; set; } = LogManager.GetCurrentClassLogger();
 	}
 }

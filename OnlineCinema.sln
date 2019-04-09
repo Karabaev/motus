@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoAgent", "InfoAgent\Info
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Spammer\Updater.csproj", "{47C7AAE4-65DF-4C65-9643-A0A83E42119B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Temp", "Temp\Temp.csproj", "{DE265152-3603-47DE-8D59-FC2D3B8638D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{47C7AAE4-65DF-4C65-9643-A0A83E42119B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47C7AAE4-65DF-4C65-9643-A0A83E42119B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47C7AAE4-65DF-4C65-9643-A0A83E42119B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE265152-3603-47DE-8D59-FC2D3B8638D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE265152-3603-47DE-8D59-FC2D3B8638D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE265152-3603-47DE-8D59-FC2D3B8638D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE265152-3603-47DE-8D59-FC2D3B8638D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

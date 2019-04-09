@@ -13,8 +13,9 @@
 	using SerialService.Infrastructure;
 	using SerialService.Infrastructure.Exceptions;
 	using SerialService.Infrastructure.Helpers;
-	
-	public class VideoMaterialDownloader
+    using KinoPoiskParser;
+
+    public class VideoMaterialDownloader
 	{
 		private VideoMaterialDownloader(IAppUnitOfWork unitOfWork, Logger logger)
 		{
@@ -136,5 +137,63 @@
 
 			return VideoMaterialDownloader.instance;
 		}
-	}
+
+        public int DownloadListByUrl(string url, string selector, string authorEmail)
+        {
+            Task.Run(() => this.logger.Info($"Начало загрузки информации о фильмах их списка {url}"));
+            int result = 0;
+
+            if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(selector) || string.IsNullOrEmpty(authorEmail))
+            {
+                Task.Run(() => this.logger.Info("Пустой аргумент"));
+                return result;
+            }
+
+            var parser = new KPParser(url);
+            IEnumerable<string> listOfId = parser.GetAllId(selector);
+
+            if(listOfId == null || !listOfId.Any())
+            {
+                Task.Run(() => this.logger.Info($"По данному url не найдено соответсвий {url}"));
+                return result;
+            }
+
+            string message;
+
+            foreach(var id in listOfId)
+            {
+                try
+                {
+                    VideoMaterial material = GetVideoMaterialFromInfo
+                   (
+                       this.infoAgentService.GetFilmInfo(id),
+                       authorEmail
+                   );
+
+                    if (this.unitOfWork.VideoMaterials.Create(material))
+                    {
+                        message = $"[{material.Title}] успешно добавлен в базу";
+                        result++;
+                        Task.Run(() => this.logger
+                        .Info(message));
+                        Console.WriteLine(message);
+                    }
+                    else
+                    {
+                        message = $"Не удалось загрузить в базу [{material.Title}]";
+                        Task.Run(() => this.logger
+                        .Warn(message));
+                        Console.WriteLine(message);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    continue;
+                }
+            }
+
+            return result;
+        }
+    }
 }
