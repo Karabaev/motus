@@ -62,7 +62,6 @@
             .ForMember(rvm => rvm.CurrentUserName, opt => opt.MapFrom(vm => vm.UserName))
             .ForMember(rvm => rvm.CurrentEmail, opt => opt.MapFrom(vm => vm.Email))
             .ForMember(rvm => rvm.CurrentAvatarURL, opt => opt.MapFrom(vm => vm.AvatarURL))
-            .ForMember(rvm => rvm.CurrentPublicName, opt => opt.MapFrom(vm => vm.PublicName))
             .ForMember(vm => vm.LikedVideoMaterials, opt => opt.MapFrom(vm => vm.VideoMarks.Where(mark => mark.Value).Select(mark => mark.VideoMaterial)))
             .ForMember(vm => vm.DislikedVideoMaterials, opt => opt.MapFrom(vm => vm.VideoMarks.Where(mark => !mark.Value).Select(mark => mark.VideoMaterial)))
             .ForMember(vm => vm.SubscribedVideoMaterials, opt => opt.MapFrom(vm => vm.SubscribedVideoMaterials));

@@ -19,7 +19,7 @@
 
 function CheckEmptines() {
     var selectedItemsNotEmpty = $('.selected').length > 0;
-    var yearInputsNotEmpty = $('#from').val() != '' || $('#to').val() != '';
+    var yearInputsNotEmpty = $('#from').val() !== '' || $('#to').val() !== '';
     var imdbNotEmpty = $('#imdb-input').val() > 0;
     var kinopoiskNotEmpty = $('#kinopoisk-input').val() > 0;
     var isClear = $('.filter-panel').find('.is-invalid').length === 0;
@@ -126,6 +126,6 @@ function SubmitFilter(selector, selectedClassName) {
     $(selector).click(function (e) {
         e.preventDefault();
         var dataObj = FilterDataCollect(selectedClassName);
-        window.location.href = '../../User/Filter?json=' + JSON.stringify(dataObj);
-    })
+        window.location.href = '/User/Filter?json=' + JSON.stringify(dataObj);
+    });
 }

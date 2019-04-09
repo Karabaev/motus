@@ -1,7 +1,7 @@
 ﻿
 $(document).ready(function () {
 
-    $.getJSON("/User/IsSubscribed/" + $("#VideoMaterialIDHdn").val(),
+    $.getJSON("is_subscribed/" + $("#VideoMaterialIDHdn").val(),
         null,
         function (data) {
             if (data.Success) {
@@ -38,7 +38,7 @@ $('#SubscribeBtn').on('click', function (e) {
 
 $('#UnSubscribeBtn').on('click', function (e) {
     var json = { id: $("#VideoMaterialIDHdn").val() };
-    $.post("/User/UnSubscribe",
+    $.post("/User/Unsubscribe",
         json,
         function (data) {
             if (data.Success) {
