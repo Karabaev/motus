@@ -137,6 +137,10 @@
       <Project>{1a57a926-d37d-45de-8216-6e1271b2f568}</Project>
       <Name>InfoAgent</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KinoPoiskParser\KPParser.csproj">
+      <Project>{62b78f87-8aab-42fe-b086-5adefadb9a16}</Project>
+      <Name>KPParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SerialService\SerialService.csproj">
       <Project>{7015bbcb-33e3-4a52-ba03-9f9c0384168a}</Project>
       <Name>SerialService</Name>

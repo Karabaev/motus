@@ -1,13 +1,13 @@
 ﻿namespace KinoPoiskParser
 {
-    using System.Linq;
     using AngleSharp.Parser.Html;
     using AngleSharp.Dom.Html;
     using System.Net;
     using System;
-    using System.Collections.Generic;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Парсер КиноПоиска по адресу страницы.
@@ -32,7 +32,17 @@
                 var encoding = ASCIIEncoding.ASCII;
                 using (var reader = new System.IO.StreamReader(response.GetResponseStream(), encoding))
                 {
-                    string responseText = reader.ReadToEnd();
+                    var onlyEnabeled = new List<string>();
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+
+                        if (line.Contains('+') && line.Contains("RU"))
+                        {
+                            onlyEnabeled.Add(line);
+                        }
+                    }
+                    string responseText = String.Join(String.Empty, onlyEnabeled.ToArray());
                     var someArr = regex.Matches(responseText);
                     randomProxyUrl = someArr[new Random().Next(someArr.Count - 1)].ToString();
                 }
@@ -66,125 +76,26 @@
         IHtmlDocument DOM;
 
         /// <summary>
-        /// Возвращает объект модели страницы фильма,содержащей основные значния.
+        /// Получить все Id на странице
         /// </summary>
-        /// <returns>Модель страницы фильма</returns>
-        public KinopoiskItemModel Parse()
-        {
-            try
-            {
-                KinopoiskItemModel model = new KinopoiskItemModel
-                {
-                    Title = GetFirstByClass(Resource.TitleSelector).Split('<')[0].Trim(),
-                    Duration = GetFirstByClass(Resource.DurationSelector).
-                    Split(GetFirstByClass(Resource.DurationSelector).FirstOrDefault(s => char.IsSeparator(s) ||
-                    char.IsPunctuation(s)))[0],//HACK:Отбитый наглухо костыль для получения продолжительности.Хардкод
-                    OriginalTitle = GetAllByAttribute(Resource.OriginalTitleSelector)[0].Trim(),
-                    FilmMakers = GetByTagOnAttribute(Resource.FilmMakersSelector, "a"),
-                    Actors = GetByTagOnAttribute(Resource.ActorsSelector, "a").Where(a => (a.Any(c => c != '.'))).ToList(),//HACK:хардкод
-                    Countries = GetAllByAttributeContains("a", "href", Resource.CountriesSelector),
-                    Genres = GetAllByAttributeContains("a", "href", Resource.GenresSelector),
-                    ReleaseDate = GetAllByAttributeContains("a", "href", Resource.YearSelector)[0].Trim(),
-                    PoserHref = GetAttributeValue(Resource.PosterSelector, "src")[0],
-                    KinopoiskID = GetAttributeValue(Resource.IDSelector, Resource.IDPropName)[0].Trim(),
-                    IDMB = GetAllByAttribute("[style='color:#999;font:100 11px tahoma, verdana']")[0].Split(' ')[1].Trim()
-                };
-                return model;
-            }
-            catch
-            {
-                throw new Exception("Ошибка при попытке парсинга. Введен некорректный url-адресс.");
-            }
-        }
-
-        /// <summary>
-        /// Возвращает содержимое элемента в строковом типе. Поиск по классу.
-        /// </summary>
-        private string GetFirstByClass(string className)
-        {
-            string result = null;
-            if (DOM != null)
-            {
-                var element = DOM.All.FirstOrDefault(m => m.ClassName == className);
-                if (element!=null)
-                {
-                    result = element.InnerHtml;
-                };
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Возвращает содержимое элемента в строковом типе. Поиск по атрибуту с заданным значением.
-        /// </summary>
-        private List<string> GetAllByAttribute(string atr)
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public IEnumerable<string> GetAllId(string selector)
         {
             List<string> result = new List<string>();
-            if (DOM != null)
+            var elements = DOM.All.Where(a => a.ClassName == selector);
+
+            foreach (var e in elements)
             {
-                var elements = DOM.QuerySelectorAll(atr).ToList();
-                foreach(var el in elements)
+                string attValue = e.Attributes.FirstOrDefault(a => a.Name == "id").Value;
+                string id = Regex.Match(attValue, @"\d+").Value;
+                if (string.IsNullOrEmpty(id))
                 {
-                    result.Add(el.InnerHtml.Trim());
+                    continue;
                 }
+                result.Add(id);
             }
-            return result;
-        }
 
-        /// <summary>
-        /// Возвращает содержимое элемента в строковом типе. Поиск по тегу, имеющему атрибут с заданным значением.
-        /// </summary>
-        /// <param name="tag">Название тэга</param>
-        /// <param name="atr">Название атрибута</param>
-        /// <param name="value">Значение или часть, входящая в него</param>
-        private List<string> GetAllByAttributeContains(string tag,string atr,string value)
-        {
-            List<string> result = new List<string>();
-            if (DOM != null)
-            {
-                var elements = DOM.QuerySelectorAll(tag).Where
-                    (e=>e.Attributes.Any(a=>a.Name==atr&&a.Value.Contains(value)&&
-                    e.InnerHtml.Length!=0));//HACK:Самое конченное в мире решение, но по другому никак
-                foreach (var el in elements)
-                {
-                    result.Add(el.InnerHtml.Trim());
-                }
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Возвращает содержимое элемента в строковом типе. 
-        /// Поиск обрабатывает элемент являющийся родительским, 
-        /// и получает,помещенное в дочерний,значение 
-        /// </summary>
-        /// <param name="atr">Атрибут родительского элемента</param>
-        /// <param name="tag">Тэг дочернего элемента</param>
-        private List<string> GetByTagOnAttribute(string atr,string tag)
-        {
-            List<string> result = new List<string>();
-            foreach (var item in GetAllByAttribute(atr))
-            {
-                var dom = new HtmlParser().Parse(item);
-                var targetLine = dom.QuerySelector(tag).InnerHtml;
-                result.Add(targetLine.Trim());
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Возвращает значение атрибута элемента в строковом типе.
-        /// </summary>
-        /// <param name="selector">Любой селектор элемента</param>
-        /// <param name="targetAtr">Название целевого атрибута</param>
-        private List<string> GetAttributeValue(string selector,string targetAtr)
-        {
-            List<string> result = new List<string>();
-            var elements = DOM.QuerySelectorAll(selector);
-            foreach(var item in elements)
-            {
-                result.Add(item.Attributes.FirstOrDefault(a => a.Name == targetAtr).Value.Trim());
-            }
             return result;
         }
     }
