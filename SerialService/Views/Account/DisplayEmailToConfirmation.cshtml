@@ -1,5 +1,6 @@
-﻿@{
-    ViewBag.Title = "Регистрация завершена";
+﻿
+@{
+    ViewBag.Title = "Завершение регистрации";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,8 +10,6 @@
         <h2 class="mdl-card__title-text">@ViewBag.Title</h2>
     </div>
     <div class="acc-form-container mdl-cell--10-col mdl-cell--12-col-phone mdl-grid">
-        <p>
-            Электронная почта подтверждена @Html.ActionLink("Щелкните здесь для входа", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
-        </p>
+        <p>На адрес электронной почты <b>@ViewBag.Email</b> отправлено письмо с ссылкой для подтверждения регистрации</p>
     </div>
 </div>

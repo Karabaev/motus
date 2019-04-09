@@ -512,6 +512,7 @@
     <Content Include="Views\Error\ServiceUnavailable.cshtml" />
     <Content Include="Views\User\AboutProject.cshtml" />
     <Content Include="Views\User\ForHolders.cshtml" />
+    <Content Include="Views\Account\DisplayEmailToConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -538,6 +539,10 @@
     <ProjectReference Include="..\KinoPoiskParser\KPParser.csproj">
       <Project>{62B78F87-8AAB-42FE-B086-5ADEFADB9A16}</Project>
       <Name>KPParser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\Shared.csproj">
+      <Project>{bafb7dbd-e78a-4488-91e4-a1af5349336b}</Project>
+      <Name>Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

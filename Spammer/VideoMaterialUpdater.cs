@@ -12,6 +12,7 @@
 	using InfoAgent;
 	using Exceptions;
 	using NLog;
+	using Shared.Mail;
 
 	public enum MessageTypes
 	{

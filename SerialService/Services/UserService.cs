@@ -212,20 +212,34 @@
             return this.manager.ConfirmEmail(id, code);
         }
 
-        public string GeneratePasswordResetToken(string id)
+		public string GenerateEmailConfirmationToken(string id)
+		{
+			if (string.IsNullOrWhiteSpace(id))
+				throw new ArgumentNullException("id");
+
+			return this.manager.GenerateEmailConfirmationToken(id);
+		}
+
+		public string GeneratePasswordResetToken(string id)
         {
-            if (string.IsNullOrWhiteSpace(id))
-                return null;
+			if (string.IsNullOrWhiteSpace(id))
+				throw new ArgumentNullException("id");
 
             return this.manager.GeneratePasswordResetToken(id);
         }
 
         public void SendEmail(string id, string subject, string message)
         {
-            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(subject) || string.IsNullOrWhiteSpace(message))
-                return;
+			if (string.IsNullOrWhiteSpace(id))
+				throw new ArgumentNullException("id");
 
-            this.manager.SendEmail(id, subject, message);
+			if (string.IsNullOrWhiteSpace(subject))
+				throw new ArgumentNullException("subject");
+
+			if (string.IsNullOrWhiteSpace(message))
+				throw new ArgumentNullException("message");
+
+			this.manager.SendEmail(id, subject, message);
         }
 
         /// <summary>

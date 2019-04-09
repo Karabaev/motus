@@ -39,7 +39,9 @@
 
         IdentityResult ConfirmEmail(string id, string code);
 
-        string GeneratePasswordResetToken(string id);
+		string GenerateEmailConfirmationToken(string id);
+
+		string GeneratePasswordResetToken(string id);
 
         void SendEmail(string id, string subject, string message);
 
@@ -63,5 +65,5 @@
         /// <param name="roleNames">список названий ролей</param>
         /// <returns></returns>
         void UpdateUserRoles(IEnumerable<IdentityRole> roles,string userId);
-    }
+	}
 }
