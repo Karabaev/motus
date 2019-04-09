@@ -6,6 +6,7 @@
 	using NLog;
 	using System.Collections.Generic;
 	using SerialService.Infrastructure.Exceptions;
+	using Shared.Mail;
 
 	public class Program
 	{
@@ -70,7 +71,7 @@
 				string login = (string)configManager.Config[ConfigKeys.MAIL_LOGIN];
 				string password = (string)configManager.Config[ConfigKeys.MAIL_PASSWORD];
 				bool useSsl = (bool)configManager.Config[ConfigKeys.SMTP_USE_SSL];
-				mailClient = MailClient.GetInstance(host, port, senderMail, senderName, login, password, useSsl, Program.Logger);
+				mailClient = new MailClient(host, port, senderMail, senderName, login, password, useSsl);
 			}
 			catch (NullReferenceException ex)
 			{

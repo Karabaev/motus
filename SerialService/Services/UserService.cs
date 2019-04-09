@@ -206,13 +206,24 @@
 
         public IdentityResult ConfirmEmail(string id, string code)
         {
-            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(code))
-                return null;
+			if (string.IsNullOrWhiteSpace(id))
+				throw new ArgumentNullException("id");
 
-            return this.manager.ConfirmEmail(id, code);
+			if (string.IsNullOrWhiteSpace(code))
+				throw new ArgumentNullException("code");
+
+			return this.manager.ConfirmEmail(id, code);
         }
 
-        public string GeneratePasswordResetToken(string id)
+		public string GenerateEmailConfirmationToken(string id)
+		{
+			if (string.IsNullOrWhiteSpace(id))
+				throw new ArgumentNullException("id");
+
+			return this.manager.GenerateEmailConfirmationToken(id);
+		}
+
+		public string GeneratePasswordResetToken(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
                 return null;

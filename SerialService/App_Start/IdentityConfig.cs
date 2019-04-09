@@ -9,31 +9,15 @@
     using DAL.Entities;
     using System.Net.Mail;
     using DAL.Repository;
+	using Shared.Mail;
 
-    public class EmailService : IIdentityMessageService
+	public class EmailService : IIdentityMessageService
     {
         public Task SendAsync(IdentityMessage message)
         {
-            // настройка логина, пароля отправителя
-            var from = "artman31@yandex.ru";
-            var pass = "132435";
-
-            // адрес и порт smtp-сервера, с которого мы и будем отправлять письмо
-            SmtpClient client = new SmtpClient("smtp.yandex.ru", 465);
-
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential(from, pass);
-            client.EnableSsl = true;
-
-            // создаем письмо: message.Destination - адрес получателя
-            var mail = new MailMessage(from, message.Destination);
-            mail.Subject = message.Subject;
-            mail.Body = message.Body;
-            mail.IsBodyHtml = true;
-
-            return client.SendMailAsync(mail);
-        }
+			MailClient mailClient = new MailClient("smtp.yandex.ru", 25, "info@motus-cinema.com", "Motus cinema", "info@motus-cinema.com", "buffalo2016", true);
+			return Task.Run(() => mailClient.SendMessage(message.Destination, message.Subject, message.Body, true));
+		}
     }
 
     // Настройка диспетчера входа для приложения.
