@@ -147,10 +147,6 @@
 			//	defaults: new { controller = "User", action = "Search" });
 
 			#endregion
-
-			routes.MapRoute(name: "Default",
-				url: "{controller}/{action}/{id}",
-				defaults: new { controller = "User", action = "Index", id = UrlParameter.Optional });
 		}
 	}
 }

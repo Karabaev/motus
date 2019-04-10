@@ -13,8 +13,9 @@
 	using System.Web;
 	using System.Web.Mvc;
 	using ViewModels;
+	using Infrastructure;
 
-	[Authorize]
+	[Authorize, ExceptionHandler]
 	public class AccountController : Controller
 	{
 		private readonly IUserService userService;
@@ -34,36 +35,6 @@
 		[HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
 		public async Task<ActionResult> Login(LoginViewModel model)
 		{
-			//         if (!ModelState.IsValid)
-			//         {
-			//             return Json(new { success = "login"});
-			//         }
-			//         this.signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-			//         // Сбои при входе не приводят к блокированию учетной записи
-			//         // Чтобы ошибки при вводе пароля инициировали блокирование учетной записи, замените на shouldLockout: true
-			//         var user = this.userService.GetScalarWithCondition(u => u.Email == model.Email);
-
-			//         var result = await signInManager.PasswordSignInAsync(user == null ? "":user.UserName, 
-			//             model.Password, 
-			//             model.RememberMe, 
-			//             shouldLockout: false);
-
-			//model.ReturnUrl = "films";
-
-			//switch (result)
-			//         {
-			//             case SignInStatus.Success:
-			//                 return Json(new { success = model.ReturnUrl });
-			//             case SignInStatus.LockedOut:
-			//                 return Json(new { error = "Учетная запись заблокирована" });
-			//             case SignInStatus.RequiresVerification:
-			//                 return RedirectToAction("SendCode", new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
-			//             case SignInStatus.Failure:
-			//                 return Json(new { error = "Неверный адрес email или пароль" });
-			//             default:
-			//                 return Json(new { error = "Неудачная попытка входа" });
-			//         }
-
 			StringBuilder errors = new StringBuilder();
 
 			if (!this.ModelState.IsValid)
