@@ -1,14 +1,14 @@
 ﻿namespace Updater
 {
-	using System;
-	using System.Threading.Tasks;
-	using SerialService.DAL;
-	using NLog;
-	using System.Collections.Generic;
-	using SerialService.Infrastructure.Exceptions;
-	using Shared.Mail;
+    using System;
+    using System.Threading.Tasks;
+    using SerialService.DAL;
+    using NLog;
+    using System.Collections.Generic;
+    using SerialService.Infrastructure.Exceptions;
+    using Cleaner;
 
-	public class Program
+    public class Program
 	{
 		static int Main(string[] args)
 		{
@@ -19,7 +19,7 @@
 
 				try
 				{
-					Console.WriteLine("1. Апдейтер 2. Даунлоадер");
+					Console.WriteLine("1. Апдейтер 2. Даунлоадер 3.Очистка(заблокированные)");
 					switcher = int.Parse(Console.ReadLine());
 
 					switch (switcher)
@@ -40,6 +40,9 @@
                                     break;
                             }
                             return 2;
+                        case 3:
+                            Program.LaunchBlockedCleaner();
+                            return 3;
 						case 0:
 							return 0;
 						default:
@@ -212,6 +215,29 @@
             {
                 Console.WriteLine(ex.Message);
                 LaunchUrlDownloader();
+            }
+        }
+
+        private static void LaunchBlockedCleaner()
+        {
+            Console.WriteLine("Начать очистку? [y/n]");
+            var response = Console.ReadKey().KeyChar;
+            if (response == 'y')
+            {
+                try
+                {
+                    VideoMaterialBlockedCleaner.Initialize(new AppUnitOfWork(), Logger).Clean();
+                }
+                catch(Exception ex)
+                {
+                    Task.Run(() => Program.Logger.Error(ex.Message));
+                    Console.WriteLine();
+                }
+            }
+            else if (response != 'n' && response != 'y')
+            {
+                Console.WriteLine("ОТВЕТ НЕВЕРНЫЙ! ЕЩЕ РАЗ!");
+                LaunchBlockedCleaner();
             }
         }
 

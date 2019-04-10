@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\IsBlockedException.cs" />
     <Compile Include="Exceptions\NotFoundInFilmBaseException.cs" />
     <Compile Include="FilmInfo.cs" />
     <Compile Include="InfoAgentService.cs" />

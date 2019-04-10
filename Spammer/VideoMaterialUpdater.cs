@@ -66,7 +66,14 @@
 		public void CheckUpdate(VideoMaterial videoMaterial)
 		{
 			Task.Run(() => this.logger.Info("Начало получения и парсинга информации о видеоматериале"));
+
 			FilmInfo filmInfo = this.infoAgent.GetFilmInfo(videoMaterial.KinopoiskID);
+            if (filmInfo.IsBlocked??false)
+            {
+                this.unitOfWork.VideoMaterials.Update(videoMaterial.ID, videoMaterial);
+                return;
+            }
+
 			Task.Run(() => this.logger.Info("Данные о видеоматериале получены"));
 			List<SerialSeason> serialSeasons = this.GetSeasonsFromInfo(filmInfo);
 			serialSeasons.ForEach(ss => { ss.VideoMaterialID = videoMaterial.ID; ss.VideoMaterial = videoMaterial; });

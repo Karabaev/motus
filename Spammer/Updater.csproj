@@ -116,6 +116,7 @@
   <ItemGroup>
     <Compile Include="ConfigManager.cs" />
     <Compile Include="Exceptions\NotFoundInFilmBaseException.cs" />
+    <Compile Include="VideoMaterialBlockedCleaner.cs" />
     <Compile Include="VideoMaterialDownloader.cs" />
     <Compile Include="VideoMaterialUpdater.cs" />
     <Compile Include="Program.cs" />

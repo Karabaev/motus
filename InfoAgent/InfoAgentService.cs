@@ -91,6 +91,11 @@
             if (!filmInfo.IsSerial.HasValue)
                 throw new NullReferenceException("Значение флага типа не может быть неопределенным");
 
+            if (filmInfo.IsBlocked ?? false)
+            {
+                throw new IsBlockedException("Фильм заблокирован в регионе RU");
+            }
+
             if ((!(bool)filmInfo.IsSerial) && jObj["duration"].HasValues)
             {
                 //Если значение null или ноль, установить null;
@@ -104,7 +109,7 @@
 			return filmInfo;
         }
 
-        private List<Translation> GetTranslations(JArray jArr, bool isSerial) // todo: убрать пометку isSerial, потому что сейчас фильмы тоже имеюn по одному сезону для каждого перевода
+        private List<Translation> GetTranslations(JArray jArr, bool isSerial)
         {
 			Task.Run(() => this.logger.Info("Начало парсинга переводов"));
 			List<Translation> result = new List<Translation>();
@@ -149,20 +154,6 @@
 					this.logger.Info("У фильма сезонов нет");
 				}
 
-
-				//if (isSerial)
-				//{
-				//    translation.lastEpisodeTime = trn["last_episode_time"].Value<DateTime?>();
-				//    translation.updateTime = trn["material_data"]["updated_at"].Value<DateTime?>();
-				//    foreach (var season in trn["season_episodes_count"])
-				//    {
-				//        translation.listOfSeasons.Add(new SeasonInfo
-				//        {
-				//            seasonNumber = season["season_number"].Value<int?>(),
-				//            episodesCount = season["episodes_count"].Value<int?>()
-				//        });
-				//    }
-				//}
 				result.Add(translation);
             }
 
