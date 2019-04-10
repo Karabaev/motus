@@ -8,16 +8,12 @@
     using Entities;
     using Context;
     using Interfaces;
+	using Microsoft.Owin.Security.DataProtection;
 
-    // Настройка диспетчера пользователей приложения. UserManager определяется в ASP.NET Identity и используется приложением.
-    public class ApplicationUserManager : UserManager<ApplicationUser>, IApplicationUserManager
+	// Настройка диспетчера пользователей приложения. UserManager определяется в ASP.NET Identity и используется приложением.
+	public class ApplicationUserManager : UserManager<ApplicationUser>, IApplicationUserManager
     {
         public ApplicationUserManager(IUserStore<ApplicationUser> store): base(store) {}
-
-        public static ApplicationUserManager CreateSimple() // todo: мой костыль для простого создания 
-        {
-            return ApplicationUserManager.Create(new IdentityFactoryOptions<ApplicationUserManager>(), null);
-        }
 
         /// <summary>
         /// Костыль для работы с UnitOfWork.
@@ -27,7 +23,6 @@
         public static ApplicationUserManager Create(ApplicationDbContext context)
         {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context));
-            IdentityFactoryOptions<ApplicationUserManager> options = new IdentityFactoryOptions<ApplicationUserManager>();
 
             // Настройка логики проверки имен пользователей
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
@@ -63,13 +58,9 @@
                 BodyFormat = "Ваш код безопасности: {0}"
             });
             manager.EmailService = new EmailService();
-            var dataProtectionProvider = options.DataProtectionProvider;
-            if (dataProtectionProvider != null)
-            {
-                manager.UserTokenProvider =
-                    new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
-            }
-            return manager;
+			var provider = new DpapiDataProtectionProvider("motus-cinema.com");
+			manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(provider.Create("token"));
+			return manager;
         }
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)

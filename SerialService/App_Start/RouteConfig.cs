@@ -94,6 +94,14 @@
 				url: "logoff",
 				defaults: new { controller = "Account", action = "Logoff" });
 
+			routes.MapRoute(name: "AccountDisplayEmailToConfirmation",
+				url: "confirmation/{model}",
+				defaults: new { controller = "Account", action = "DisplayEmailToConfirmation", model = UrlParameter.Optional });
+
+			routes.MapRoute(name: "AccountConfirmEmail",
+				url: "confirmed/{model}",
+				defaults: new { controller = "Account", action = "ConfirmEmail", model = UrlParameter.Optional });
+
 			#endregion
 
 			#region Роуты Redactor и Admin
