@@ -350,6 +350,8 @@
     <Compile Include="Services\Interfaces\IRoleService.cs" />
     <Compile Include="Services\RoleService.cs" />
     <Compile Include="ViewModels\AdminTools\AdministratableUserInfo.cs" />
+    <Compile Include="ViewModels\ConfirmEmailViewModel.cs" />
+    <Compile Include="ViewModels\DisplayEmailToConfirmationViewModel.cs" />
     <Compile Include="ViewModels\RedactorTools\AddFilmViewModel.cs" />
     <Compile Include="ViewModels\CountMarksViewModel.cs" />
     <Compile Include="ViewModels\PersonalAccountViewModel.cs" />
@@ -541,7 +543,7 @@
       <Name>KPParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\Shared\Shared.csproj">
-      <Project>{bafb7dbd-e78a-4488-91e4-a1af5349336b}</Project>
+      <Project>{5c22b0c3-d603-4c71-9ee7-9f8ba3e21f41}</Project>
       <Name>Shared</Name>
     </ProjectReference>
   </ItemGroup>

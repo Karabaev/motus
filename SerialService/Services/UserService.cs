@@ -200,16 +200,19 @@
             if (!result.Succeeded)
                 return result;
 
-            result = this.manager.AddToRole(user.Id, Resource.UserRoleName);
+			result = this.manager.AddToRole(user.Id, Resource.UserRoleName);
             return result;
         }
 
         public IdentityResult ConfirmEmail(string id, string code)
         {
-            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(code))
-                return null;
+			if (string.IsNullOrWhiteSpace(id))
+				throw new ArgumentNullException("id");
 
-            return this.manager.ConfirmEmail(id, code);
+			if (string.IsNullOrWhiteSpace(code))
+				throw new ArgumentNullException("code");
+
+			return this.manager.ConfirmEmail(id, code);
         }
 
 		public string GenerateEmailConfirmationToken(string id)
@@ -248,13 +251,13 @@
         /// <param name="id">Идентификатор пользователя.</param>
         /// <param name="publicName">Новое публичное имя.</param>
         /// <returns></returns>
-        public IdentityResult SetPublicName(string id, string publicName)
+        public IdentityResult SetUserName(string id, string userName)
         {
-            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(publicName))
+            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(userName))
                 return IdentityResult.Failed();
 
             ApplicationUser user = this.manager.FindById(id);
-            user.PublicName = publicName;
+            user.UserName = userName;
             return manager.Update(user);
         }
 

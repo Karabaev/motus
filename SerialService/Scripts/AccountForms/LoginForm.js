@@ -18,7 +18,7 @@ function SubmitLoginForm() {
     $.ajax({
         method: 'post',
         data: formObj,
-        url: '../../Account/Login',
+        url: 'login',
         success: function (result) {
             if (result.error) {
                 $('.error').html(result.error)

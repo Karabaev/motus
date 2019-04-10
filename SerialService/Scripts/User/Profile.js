@@ -58,16 +58,59 @@ function AvatarPanelManage() {
         panel.style.display = 'none'
     })
 }
+
+//Генерация json. 
+function GenerateModelJson() {
+    var json = {
+        ID: $("#account-id").val(),
+        NewUserName: $("#username").val(),
+        NewPassword: $("#password").val(),
+        ConfirmPassword: $("#confitm-password").val(),
+        NewEmail: $("#email").val(),
+        CurrentPassword: $("#password-confirm").val()
+    };
+    return json;
+}
+
+//function Update() {
+//    $("#username").val = "";
+//    $("#password").val() = "";
+//    $("#email").val() = "";
+//}
+
+function SendChanges() {
+    var formObj = GenerateModelJson();
+
+    $.post("personal_account/save_changes",
+        formObj,
+        function (result) {
+            if (result.error) {
+                $('.error').html(result.error);
+                ShowErrorMessage();
+            }
+            else if (result.success) {
+                window.location.reload();
+            }
+        },
+        "json");
+}
+
 $(document).ready(function () {
-    ConfirmChangesShow()
-    AvatarPanelManage()
-    AvatarBtnManage()
-    ProfilePanelManage()
+    ConfirmChangesShow();
+    
+    AvatarPanelManage();
+    AvatarBtnManage();
+    ProfilePanelManage();
     $('#InputFile').change(function () {
-        readURL(this)
-    })
+        readURL(this);
+    });
     $('input').change(function () {
-        SubmitButtonManage()
-        ValidatePassword()
-    })
-})
+        SubmitButtonManage();
+        ValidatePassword();
+    });
+    $('#submit-btn').click(function (e) {
+        e.preventDefault();
+        SendChanges();
+    });
+});
+

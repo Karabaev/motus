@@ -8,10 +8,11 @@
 	using Models;
 	using SerialService.Infrastructure.Exceptions;
 	using Services.Interfaces;
+	using System.Text;
 	using System.Threading.Tasks;
 	using System.Web;
 	using System.Web.Mvc;
-	using System.Text;
+	using ViewModels;
 
 	[Authorize]
 	public class AccountController : Controller
@@ -24,7 +25,7 @@
 		}
 
 		[AllowAnonymous]
-		public ActionResult Login(string returnUrl)
+		public ActionResult Login(string returnUrl = "")
 		{
 			this.ViewBag.ReturnUrl = returnUrl;
 			return this.View();
@@ -33,10 +34,40 @@
 		[HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
 		public async Task<ActionResult> Login(LoginViewModel model)
 		{
+			//         if (!ModelState.IsValid)
+			//         {
+			//             return Json(new { success = "login"});
+			//         }
+			//         this.signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+			//         // Сбои при входе не приводят к блокированию учетной записи
+			//         // Чтобы ошибки при вводе пароля инициировали блокирование учетной записи, замените на shouldLockout: true
+			//         var user = this.userService.GetScalarWithCondition(u => u.Email == model.Email);
+
+			//         var result = await signInManager.PasswordSignInAsync(user == null ? "":user.UserName, 
+			//             model.Password, 
+			//             model.RememberMe, 
+			//             shouldLockout: false);
+
+			//model.ReturnUrl = "films";
+
+			//switch (result)
+			//         {
+			//             case SignInStatus.Success:
+			//                 return Json(new { success = model.ReturnUrl });
+			//             case SignInStatus.LockedOut:
+			//                 return Json(new { error = "Учетная запись заблокирована" });
+			//             case SignInStatus.RequiresVerification:
+			//                 return RedirectToAction("SendCode", new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+			//             case SignInStatus.Failure:
+			//                 return Json(new { error = "Неверный адрес email или пароль" });
+			//             default:
+			//                 return Json(new { error = "Неудачная попытка входа" });
+			//         }
+
 			StringBuilder errors = new StringBuilder();
 
 			if (!this.ModelState.IsValid)
-				return this.Json(new { success = "../../Account/Login" });
+				return this.Json(new { success = "login" });
 
 			ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
 			var user = this.userService.GetScalarWithCondition(u => u.Email == model.Email);
@@ -46,9 +77,7 @@
 				if (user.EmailConfirmed == true)
 				{
 					var result = await signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, shouldLockout: false);
-
-					if (string.IsNullOrEmpty(model.ReturnUrl))
-						model.ReturnUrl = "../User/Index";
+					model.ReturnUrl = "films";
 
 					switch (result)
 					{
@@ -76,23 +105,24 @@
 			}
 
 			return this.Json(new { error = errors.ToString() });
-
-			//return View(model);
 		}
 
-		/// <summary>
-		/// Открыть вьюшку регистрации.
-		/// </summary>
+		//   [HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult LogOff()
+		{
+			this.AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+			return this.RedirectToAction("Index", "User");
+		}
+
+		// GET: /Account/Register
 		[AllowAnonymous]
 		public ActionResult Register()
 		{
 			return this.View();
 		}
 
-		/// <summary>
-		/// Зарегистрироваться.
-		/// </summary>
-		/// <param name="model"></param>
+		// POST: /Account/Register
 		[HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
 		public ActionResult Register(RegisterViewModel model)
 		{
@@ -109,20 +139,17 @@
 					{
 						var code = this.userService.GenerateEmailConfirmationToken(user.Id); // токен для подтверждения регистрации
 						var callbackUrl = this.Url.Action("ConfirmEmail",
-														"Account",
-														new { userId = user.Id, code = code },
-														protocol: this.Request.Url.Scheme);
-						this.userService.SendEmail(user.Id,
+									"Account",
+									new ConfirmEmailViewModel { UserID = user.Id, Code = code },
+									protocol: this.Request.Url.Scheme);
+						Task.Run(() => this.userService.SendEmail(user.Id,
 												   "Подтверждение адреса электронной почты",
 												   string.Format("Для завершения регистрации перейдите по ссылке: <a href=\"{0}\">завершить регистрацию</a>",
-																	callbackUrl));
+																	callbackUrl)));
 						return this.Json(new
 						{
-							success = Url.Action("DisplayEmailToConfirmation", "Account", new
-							{
-								email = model.Email
-							})
-						});// "../Account/DisplayEmailToConfirmation/" + model.Email });
+							success = this.Url.Action("DisplayEmailToConfirmation", "Account", new DisplayEmailToConfirmationViewModel { Email = model.Email })
+						});
 					}
 
 					this.AddErrors(result);
@@ -138,31 +165,30 @@
 		}
 
 		[AllowAnonymous]
-		public ActionResult DisplayEmailToConfirmation(string email)
+		public ActionResult DisplayEmailToConfirmation(DisplayEmailToConfirmationViewModel model)
 		{
-			if (string.IsNullOrWhiteSpace(email))
+			if (model == null || string.IsNullOrWhiteSpace(model.Email))
 				HttpNotFound();
 
-			ViewBag.Email = email;
-			return View();
+			return View(model);
 		}
 
 		// GET: /Account/ConfirmEmail
 		[AllowAnonymous]
-		public ActionResult ConfirmEmail(string userId, string code)
+		public ActionResult ConfirmEmail(ConfirmEmailViewModel model)
 		{
-			if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
-				return HttpNotFound();
+			if (model == null || string.IsNullOrWhiteSpace(model.UserID) || string.IsNullOrWhiteSpace(model.Code))
+				return this.HttpNotFound();
 
-			IdentityResult result = this.userService.ConfirmEmail(userId, code);
+			IdentityResult result = this.userService.ConfirmEmail(model.UserID, model.Code);
 			return this.View(result.Succeeded ? "ConfirmEmail" : "Error");
 		}
+
 
 		[AllowAnonymous]
 		public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
 		{
 			ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-
 			// Требовать предварительный вход пользователя с помощью имени пользователя и пароля или внешнего имени входа
 			if (!await signInManager.HasBeenVerifiedAsync())
 				return this.View("Error");
@@ -170,20 +196,22 @@
 			return this.View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
 		}
 
-		[HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+		[HttpPost]
+		[AllowAnonymous]
+		[ValidateAntiForgeryToken]
 		public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
 		{
 			if (!this.ModelState.IsValid)
+			{
 				return this.View(model);
+			}
 
 			ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-
 			// Приведенный ниже код защищает от атак методом подбора, направленных на двухфакторные коды. 
 			// Если пользователь введет неправильные коды за указанное время, его учетная запись 
 			// будет заблокирована на заданный период. 
 			// Параметры блокирования учетных записей можно настроить в IdentityConfig
 			var result = await signInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
-
 			switch (result)
 			{
 				case SignInStatus.Success:
@@ -223,7 +251,9 @@
 		/// </summary>
 		/// <param name="model">Object with email property</param>
 		/// <returns></returns>
-		[HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+		[HttpPost]
+		[AllowAnonymous]
+		[ValidateAntiForgeryToken]
 		public async Task<ActionResult> EmailForgotPassword(EmailForgotPasswordViewModel model)
 		{
 			if (this.ModelState.IsValid)
@@ -349,9 +379,7 @@
 			{
 				return this.View();
 			}
-
 			ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-
 			// Создание и отправка маркера
 			if (!await signInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
 			{
@@ -369,7 +397,6 @@
 			{
 				return this.RedirectToAction("Login");
 			}
-
 			ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
 			// Выполнение входа пользователя посредством данного внешнего поставщика входа, если у пользователя уже есть имя входа
 			var result = await signInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
@@ -424,14 +451,6 @@
 
 			//ViewBag.ReturnUrl = returnUrl;
 			return this.View(model);
-		}
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult LogOff()
-		{
-			this.AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-			return this.RedirectToAction("Index", "User");
 		}
 
 		[AllowAnonymous]

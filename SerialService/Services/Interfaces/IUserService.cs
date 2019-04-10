@@ -45,7 +45,7 @@
 
         void SendEmail(string id, string subject, string message);
 
-        IdentityResult SetPublicName(string id, string publicName);
+        IdentityResult SetUserName(string id, string userName);
 
         IdentityResult SetPassword(string id, string currentPassword, string newPassword);
 
