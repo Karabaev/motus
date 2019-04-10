@@ -430,7 +430,6 @@
         [HttpPost]
         public JsonResult UploadAvatar()
         {
-            Task.Run(() => this.logger.Info("Вызов UserController.UploadAvatar. User ID: " + User.Identity.GetUserId()));
             var files = Request.Files;
             JsonResult badResult = Json(new
             {
@@ -453,7 +452,6 @@
                 try
                 {
                     files[0].SaveAs(absoluteAvatarPath);
-                    Task.Run(() => this.logger.Info("Файл аватарки " + absoluteAvatarPath + " был успешно сохранен."));
                 }
                 catch (Exception ex)
                 {
@@ -474,14 +472,12 @@
             try
             {
                 System.IO.File.Delete(Server.MapPath(oldAvatarPath));
-                Task.Run(() => this.logger.Info("Файл старой аватарки " + oldAvatarPath + " успшно удален."));
             }
             catch (Exception ex)
             {
                 Task.Run(() => this.logger.Warn(ex, "Не удалось удалить файл аватарки " + oldAvatarPath));
             }
 
-            Task.Run(() => this.logger.Info("Успешное завершение UserController.UploadAvatar. User ID: " + User.Identity.GetUserId()));
             return Json(new
             {
                 Success = true,

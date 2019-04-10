@@ -1,8 +1,8 @@
 ﻿function ConfirmChangesShow() {
     var confirmField = $('#confirm-changes')
-    $('input').change(function () {
+    $('input:not(#InputFile)').change(function () {
         if (confirmField.is(':visible')) {
-            return
+            return;
         }
         confirmField.slideDown();
     })
@@ -30,17 +30,45 @@ function ProfilePanelManage() {
             isRotated = true;
         }
         PanelShow($(this).attr('for'));
-    })
+    });
 }
 function readURL(input) {
-    if (input.files && input.files[0]) {
+    var files = input.files;
+
+    if (files && files[0]) {
         var reader = new FileReader();
         reader.onload = function (e) {
-            $('#CurrentAvatarURLImg').attr('src', e.target.result);
-        }
+         //   $('#CurrentAvatarURLImg').attr('src', e.target.result);
+            var data = new FormData();
+
+            for (var x = 0; x < files.length; x++) {
+                data.append("file" + x, files[x]);
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '/personal_account/upload_avatar',
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function (result) {
+                    if (result.Success) {
+                        $("#CurrentAvatarURLImg").attr("src", result.AvatarPath);
+                        input.value = "";
+                    }
+                    else {
+                        alert(result.Message);
+                    }
+                },
+                error: function (xhr, status, p3) {
+                    alert(xhr.responseText);
+                }
+            });
+        };
         reader.readAsDataURL(input.files[0]);
     }
 }
+
 function AvatarBtnManage() {
     var btn = document.getElementsByClassName('avatar-btn')[0]
     var input = document.getElementById('InputFile')
@@ -67,16 +95,11 @@ function GenerateModelJson() {
         NewPassword: $("#password").val(),
         ConfirmPassword: $("#confitm-password").val(),
         NewEmail: $("#email").val(),
-        CurrentPassword: $("#password-confirm").val()
+        CurrentPassword: $("#password-confirm").val(),
+        NewAvatarURL: $('#CurrentAvatarURLImg').attr('src')
     };
     return json;
 }
-
-//function Update() {
-//    $("#username").val = "";
-//    $("#password").val() = "";
-//    $("#email").val() = "";
-//}
 
 function SendChanges() {
     var formObj = GenerateModelJson();
@@ -105,8 +128,8 @@ $(document).ready(function () {
         readURL(this);
     });
     $('input').change(function () {
-        SubmitButtonManage();
-        ValidatePassword();
+        //SubmitButtonManage();
+        //ValidatePassword();
     });
     $('#submit-btn').click(function (e) {
         e.preventDefault();
