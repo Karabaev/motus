@@ -9,6 +9,7 @@
     using System.Linq;
     using SerialService.Infrastructure;
     using System.Threading.Tasks;
+    using InfoAgent.Exceptions;
 
     public class VideoMaterialBlockedCleaner
     {
@@ -75,7 +76,9 @@
                 }
                 count++;
             }
+            Task.Run(() => this.logger.Info($"Очистка зваершена. Очищено {count} елементов"));
             Console.WriteLine("Очистка зваершена:");
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -83,6 +86,9 @@
         /// </summary>
         private IEnumerable<VideoMaterial> FindBlocked()
         {
+            Console.WriteLine("Загрузка данных. Может занять значительное время");
+            Task.Run(() => this.logger.Info("Старт загрузки"));
+
             var videoMaterials = 
                 unitOfWork
                 .VideoMaterials
@@ -98,10 +104,11 @@
             {
                 try
                 {
-                    if (infoAgent.GetFilmInfo(material.KinopoiskID).IsBlocked ?? false)
-                    {
-                        result.Add(material);
-                    }
+                    infoAgent.GetFilmInfo(material.KinopoiskID);
+                }
+                catch(IsBlockedException ex)
+                {
+                    result.Add(material);
                 }
                 catch(Exception ex)
                 {
@@ -109,6 +116,8 @@
                     continue;
                 }
             }
+
+            Task.Run(() => this.logger.Info($"Загрузка завершена.Включено {result.Count} елементов"));
 
             return result;
         }
