@@ -53,3 +53,14 @@
 .profile-link {
     font-size: medium;
 }
+
+.image-wrap {
+    width: 250px;
+    height: 250px;
+}
+
+.image-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

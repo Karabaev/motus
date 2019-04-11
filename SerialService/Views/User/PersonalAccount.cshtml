@@ -10,7 +10,7 @@
         <h2 class="mdl-card__title-text">@(Model.CurrentUserName ?? Model.CurrentEmail)</h2>
     </div>
     <div class="profile-container mdl-cell--12-col mdl-grid">
-        <div class="avatar-container">
+        <div class="avatar-container image-wrap image-flex">
             <div class="avatar-panel">
                 <button class="avatar-btn mdl-button mdl-js-button mdl-button--icon">
                     <i class="material-icons">image_search</i>
@@ -87,6 +87,7 @@
                 </li>
             </ul>
         </div>
+        <div class="mdl-cell--12-col"><span style="display:none" class="error"></span></div>
         <div class="mdl-cell--6-col">
             @if (Model.SubscribedVideoMaterials != null && Model.SubscribedVideoMaterials.Any())
             {

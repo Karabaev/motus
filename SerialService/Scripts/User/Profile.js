@@ -38,7 +38,6 @@ function readURL(input) {
     if (files && files[0]) {
         var reader = new FileReader();
         reader.onload = function (e) {
-         //   $('#CurrentAvatarURLImg').attr('src', e.target.result);
             var data = new FormData();
 
             for (var x = 0; x < files.length; x++) {
@@ -52,12 +51,13 @@ function readURL(input) {
                 processData: false,
                 data: data,
                 success: function (result) {
-                    if (result.Success) {
-                        $("#CurrentAvatarURLImg").attr("src", result.AvatarPath);
-                        input.value = "";
+                    if (result.error) {
+                        $('.error').html(result.error);
+                        ShowErrorMessage();
                     }
-                    else {
-                        alert(result.Message);
+                    else if (result.success) {
+                        $("#CurrentAvatarURLImg").attr("src", result.success);
+                        input.value = "";
                     }
                 },
                 error: function (xhr, status, p3) {
@@ -70,21 +70,21 @@ function readURL(input) {
 }
 
 function AvatarBtnManage() {
-    var btn = document.getElementsByClassName('avatar-btn')[0]
-    var input = document.getElementById('InputFile')
+    var btn = document.getElementsByClassName('avatar-btn')[0];
+    var input = document.getElementById('InputFile');
     btn.addEventListener('click', function () {
-        input.click()
-    })
+        input.click();
+    });
 }
 function AvatarPanelManage() {
-    var continer = document.getElementsByClassName('avatar-container')[0]
-    var panel = document.getElementsByClassName('avatar-panel')[0]
+    var continer = document.getElementsByClassName('avatar-container')[0];
+    var panel = document.getElementsByClassName('avatar-panel')[0];
     continer.addEventListener('mouseover', function () {
-        panel.style.display = 'block'
+        panel.style.display = 'block';
     })
     continer.addEventListener('mouseout', function () {
-        panel.style.display = 'none'
-    })
+        panel.style.display = 'none';
+    });
 }
 
 //Генерация json. 
@@ -96,7 +96,6 @@ function GenerateModelJson() {
         ConfirmPassword: $("#confitm-password").val(),
         NewEmail: $("#email").val(),
         CurrentPassword: $("#password-confirm").val(),
-        NewAvatarURL: $('#CurrentAvatarURLImg').attr('src')
     };
     return json;
 }
@@ -104,7 +103,7 @@ function GenerateModelJson() {
 function SendChanges() {
     var formObj = GenerateModelJson();
 
-    $.post("personal_account/save_changes",
+    $.post("/personal_account/save_changes",
         formObj,
         function (result) {
             if (result.error) {
@@ -120,7 +119,7 @@ function SendChanges() {
 
 $(document).ready(function () {
     ConfirmChangesShow();
-    
+
     AvatarPanelManage();
     AvatarBtnManage();
     ProfilePanelManage();
@@ -128,8 +127,8 @@ $(document).ready(function () {
         readURL(this);
     });
     $('input').change(function () {
-        //SubmitButtonManage();
-        //ValidatePassword();
+        SubmitButtonManage();
+        ValidatePassword();
     });
     $('#submit-btn').click(function (e) {
         e.preventDefault();
