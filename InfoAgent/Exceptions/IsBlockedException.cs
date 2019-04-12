@@ -2,7 +2,7 @@
 {
     using System;
 
-    class IsBlockedException: Exception
+    public class IsBlockedException: Exception
     {
         public string Value { get; }
 

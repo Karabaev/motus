@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using SerialService.Infrastructure.Exceptions;
     using Cleaner;
+    using Shared.Mail;
 
     public class Program
 	{
@@ -231,7 +232,7 @@
                 catch(Exception ex)
                 {
                     Task.Run(() => Program.Logger.Error(ex.Message));
-                    Console.WriteLine();
+                    Console.WriteLine(ex.Message);
                 }
             }
             else if (response != 'n' && response != 'y')
