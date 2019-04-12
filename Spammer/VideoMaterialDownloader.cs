@@ -1,18 +1,17 @@
 ﻿namespace Updater
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-	using System.Threading.Tasks;
-	using NLog;
-	using InfoAgent;
-	using InfoAgent.Exceptions;
-	using SerialService.DAL;
-	using SerialService.DAL.Entities;
-	using SerialService.Infrastructure;
-	using SerialService.Infrastructure.Exceptions;
-	using SerialService.Infrastructure.Helpers;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using NLog;
+    using InfoAgent;
+    using InfoAgent.Exceptions;
+    using SerialService.DAL;
+    using SerialService.DAL.Entities;
+    using SerialService.Infrastructure;
+    using SerialService.Infrastructure.Exceptions;
+    using SerialService.Infrastructure.Helpers;
     using KinoPoiskParser;
 
     public class VideoMaterialDownloader
@@ -94,30 +93,32 @@
 			if (user == null)
 				throw new EntryNotFoundException(string.Format("Пользователь с email {0} не найден", authorMail));
 
-			result = new VideoMaterial
-			{
-				Duration = info.Duration,
-				IDMB = info.IDMB.Value,
-				KinopoiskRating = info.KinopoiskRating,
-				KinopoiskID = info.KinopoiskID,
-				OriginalTitle = info.OriginalTitle,
-				ReleaseDate = info.ReleaseDate,
-				Text = info.Description,
-				Title = info.Title,
-				Tagline = info.Tagline,
-				Pictures = new List<Picture>
-				{
-					new Picture{ IsPoster = true, URL = info.PosterHref }
-				},
-				Actors = this.unitOfWork.Persons.AutoSave(info.Actors),
-				FilmMakers = this.unitOfWork.Persons.AutoSave(info.FilmMakers),
-				Genres = this.unitOfWork.Genres.AutoSave(info.Genres),
-				Countries = this.unitOfWork.Countries.AutoSave(info.Countries),
-				Author = user,
-				AuthorID = user.Id,
-				CheckStatus = CheckStatus.Checking,
-				WatchForUpdates = info.IsSerial.HasValue && info.IsSerial.Value ? true : false,
-				SerialSeasons = new List<SerialSeason>()
+            result = new VideoMaterial
+            {
+                Duration = info.Duration,
+                IDMB = info.IDMB.Value,
+                KinopoiskRating = info.KinopoiskRating,
+                KinopoiskID = info.KinopoiskID,
+                OriginalTitle = info.OriginalTitle,
+                ReleaseDate = info.ReleaseDate,
+                Text = info.Description,
+                Title = info.Title,
+                Tagline = info.Tagline,
+                Pictures = new List<Picture>
+                {
+                    new Picture{ IsPoster = true, URL = info.PosterHref }
+                },
+                Actors = this.unitOfWork.Persons.AutoSave(info.Actors),
+                FilmMakers = this.unitOfWork.Persons.AutoSave(info.FilmMakers),
+                Genres = this.unitOfWork.Genres.AutoSave(info.Genres),
+                Countries = this.unitOfWork.Countries.AutoSave(info.Countries),
+                Author = user,
+                AuthorID = user.Id,
+                CheckStatus = CheckStatus.Checking,
+                WatchForUpdates = info.IsSerial.HasValue && info.IsSerial.Value ? true : false,
+                SerialSeasons = new List<SerialSeason>(),
+                AddDateTime = DateTime.Now,
+                MoonWalkAddDate = info.MoonWalkAddDate,                
 			};
 			TranslationAddHelper translationHelper = new TranslationAddHelper();
 			translationHelper.SaveTranslations(info, result, this.unitOfWork.Translations);
@@ -165,10 +166,10 @@
                 try
                 {
                     VideoMaterial material = GetVideoMaterialFromInfo
-                   (
-                       this.infoAgentService.GetFilmInfo(id),
-                       authorEmail
-                   );
+                    (
+                        this.infoAgentService.GetFilmInfo(id),
+                        authorEmail
+                    );
 
                     if (this.unitOfWork.VideoMaterials.Create(material))
                     {
