@@ -40,7 +40,6 @@
                 IsLocked = false,
                 LockoutEnabled = false,//Админа нельзя заблокировать
                 Parole = CalculatorMD5.CreateMD5("R2d0D1s8"),
-                PublicName = "Роман",
                 AvatarURL = "https://avatars.mds.yandex.net/get-pdb/367895/9d25fd18-b8ce-4114-9429-26fb34ffa2ee/s1200"
 
             };
@@ -63,7 +62,6 @@
                 IsLocked = false,
                 LockoutEnabled = false,
                 Parole = CalculatorMD5.CreateMD5("35356"),
-                PublicName = "Максим",
                 AvatarURL = "https://pp.userapi.com/c849024/v849024490/4f6d4/mP4Cozt2mMw.jpg"
             };
 
@@ -84,7 +82,6 @@
 				IsLocked = false,
 				LockoutEnabled = false,
 				Parole = CalculatorMD5.CreateMD5("35356"),
-				PublicName = "Макс",
 				AvatarURL = "https://pp.userapi.com/c849024/v849024490/4f6d4/mP4Cozt2mMw.jpg"
 			};
 
