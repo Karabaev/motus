@@ -38,6 +38,9 @@
 			modelBuilder.Entity<VideoMaterial>().HasMany(vmi => vmi.SerialSeasons).WithRequired(s => s.VideoMaterial);
 
 			modelBuilder.Entity<Translation>().Property(t => t.Name).IsRequired();
+			modelBuilder.Entity<ApplicationUser>().Property(a => a.RegisterDateTime).IsRequired();
+			modelBuilder.Entity<ApplicationUser>().Property(a => a.LastAuthorizationDateTime).IsRequired();
+			modelBuilder.Entity<ApplicationUser>().Property(a => a.ChangeDateTime).IsRequired();
 			base.OnModelCreating(modelBuilder);
         }
 
