@@ -151,17 +151,20 @@
             }
 
             var parser = new KPParser(url);
-            IEnumerable<string> listOfId = parser.GetAllId(selector);
 
-            if(listOfId == null || !listOfId.Any())
+            IEnumerable<string> kpIdList = parser.GetAllId(selector);
+            if(kpIdList == null || !kpIdList.Any())
             {
                 Task.Run(() => this.logger.Info($"По данному url не найдено соответсвий {url}"));
                 return result;
             }
 
+            var dbIdList = unitOfWork.VideoMaterials.GetAll().Select(vm => vm.KinopoiskID).ToList();
+            var diffList = kpIdList.Where(id => !dbIdList.Contains(id));
+
             string message;
 
-            foreach(var id in listOfId)
+            foreach(var id in diffList)
             {
                 try
                 {
