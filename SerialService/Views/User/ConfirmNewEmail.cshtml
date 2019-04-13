@@ -1,0 +1,18 @@
+﻿@model SerialService.ViewModels.ConfirmNewEmailViewModel
+
+@{
+    ViewBag.Title = "Изменение эл. почты";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/AccountForms/AccountForms.css" />
+<div class="mdl-card mdl-shadow--2dp acc-card mdl-cell--4-col mdl-cell--12-col-phone mdl-grid">
+    <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">@ViewBag.Title</h2>
+    </div>
+    <div class="acc-form-container mdl-cell--10-col mdl-cell--12-col-phone mdl-grid">
+        <p>
+            @Model.ResultMessage.
+        </p>
+    </div>
+</div>

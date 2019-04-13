@@ -100,12 +100,22 @@ function GenerateModelJson() {
     return json;
 }
 
+function ShowChanges(email, name) {
+    $("#user-name-title").text(name);
+    $("#username").text(name);
+    $("#email").text(email);
+}
+
 function SendChanges() {
     var formObj = GenerateModelJson();
 
     $.post("/personal_account/save_changes",
         formObj,
         function (result) {
+            if (result.message) {
+                alert(result.message);
+            }
+
             if (result.error) {
                 $('.error').html(result.error);
                 ShowErrorMessage();

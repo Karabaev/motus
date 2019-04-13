@@ -327,8 +327,8 @@
 		[HttpPost]
 		public ActionResult PersonalAccountSaveChanges(PersonalAccountViewModel account)
 		{
-			Task.Run(() => this.logger.Info("Вызов UserController.PersonalAccountSaveChanges..."));
 			StringBuilder errors = new StringBuilder();
+			string advancedMessage = string.Empty;
 
 			if (account == null)
 			{
@@ -336,7 +336,7 @@
 				return this.HttpNotFound();
 			}
 
-			if (!this.ModelState.IsValid) // todo: тут надо как то по другому обработать
+			if (!this.ModelState.IsValid)
 			{
 				Task.Run(() => this.logger.Warn("Переданный параметр не валиден."));
 				return Json(new { error = "Ошибка валидации" });
@@ -359,24 +359,54 @@
 					IdentityResult result = this.unitOfWork.Users.SetUserName(user.Id, account.NewUserName);
 
 					if (result.Succeeded)
+					{
 						Task.Run(() => this.logger.Info(string.Format("Имя пользователя успешно изменено на {0}.", account.NewUserName)));
+					}
 					else
 					{
-						errors.AppendLine("Не удалось изменить публичное имя");
+						errors.Append("Не удалось изменить публичное имя<br/>");
 						Task.Run(() => this.logger.Warn(string.Format("Ошибки при изменении имени: {0}.", string.Join(", ", result.Errors))));
 					}
 				}
 
 				if (!string.IsNullOrWhiteSpace(account.NewEmail))
 				{
-					IdentityResult result = this.unitOfWork.Users.SetEmail(user.Id, account.NewEmail);
+					if (user.Email.ToLower() != account.NewEmail.ToLower())
+					{
+						var checkUser = this.unitOfWork.Users.GetByMainStringProperty(account.NewEmail);
 
-					if (result.Succeeded)
-						Task.Run(() => this.logger.Info(string.Format("Email пользователя успешно изменен на {0}.", account.NewEmail)));
+						if (checkUser == null)
+						{
+							var code = this.unitOfWork.Users.GenerateEmailConfirmationToken(user.Id);
+							var result = this.unitOfWork.Users.SetKey(user.Id, code);
+
+							if (result.Succeeded)
+							{
+								var callbackUrl = this.Url.Action("ConfirmNewEmail",
+											"User",
+											new ConfirmNewEmailViewModel { UserID = user.Id, Code = code, NewEmail = account.NewEmail, OldEmail = user.Email },
+											protocol: this.Request.Url.Scheme);
+
+								Task.Run(() => this.unitOfWork.Users.SendToCustomEmail(
+									account.NewEmail,
+									"Изменение адреса электронной почты",
+									string.Format("Для изменения адреса электронной почты перейдите по <a href=\"{0}\">ссылке</a>",
+													callbackUrl)));
+								advancedMessage = string.Format("Для изменения эл. почты необходимо перейти по ссылке, отправленной по адресу {0}", account.NewEmail);
+							}
+							else
+							{
+								errors.Append(string.Format("Произошла ошибка при генерации ключа. {0}<br/>", string.Join(", ", result.Errors)));
+							}
+						}
+						else
+						{
+							errors.Append(string.Format("Адрес эл. почты {0} занят<br/>", account.NewEmail));
+						}
+					}
 					else
 					{
-						errors.AppendLine("Не удалось изменить email");
-						Task.Run(() => this.logger.Warn(string.Format("Ошибки при изменении email: {0}.", string.Join(", ", result.Errors))));
+						errors.Append(string.Format("У вас уже установлен адрес эл. почты {0}<br/>", account.NewEmail));
 					}
 				}
 
@@ -385,10 +415,12 @@
 					IdentityResult result = this.unitOfWork.Users.SetParole(user.Id, account.NewParole);
 
 					if (result.Succeeded)
+					{
 						Task.Run(() => this.logger.Info(string.Format("Контрольное слово пользователя успешно изменено на .", account.NewParole)));
+					}
 					else
 					{
-						errors.AppendLine("Не удалось изменить контрольное слово");
+						errors.Append("Не удалось изменить контрольное слово<br/>");
 						Task.Run(() => this.logger.Warn(string.Format("Ошибки при изменении контрольного слова: {0}.", string.Join(", ", result.Errors))));
 					}
 				}
@@ -400,16 +432,18 @@
 						IdentityResult result = this.unitOfWork.Users.SetPassword(user.Id, account.CurrentPassword, account.NewPassword);
 
 						if (result.Succeeded)
+						{
 							Task.Run(() => this.logger.Info("Пароль пользователя успешно изменен."));
+						}
 						else
 						{
-							errors.AppendLine("Не удалось изменить пароль");
+							errors.Append("Не удалось изменить пароль<br/>");
 							Task.Run(() => this.logger.Warn(string.Format("Ошибки при изменении пароля: {0}.", string.Join(", ", result.Errors))));
 						}
 					}
 					else
 					{
-						errors.AppendLine("Пароль и его подтвержение не совпадают");
+						errors.Append("Пароль и его подтвержение не совпадают<br/>");
 						Task.Run(() => this.logger.Warn(string.Format("Пароль и его подтвержение не совпадают")));
 					}
 				}
@@ -417,17 +451,31 @@
 			else
 			{
 				Task.Run(() => this.logger.Warn(string.Format("Был введен неверный пароль для подтверждения. Завершение UserController.PersonalAccountSaveChanges.")));
-				//todo: вывести ошибку 
 				return this.Json(new { error = "Пароль для подтверждения не правильный." });
 			}
 
 			if(errors.Length > 0)
-				return this.Json(new { error = errors });
+				return this.Json(new { error = errors.ToString(), message = advancedMessage });
 
 			user = this.unitOfWork.Users.Get(account.ID);
-			Task.Run(() => this.logger.Info("Завершение UserController.PersonalAccountSaveChanges."));
 
-			return this.Json(new { success = true });
+			return this.Json(new { success = true, email = user.Email, name = user.UserName, message = advancedMessage });
+		}
+
+		public ActionResult ConfirmNewEmail(ConfirmNewEmailViewModel model)
+		{
+			if (model == null || !ModelState.IsValid)
+				return HttpNotFound();
+
+			IdentityResult result = this.unitOfWork.Users.ChangeEmail(model.UserID, model.NewEmail, model.Code);
+			string oursEmail = "help@motus-cinema.com";
+
+			if (result.Succeeded)
+				model.ResultMessage = "Адрес электронной почты успешно изменен";
+			else
+				model.ResultMessage = string.Format("Не удалось изменить адрес электронной почты. Пожалуйста, сообщите о проблеме по адресу {0}", oursEmail);
+
+			return View(model);
 		}
 
 		[HttpPost]
