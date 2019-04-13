@@ -197,14 +197,14 @@
 		private void SendMessageAddedNewEpisodeToSubscribers(VideoMaterial videoMaterial, int lastEpNum, int lastSesNum, string lastTrans)
 		{
 			if (videoMaterial == null || lastEpNum <= 0 || lastSesNum <= 0 || string.IsNullOrWhiteSpace(lastTrans))
-				throw new ArgumentOutOfRangeException("Один из вараметров имеет неверное значение");
+				throw new ArgumentOutOfRangeException("Один из параметров имеет неверное значение");
 
 			string messageCaption = (string)this.configManager.Config[ConfigKeys.MAIL_MESSAGE_CAPTION];
 			string messageBodyTemplate = (string)this.configManager.Config[ConfigKeys.MAIL_MESSAGE_BODY_ADDED_NEW_EPISODE];
 			
 			foreach (var user in videoMaterial.SubscribedUsers)
 			{
-				string messageBody = string.Format(messageBodyTemplate, user.PublicName, videoMaterial.Title, lastEpNum, lastSesNum, lastTrans);
+				string messageBody = string.Format(messageBodyTemplate,user.UserName, videoMaterial.Title, lastEpNum, lastSesNum, lastTrans);
 				Task.Run(() => this.logger.Info("Отправка сообщения {0} пользователю ID: {1} UserName: {2}", messageBody, user.Id, user.UserName));
 				this.mailClient.SendMessage(user.Email, messageCaption, messageBody, true);
 				Task.Run(() => this.logger.Info("Окончание отправки сообщения пользователю ID: {0} UserName: {1}.", user.Id, user.UserName));
@@ -214,14 +214,14 @@
 		private void SendMessageAddedNewSeasonToSubscribers(VideoMaterial videoMaterial, int lastSesNum, string lastTrans)
 		{
 			if (videoMaterial == null || lastSesNum <= 0 || string.IsNullOrWhiteSpace(lastTrans))
-				throw new ArgumentOutOfRangeException("Один из вараметров имеет неверное значение");
+				throw new ArgumentOutOfRangeException("Один из параметров имеет неверное значение");
 
 			string messageCaption = (string)this.configManager.Config[ConfigKeys.MAIL_MESSAGE_CAPTION];
 			string messageBodyTemplate = (string)this.configManager.Config[ConfigKeys.MAIL_MESSAGE_BODY_ADDED_NEW_SEASON];
 
 			foreach (var user in videoMaterial.SubscribedUsers)
 			{
-				string messageBody = string.Format(messageBodyTemplate, user.PublicName, videoMaterial.Title, lastSesNum, lastTrans);
+				string messageBody = string.Format(messageBodyTemplate,user.UserName, videoMaterial.Title, lastSesNum, lastTrans);
 				Task.Run(() => this.logger.Info("Отправка сообщения {0} пользователю ID: {1} UserName: {2}", messageBody, user.Id, user.UserName));
 				this.mailClient.SendMessage(user.Email, messageCaption, messageBody, true);
 				Task.Run(() => this.logger.Info("Окончание отправки сообщения пользователю ID: {0} UserName: {1}.", user.Id, user.UserName));
