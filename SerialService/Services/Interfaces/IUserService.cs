@@ -73,5 +73,7 @@
 		IdentityResult ChangeEmail(string userId, string newEmail, string key);
 
 		void SendToCustomEmail(string email, string subject, string message);
+
+		IdentityResult Update(ApplicationUser user);
 	}
 }

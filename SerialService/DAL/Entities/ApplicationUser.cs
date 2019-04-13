@@ -1,5 +1,6 @@
 ﻿namespace SerialService.DAL.Entities
 {
+	using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using Microsoft.AspNet.Identity;
@@ -8,7 +9,10 @@
 
     public class ApplicationUser : IdentityUser
     {
-        public string Parole { get; set; }
+		public DateTime RegisterDateTime { get; set; }
+		public DateTime ChangeDateTime { get; set; }
+		public DateTime LastAuthorizationDateTime { get; set; }
+		public string Parole { get; set; }
         public string AvatarURL { get; set; }
         public string PublicName { get; set; }
         public bool IsLocked { get; set; }

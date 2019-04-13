@@ -14,6 +14,7 @@
 	using System.Web.Mvc;
 	using ViewModels;
 	using Infrastructure;
+	using System;
 
 	[Authorize, ExceptionHandler]
 	public class AccountController : Controller
@@ -53,6 +54,8 @@
 					switch (result)
 					{
 						case SignInStatus.Success:
+							user.LastAuthorizationDateTime = DateTime.Now;
+							Task.Run(() => this.userService.Update(user));
 							return this.Json(new { success = model.ReturnUrl });
 						case SignInStatus.LockedOut:
 							errors.Append("Учетная запись заблокирована<br/>");
