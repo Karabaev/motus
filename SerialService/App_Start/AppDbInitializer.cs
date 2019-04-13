@@ -9,8 +9,8 @@
     using Infrastructure.Helpers;
     using DAL.Repository;
 
-    public class AppDbInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
-    {
+    public class AppDbInitializer : CreateDatabaseIfNotExists<ApplicationDbContext> // DropCreateDatabaseIfModelChanges<ApplicationDbContext>
+	{
         /// <summary>
         /// Создание первоначальной базы данных
         /// </summary>
@@ -40,6 +40,7 @@
                 IsLocked = false,
                 LockoutEnabled = false,//Админа нельзя заблокировать
                 Parole = CalculatorMD5.CreateMD5("R2d0D1s8"),
+				EmailConfirmed = true,
                 AvatarURL = "https://avatars.mds.yandex.net/get-pdb/367895/9d25fd18-b8ce-4114-9429-26fb34ffa2ee/s1200"
 
             };
@@ -62,7 +63,8 @@
                 IsLocked = false,
                 LockoutEnabled = false,
                 Parole = CalculatorMD5.CreateMD5("35356"),
-                AvatarURL = "https://pp.userapi.com/c849024/v849024490/4f6d4/mP4Cozt2mMw.jpg"
+				EmailConfirmed = true,
+				AvatarURL = "https://pp.userapi.com/c849024/v849024490/4f6d4/mP4Cozt2mMw.jpg"
             };
 
             var result1 = userManager.Create(user1, "abc123");
@@ -82,6 +84,7 @@
 				IsLocked = false,
 				LockoutEnabled = false,
 				Parole = CalculatorMD5.CreateMD5("35356"),
+				EmailConfirmed = true,
 				AvatarURL = "https://pp.userapi.com/c849024/v849024490/4f6d4/mP4Cozt2mMw.jpg"
 			};
 
