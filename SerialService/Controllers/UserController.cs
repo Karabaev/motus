@@ -87,7 +87,7 @@
 			if (user != null)
 			{
 				//ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken("V2vt2ul0QFpPnsa71RPNXnQ38gH5CWHkhKFJsQIFe9DCzHN2YLyiHZtU2UOIU4c4", "7", "Max", "maxkarab@yandex.ru", "https://img.icons8.com/ios/1600/folder-invoices.png");
-				this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey, user.Id, user.PublicName, user.Email, user.AvatarURL);
+				this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey, user.Id, user.UserName, user.Email, user.AvatarURL);
 				dvm.IsUserSubscribed = this.unitOfWork.VideoMaterials.IsUserSubscribed(id, user.Id);
 			}
 			else

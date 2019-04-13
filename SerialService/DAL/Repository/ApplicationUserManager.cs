@@ -27,7 +27,7 @@
             // Настройка логики проверки имен пользователей
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
-                AllowOnlyAlphanumericUserNames = true,
+                AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
             };
 

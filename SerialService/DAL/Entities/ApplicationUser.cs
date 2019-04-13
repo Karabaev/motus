@@ -14,7 +14,6 @@
 		public DateTime LastAuthorizationDateTime { get; set; }
 		public string Parole { get; set; }
         public string AvatarURL { get; set; }
-        public string PublicName { get; set; }
         public bool IsLocked { get; set; }
 		/// <summary>
 		/// Необходим для хранения уникального ключа, сгенерированного для изменения эл. почты (пока только для этого).
@@ -32,7 +31,6 @@
                 return false;
 
             return this.UserName == other.UserName &&
-				this.PublicName == other.PublicName &&
 				this.Email == other.Email &&
 				this.Parole == other.Parole &&
 				this.PasswordHash == other.PasswordHash &&
