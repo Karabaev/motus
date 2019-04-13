@@ -7,7 +7,7 @@
 
     .avatar-container img {
         width: 100%;
-        height: auto;
+        height: 100%;
     }
 
 .avatar-panel {
@@ -52,4 +52,15 @@
 
 .profile-link {
     font-size: medium;
+}
+
+.image-wrap {
+    width: 250px;
+    height: 250px;
+}
+
+.image-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

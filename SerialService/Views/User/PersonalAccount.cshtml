@@ -7,10 +7,10 @@
 <div class="mdl-card mdl-shadow--2dp acc-card mdl-cell--7-col mdl-cell--12-col-phone mdl-grid">
     @Html.HiddenFor(m => m.ID, new { id = "account-id" })
     <div class="mdl-card__title">
-        <h2 class="mdl-card__title-text">@(Model.CurrentUserName ?? Model.CurrentEmail)</h2>
+        <h2 id="user-name-title" class="mdl-card__title-text">@(Model.CurrentUserName + " " + Model.CurrentEmail)</h2>
     </div>
     <div class="profile-container mdl-cell--12-col mdl-grid">
-        <div class="avatar-container">
+        <div class="avatar-container image-wrap image-flex">
             <div class="avatar-panel">
                 <button class="avatar-btn mdl-button mdl-js-button mdl-button--icon">
                     <i class="material-icons">image_search</i>
@@ -33,13 +33,15 @@
                     <ul style="display:none" id="profile-contacts" class="mdl-list profile-info-panel">
                         <li class="mdl-list__item">
                             <div class="mdl-textfield mdl-js-textfield mdl-cell--10-col mdl-textfield--floating-label">
-                                <input class="mdl-textfield__input" type="text" value="@Model.CurrentUserName" id="username">
+                                @*<input class="mdl-textfield__input" type="text" value="@Model.CurrentUserName" id="username">*@
+                                <input class="mdl-textfield__input" type="text" id="username">
                                 <label class="mdl-textfield__label" for="username">Имя пользователя...</label>
                             </div>
                         </li>
                         <li class="mdl-list__item">
                             <div class="mdl-textfield mdl-js-textfield mdl-cell--10-col mdl-textfield--floating-label">
-                                <input class="mdl-textfield__input" type="text" id="email" value="@Model.CurrentEmail">
+                                @*<input class="mdl-textfield__input" type="text" id="email" value="@Model.CurrentEmail">*@
+                                <input class="mdl-textfield__input" type="text" id="email">
                                 <label class="mdl-textfield__label" for="email">Email...</label>
                             </div>
                         </li>
@@ -87,6 +89,7 @@
                 </li>
             </ul>
         </div>
+        <div class="mdl-cell--12-col"><span style="display:none" class="error"></span></div>
         <div class="mdl-cell--6-col">
             @if (Model.SubscribedVideoMaterials != null && Model.SubscribedVideoMaterials.Any())
             {

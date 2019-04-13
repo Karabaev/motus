@@ -231,6 +231,20 @@
             return this.manager.GeneratePasswordResetToken(id);
         }
 
+		public void SendToCustomEmail(string email, string subject, string message)
+		{
+			if (string.IsNullOrWhiteSpace(email))
+				throw new ArgumentNullException("email");
+
+			if (string.IsNullOrWhiteSpace(subject))
+				throw new ArgumentNullException("subject");
+
+			if (string.IsNullOrWhiteSpace(message))
+				throw new ArgumentNullException("message");
+
+			this.manager.EmailService.Send(new IdentityMessage { Destination = email, Body = message, Subject = subject });
+		}
+
         public void SendEmail(string id, string subject, string message)
         {
 			if (string.IsNullOrWhiteSpace(id))
@@ -253,13 +267,19 @@
         /// <returns></returns>
         public IdentityResult SetUserName(string id, string userName)
         {
-            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(userName))
-                return IdentityResult.Failed();
+			if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(userName))
+				throw new ArgumentNullException("id и userName");
 
             ApplicationUser user = this.manager.FindById(id);
+			string oldName = user.UserName;
             user.UserName = userName;
-            return manager.Update(user);
-        }
+			var result = manager.Update(user);
+
+			if(!result.Succeeded)
+				user.UserName = oldName;
+
+			return result;
+		}
 
         /// <summary>
         /// Назначить новый пароль.
@@ -368,5 +388,77 @@
                 }
             }
         }
+
+		public IdentityResult ChangeEmail(string userId, string newEmail, string key)
+		{
+			if (string.IsNullOrWhiteSpace(userId))
+				throw new ArgumentNullException("userId");
+
+			if (string.IsNullOrWhiteSpace(newEmail))
+				throw new ArgumentNullException("newEmail");
+
+			if (string.IsNullOrWhiteSpace(key))
+				throw new ArgumentNullException("key");
+
+
+			if (this.CheckKey(userId, key))
+			{
+				var result = this.SetEmail(userId, newEmail);
+
+				if (!result.Succeeded)
+					return result;
+
+				string confirmationKey = this.manager.GenerateEmailConfirmationToken(userId);
+				result = this.manager.ConfirmEmail(userId, confirmationKey);
+				return result;
+			}
+			else
+				return new IdentityResult("Не подходит ключ");
+		
+	}
+
+	public IdentityResult SetKey(string userId, string key)
+		{
+			if (string.IsNullOrWhiteSpace(userId))
+				throw new ArgumentNullException("userId");
+
+			if (string.IsNullOrWhiteSpace(key))
+				throw new ArgumentNullException("key");
+
+			var user = this.Get(userId);
+
+			if (user == null)
+				throw new EntryNotFoundException("Пользователь не найден");
+
+			user.LastConfirmationKey = key;
+			return this.manager.Update(user);
+		}
+
+		public bool CheckKey(string userId, string key)
+		{
+			if (string.IsNullOrWhiteSpace(userId))
+				throw new ArgumentNullException("userId");
+
+			if (string.IsNullOrWhiteSpace(key))
+				throw new ArgumentNullException("key");
+
+			var user = this.Get(userId);
+
+			if (user == null)
+				throw new EntryNotFoundException("Пользователь не найден");
+
+			if (user.LastConfirmationKey == key)
+			{
+				user.LastConfirmationKey = string.Empty;
+				this.manager.Update(user);
+				return true;
+			}
+			else
+			{
+				user.LastConfirmationKey = string.Empty;
+				this.manager.Update(user);
+				return false;
+			}
+		}
     }
 }

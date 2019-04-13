@@ -70,6 +70,14 @@
 				url: "User/GetSuggest/{part}",
 				defaults: new { controller = "User", action = "GetSuggest", part = UrlParameter.Optional });
 
+			routes.MapRoute(name: "UserUploadAvatar",
+				url: "personal_account/upload_avatar",
+				defaults: new { controller = "User", action = "UploadAvatar" });
+
+			routes.MapRoute(name: "UserConfirmNewEmail",
+				url: "personal_account/confirm_new_email",
+				defaults: new { controller = "User", action = "ConfirmNewEmail" });
+
 			#endregion
 
 			#region Роуты Account

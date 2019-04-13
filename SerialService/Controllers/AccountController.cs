@@ -55,24 +55,24 @@
 						case SignInStatus.Success:
 							return this.Json(new { success = model.ReturnUrl });
 						case SignInStatus.LockedOut:
-							errors.AppendLine("Учетная запись заблокирована");
+							errors.Append("Учетная запись заблокирована<br/>");
 							break;
 						case SignInStatus.Failure:
-							errors.AppendLine("Неверный адрес email или пароль");
+							errors.Append("Неверный адрес email или пароль<br/>");
 							break;
 						default:
-							errors.AppendLine("Неудачная попытка входа");
+							errors.Append("Неудачная попытка входа<br/>");
 							break;
 					}
 				}
 				else
 				{
-					errors.AppendLine("Не подтвержден email");
+					errors.Append("Не подтвержден email<br/>");
 				}
 			}
 			else
 			{
-				errors.AppendLine("Неверный адрес email или пароль");
+				errors.Append("Неверный адрес email или пароль<br/>");
 			}
 
 			return this.Json(new { error = errors.ToString() });

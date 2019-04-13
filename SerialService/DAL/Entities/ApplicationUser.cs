@@ -12,6 +12,10 @@
         public string AvatarURL { get; set; }
         public string PublicName { get; set; }
         public bool IsLocked { get; set; }
+		/// <summary>
+		/// Необходим для хранения уникального ключа, сгенерированного для изменения эл. почты (пока только для этого).
+		/// </summary>
+		public string LastConfirmationKey { get; set; } 
         public virtual List<VideoMaterial> AddedVideoMaterials { get; set; }
         public virtual List<VideoMaterial> SubscribedVideoMaterials { get; set; }
         public virtual List<VideoMark> VideoMarks { get; set; }

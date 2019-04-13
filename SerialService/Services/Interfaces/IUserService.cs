@@ -65,5 +65,13 @@
         /// <param name="roleNames">список названий ролей</param>
         /// <returns></returns>
         void UpdateUserRoles(IEnumerable<IdentityRole> roles,string userId);
+
+		bool CheckKey(string userId, string key);
+
+		IdentityResult SetKey(string userId, string key);
+
+		IdentityResult ChangeEmail(string userId, string newEmail, string key);
+
+		void SendToCustomEmail(string email, string subject, string message);
 	}
 }
