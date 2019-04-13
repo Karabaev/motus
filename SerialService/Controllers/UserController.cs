@@ -19,8 +19,11 @@
     using SerialService.Infrastructure.Core;
     using Newtonsoft.Json;
 	using NLog;
+    using SerialService.Sitemap;
+    using System.Net.Mime;
+    using System.Text;
 
-	[ExceptionHandler]
+    [ExceptionHandler]
 	public class UserController : Controller
     {
 		private readonly Logger logger;
@@ -524,6 +527,14 @@
         public ActionResult ForHolders()
         {
             return View();
+        }
+
+        public ActionResult SitemapXml()
+        {
+            var generator = new SitemapGenerator();
+            var sitemapNodes = generator.GetNodes(this.Url);
+            string xml = generator.GetSitemapDocument(sitemapNodes);
+            return this.Content(xml, "text/xml", Encoding.UTF8);
         }
     }
 }
