@@ -122,31 +122,37 @@
 				url: "error/{action}",
 				defaults: new { controller = "Error" });
 
-			#endregion
+            #endregion
 
-			#region Нереализованные роуты
+            #region sitemap
+            routes.MapRoute(name: "SiteMap",
+                url: "sitemap.xml",
+                defaults: new { controller = "User", action = "SitemapXml", id = UrlParameter.Optional });
+            #endregion
 
-			//routes.MapRoute(name: "UserAddMarkPost",
-			//	url: "films/add_mark/{mark}",
-			//	defaults: new { controller = "User", action = "AddMark", mark = UrlParameter.Optional });
+            #region Нереализованные роуты
 
-			//routes.MapRoute(name: "UserSubscribe",
-			//	url: "films/subscribe/{id}",
-			//	defaults: new { controller = "User", action = "Subscribe", id = UrlParameter.Optional });
+            //routes.MapRoute(name: "UserAddMarkPost",
+            //	url: "films/add_mark/{mark}",
+            //	defaults: new { controller = "User", action = "AddMark", mark = UrlParameter.Optional });
 
-			//routes.MapRoute(name: "UserUnsubscribe",
-			//	url: "films/unsubscribe/{id}",
-			//	defaults: new { controller = "User", action = "Unsubscribe", id = UrlParameter.Optional });
+            //routes.MapRoute(name: "UserSubscribe",
+            //	url: "films/subscribe/{id}",
+            //	defaults: new { controller = "User", action = "Subscribe", id = UrlParameter.Optional });
 
-			//routes.MapRoute(name: "UserFilter",
-			//	url: "films/filter",
-			//	defaults: new { controller = "User", action = "Filter"});
+            //routes.MapRoute(name: "UserUnsubscribe",
+            //	url: "films/unsubscribe/{id}",
+            //	defaults: new { controller = "User", action = "Unsubscribe", id = UrlParameter.Optional });
 
-			//routes.MapRoute(name: "UserSearch",
-			//	url: "films/search",
-			//	defaults: new { controller = "User", action = "Search" });
+            //routes.MapRoute(name: "UserFilter",
+            //	url: "films/filter",
+            //	defaults: new { controller = "User", action = "Filter"});
 
-			#endregion
-		}
-	}
+            //routes.MapRoute(name: "UserSearch",
+            //	url: "films/search",
+            //	defaults: new { controller = "User", action = "Search" });
+
+            #endregion
+        }
+    }
 }
