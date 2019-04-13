@@ -154,11 +154,11 @@
     <comment>Название свойства содержащего ключевое слово</comment>
   </data>
   <data name="UserAvatarFolder" xml:space="preserve">
-    <value>/content/UserFiles/Avatars/</value>
+    <value>/UserFiles/Avatars/</value>
     <comment>Папка для хранения аватарок пользователей</comment>
   </data>
   <data name="UserContentFolder" xml:space="preserve">
-    <value>/content/UserFiles/</value>
+    <value>/UserFiles/</value>
     <comment>Папка для хранения файлов пользователей</comment>
   </data>
   <data name="UserRoleName" xml:space="preserve">

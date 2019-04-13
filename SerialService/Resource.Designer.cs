@@ -151,7 +151,7 @@ namespace SerialService {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на /content/UserFiles/Avatars/.
+        ///   Ищет локализованную строку, похожую на /UserFiles/Avatars/.
         /// </summary>
         internal static string UserAvatarFolder {
             get {
@@ -160,7 +160,7 @@ namespace SerialService {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на /content/UserFiles/.
+        ///   Ищет локализованную строку, похожую на /UserFiles/.
         /// </summary>
         internal static string UserContentFolder {
             get {
