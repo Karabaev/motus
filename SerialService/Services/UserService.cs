@@ -33,19 +33,21 @@
         /// <param name="pass">Пароль пользователя.</param>
         public IdentityResult Create(ApplicationUser entity, string pass, params string[] roleNames)
         {
-            if (entity == null || string.IsNullOrWhiteSpace(pass))
-                return null;
+			if (entity == null)
+				throw new ArgumentNullException("entity");
 
-            if (this.GetScalarWithCondition(au => au.Id == entity.Id) != null)
+			if (string.IsNullOrWhiteSpace(pass))
+				throw new ArgumentNullException("pass");
+
+			if (this.GetScalarWithCondition(au => au.Id == entity.Id) != null)
                 throw new EntryAlreadyExistsException("Пользователь с таким идентификатором уже существует.");
 
             if (this.GetByMainStringProperty(entity.Email) != null)
                 throw new EntryAlreadyExistsException("Пользователь с такой почтой уже существует.");
 
-            if (this.GetByUserName(entity.UserName) != null)
-                throw new EntryAlreadyExistsException("Пользователь с таким именем уже существует.");
-
-            entity.Parole = entity.Parole.CreateMD5();
+			entity.RegisterDateTime = DateTime.Now;
+			entity.ChangeDateTime = entity.RegisterDateTime;
+			entity.Parole = entity.Parole.CreateMD5();
             IdentityResult result = this.manager.Create(entity, pass);
 
             foreach (var item in roleNames)
@@ -272,10 +274,11 @@
 
             ApplicationUser user = this.manager.FindById(id);
 			string oldName = user.UserName;
+			DateTime oldChangeDateTime = user.ChangeDateTime;
             user.UserName = userName;
 			var result = manager.Update(user);
 
-			if(!result.Succeeded)
+			if (!result.Succeeded)
 				user.UserName = oldName;
 
 			return result;
@@ -293,7 +296,15 @@
             if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(newPassword) || currentPassword == null)
                 return IdentityResult.Failed();
 
-            return this.manager.ChangePassword(id, currentPassword, newPassword);
+			var result = this.manager.ChangePassword(id, currentPassword, newPassword);
+			var user = this.Get(id);
+
+			if (result.Succeeded)
+			{
+				user.ChangeDateTime = DateTime.Now;
+				this.manager.Update(user);
+			}
+			return result;
         }
 
         /// <summary>
@@ -309,7 +320,8 @@
 
             ApplicationUser user = this.manager.FindById(id);
             user.AvatarURL = newAvatarUrl;
-            return this.manager.Update(user);
+			user.ChangeDateTime = DateTime.Now;
+			return this.manager.Update(user);
         }
 
         /// <summary>
@@ -323,8 +335,17 @@
             if (string.IsNullOrWhiteSpace(id) || newEmail == null)
                 return IdentityResult.Failed();
 
-            return this.manager.SetEmail(id, newEmail);
-        }
+			var result = this.manager.SetEmail(id, newEmail);
+			var user = this.Get(id);
+
+			if (result.Succeeded)
+			{
+				user.ChangeDateTime = DateTime.Now;
+				this.manager.Update(user);
+			}
+			return result;
+
+		}
 
         /// <summary>
         /// Назначить новое контрольное слово.
@@ -342,7 +363,8 @@
             if (user == null)
                 return IdentityResult.Failed();
 
-            user.Parole = newParole.CreateMD5();
+			user.ChangeDateTime = DateTime.Now;
+			user.Parole = newParole.CreateMD5();
             return this.manager.Update(user);
         }
 
@@ -459,6 +481,11 @@
 				this.manager.Update(user);
 				return false;
 			}
+		}
+
+		public IdentityResult Update(ApplicationUser user)
+		{
+			return this.manager.Update(user);
 		}
     }
 }
