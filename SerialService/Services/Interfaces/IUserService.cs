@@ -75,5 +75,8 @@
 		void SendToCustomEmail(string email, string subject, string message);
 
 		IdentityResult Update(ApplicationUser user);
-	}
+
+        IdentityResult ResetPassword(string userId, string code, string newPassword);
+
+    }
 }

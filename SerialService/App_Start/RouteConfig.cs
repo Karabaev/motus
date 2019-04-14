@@ -110,11 +110,27 @@
 				url: "confirmed/{model}",
 				defaults: new { controller = "Account", action = "ConfirmEmail", model = UrlParameter.Optional });
 
-			#endregion
+            routes.MapRoute(name: "AccountForgotPassword",
+                url: "forgot",
+                defaults: new { controller = "Account", action = "ForgotPassword" });
 
-			#region Роуты Redactor и Admin
+            routes.MapRoute(name: "AccountEmailForgotPasswordGet",
+                url: "email_forgot",
+                defaults: new { controller = "Account", action = "EmailForgotPassword" });
 
-			routes.MapRoute(name: "AdminTools",
+            routes.MapRoute(name: "AccountEmailForgotPasswordPost",
+                url: "Account/EmailForgotPassword/{model}",
+                defaults: new { controller = "Account", action = "EmailForgotPassword", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "AccountForgotPasswordConfirmation",
+               url: "Account/EmailForgotPassword/{model}",
+               defaults: new { controller = "Account", action = "ForgotPasswordConfirmation", model = UrlParameter.Optional });
+
+            #endregion
+
+            #region Роуты Redactor и Admin
+
+            routes.MapRoute(name: "AdminTools",
 				url: "admin_panel/{action}/{id}",
 				defaults: new { controller = "AdminTools", action = "Index", id = UrlParameter.Optional });
 
