@@ -14,7 +14,7 @@
             {
                 {"genres",unitOfWork.Genres.GetAll().Select(g=>g.Name).ToList()},
                 {"countries",unitOfWork.Countries.GetAll().Select(c=>c.Name).ToList()},
-                {"translations",unitOfWork.Translations.GetAll().Select(t=>t.Name).ToList()}
+                {"translations",unitOfWork.Translations.GetAll().Where(t => !string.IsNullOrEmpty(t.Name)).Select(t=>t.Name).ToList()}
             };
             GlobalCache.AddOrGetExisting("filter-lists", filterLists);
         }
