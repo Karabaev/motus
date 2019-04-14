@@ -15,7 +15,7 @@
                 string countries = string.Join(",", data.Countries);
                 var resultByCountries = MotusElasticsearch.SearchByCountrieName(countries);
 
-                if(resultByCountries.Any())
+                if (resultByCountries.Any())
                 {
                     result.AddRange(resultByCountries);
                 }
@@ -83,7 +83,7 @@
             {
                 int min = data.MinReliseDateValue ?? int.MinValue;
                 int max = data.MaxReliseDateValue ?? int.MaxValue;
-                var resultByReliseDate = MotusElasticsearch.SearchByReliseDate(min,max);
+                var resultByReliseDate = MotusElasticsearch.SearchByReliseDate(min, max);
 
                 if (result.Any() && resultByReliseDate.Any())
                 {
@@ -94,7 +94,23 @@
                     result.AddRange(resultByReliseDate);
                 }
             }
-            return result;
+            return OrderMaterials(result);
+        }
+
+        /// <summary>
+        /// Сортировка результатов elasticsearch
+        /// </summary>
+        /// <returns></returns>
+        public static List<ElasticVideoMaterial> OrderMaterials(IEnumerable<ElasticVideoMaterial> data)
+        {
+            if(data == null)
+            {
+                return new List<ElasticVideoMaterial>();
+            }
+            return data.OrderBy(d => d.Imdb < 6.5)
+                       .ThenByDescending(d => d.ReleaseDate)
+                       .ThenByDescending(d => d.Imdb)
+                       .ToList();
         }
     }
 }

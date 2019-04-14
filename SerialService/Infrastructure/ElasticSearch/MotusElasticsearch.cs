@@ -330,11 +330,12 @@
         /// <returns></returns>
         public static List<ElasticVideoMaterial> GetAll()
         {
-            var result = client.SearchAsync<ElasticVideoMaterial>(s => s
-                .Index(index)
-                .Size(StoreSize)
-                .Sort(q => q.Descending(a => a.ReleaseDate))).Result.Documents.ToList();
-            return result;
+            return SearchWrapper.OrderMaterials(
+                client.SearchAsync<ElasticVideoMaterial>(s => s
+                    .Index(index)
+                    .Size(StoreSize)
+                ).Result
+                .Documents);
         }
 
         /// <summary>
