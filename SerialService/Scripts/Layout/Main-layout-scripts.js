@@ -47,3 +47,8 @@ $(document).ready(function () {
     });
     FilterPanelManage('exp-filter-arrow');
 });
+
+function Base64Encode(str, encoding = 'utf-8') {
+    var bytes = new (TextEncoder || TextEncoderLite)(encoding).encode(str);
+    return base64js.fromByteArray(bytes);
+}

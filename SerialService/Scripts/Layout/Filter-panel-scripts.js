@@ -126,6 +126,6 @@ function SubmitFilter(selector, selectedClassName) {
     $(selector).click(function (e) {
         e.preventDefault();
         var dataObj = FilterDataCollect(selectedClassName);
-        window.location.href = '/User/Filter?json=' + JSON.stringify(dataObj);
+        window.location.href = '/User/Filter?cryptodata=' + Base64Encode(JSON.stringify(dataObj));
     });
 }

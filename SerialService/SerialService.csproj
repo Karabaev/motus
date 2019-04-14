@@ -429,6 +429,7 @@
     <Content Include="Content\mdl-v1.1.2\material.min.css.map" />
     <Content Include="Content\mdl-v1.1.2\LICENSE" />
     <Content Include="Content\mdl-v1.1.2\bower.json" />
+    <Content Include="Scripts\base64js.min.js" />
     <Content Include="Scripts\Comments\CommonComments.js" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
