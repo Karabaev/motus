@@ -530,9 +530,10 @@
 		}
 
 		[HttpGet]
-		public ActionResult Filter(string json)
+		public ActionResult Filter(string cryptodata)
 		{
-			var data = JsonConvert.DeserializeObject<FilterData>(json);
+            string json = Encoding.UTF8.GetString(Convert.FromBase64String(cryptodata));
+            var data = JsonConvert.DeserializeObject<FilterData>(json);
 			var result = SearchWrapper.FilerResults(data).ToList();
 			return this.View("Index", result.ToPagedList(1, PageSize));
 		}
