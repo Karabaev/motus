@@ -41,7 +41,7 @@
 			.ForMember(dvm => dvm.UpdateDateTime, opt => opt.MapFrom(vm => vm.UpdateDateTime))
 			.ForMember(dvm => dvm.ReleaseDate, opt => opt.MapFrom(vm => vm.ReleaseDate))
 			.ForMember(dvm => dvm.KinopoiskID, opt => opt.MapFrom(vm => vm.KinopoiskID))
-			.ForMember(dvm => dvm.TranslationTitles, opt => opt.MapFrom(vm => vm.SerialSeasons.GroupBy(ss => ss.Translation.Name).Select(ss => ss.Key)))
+			.ForMember(dvm => dvm.TranslationTitles, opt => opt.MapFrom(vm => vm.SerialSeasons.GroupBy(ss => ss.Translation.Name).Select(ss => ss.Key).Where(tn => !string.IsNullOrEmpty(tn))))
 			.ForMember(dvm => dvm.PictureURLs, opt => opt.MapFrom(vm => vm.Pictures.Where(p => !p.IsPoster).Select(c => c.URL)))
 			.ForMember(dvm => dvm.FilmMakerNames, opt => opt.MapFrom(vm => vm.FilmMakers.Select(c => c.FullName)))
 			.ForMember(dvm => dvm.ActorNames, opt => opt.MapFrom(vm => vm.Actors.Select(c => c.FullName)))

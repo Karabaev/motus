@@ -18,7 +18,7 @@
 				if (translation == null)
 				{
 					if (string.IsNullOrWhiteSpace(item.studioName))
-						item.studioName = "Не определено";
+						item.studioName = string.Empty;
 
 					translation = new DAL.Entities.Translation
 					{
