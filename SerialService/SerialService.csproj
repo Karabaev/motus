@@ -19,7 +19,8 @@
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>44376</IISExpressSSLPort>
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -344,15 +345,6 @@
     <Compile Include="Infrastructure\Helpers\TranslationAddHelper.cs" />
     <Compile Include="Infrastructure\Helpers\UserTokenGenerator.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
-    <Compile Include="Migrations\201903301911481_InitialCreate.cs" />
-    <Compile Include="Migrations\201903301911481_InitialCreate.Designer.cs">
-      <DependentUpon>201903301911481_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201904131742372_AppUserMigration.cs" />
-    <Compile Include="Migrations\201904131742372_AppUserMigration.Designer.cs">
-      <DependentUpon>201904131742372_AppUserMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ElasticVideoMaterial.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -541,12 +533,6 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201903301911481_InitialCreate.resx">
-      <DependentUpon>201903301911481_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201904131742372_AppUserMigration.resx">
-      <DependentUpon>201904131742372_AppUserMigration.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
