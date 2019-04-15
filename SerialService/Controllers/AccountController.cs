@@ -228,17 +228,35 @@
                     return Json(new { error = string.Format("Пользователь с email {0} не найден", model.Email) });
 
                 string code = this.userService.GeneratePasswordResetToken(user.Id);
-                var callbackUrl = this.Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: this.Request.Url.Scheme);
+                var callbackUrl = this.Url.Action("ResetPassword", "Account", new { UserID = user.Id, Code = code }, protocol: this.Request.Url.Scheme);
 
                 Task.Run(() => this.userService.SendEmail(user.Id, "Сброс пароля",
                 "Для сброса пароля, перейдите по ссылке <a href=\"" + callbackUrl + "\">сбросить</a>"));
-                return Json(new { success = "Account/ForgotPasswordConfirmation" });
-                //return this.RedirectToAction("ForgotPasswordConfirmation", "Account");
+                return Json(new
+                {
+                    success = Url.Action("ForgotPasswordConfirmation", new DisplayEmailToConfirmationViewModel
+                    {
+                        Email = model.Email
+                    })
+                });
             }
             else
             {
                 return Json(new { error = "Поле Email некорректно" });
             }
+        }
+
+        /// <summary>
+        /// Показать сообщение об отправке письма на почту с ссылкой на сброс.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        public ActionResult ForgotPasswordConfirmation(DisplayEmailToConfirmationViewModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.Email))
+                HttpNotFound();
+
             return this.View(model);
         }
 
@@ -248,12 +266,23 @@
         /// <param name="code"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
+        public ActionResult ResetPassword(ConfirmEmailViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(code))
+            if (model == null || string.IsNullOrWhiteSpace(model.Code) || string.IsNullOrWhiteSpace(model.UserID))
                 return this.View("Error");
 
-            return this.View();
+            var user = this.userService.Get(model.UserID);
+
+            if (user == null)
+                return HttpNotFound();
+
+            ResetPasswordViewModel m = new ResetPasswordViewModel
+            {
+                Email = user.Email,
+                Code = model.Code
+            };
+
+            return this.View(m);
         }
 
         /// <summary>
@@ -262,6 +291,7 @@
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+       // [HttpPost, AllowAnonymous]
         public ActionResult ResetPassword(ResetPasswordViewModel model)
         {
             if (!ModelState.IsValid)
@@ -269,23 +299,20 @@
 
             var user =  this.userService.GetByMainStringProperty(model.Email);
 
-            if (user == null) // Не показывать, что пользователь не существует
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+            if (user == null)
+                return Json(new { error = "Пользователь с указанным адресом эл. почты не найден" });
+                //return RedirectToAction("ResetPasswordConfirmation", "Account");
 
             var result = this.userService.ResetPassword(user.Id, model.Code, model.Password);
 
-            if (result.Succeeded)
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+            if (!result.Succeeded)
+                return Json(new { error = string.Join(", ", result.Errors) });
+            // return RedirectToAction("ResetPasswordConfirmation", "Account");
 
-            AddErrors(result);
+            return Json(new { success = Url.Action("ResetPasswordConfirmation") });
+            //AddErrors(result);
             return this.View();
 
-        }
-
-        [AllowAnonymous]
-        public ActionResult ForgotPasswordConfirmation()
-        {
-            return this.View();
         }
 
         /// <summary>
@@ -297,6 +324,7 @@
         {
             return this.View();
         }
+
         [AllowAnonymous]
 		public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
 		{

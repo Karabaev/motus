@@ -431,6 +431,7 @@
     <Content Include="Scripts\AccountForms\CommonForm.js" />
     <Content Include="Scripts\AccountForms\ForgotPasswordForm.js" />
     <Content Include="Scripts\AccountForms\LoginForm.js" />
+    <Content Include="Scripts\AccountForms\ResetPasswordForm.js" />
     <Content Include="Scripts\AccountForms\RegisterForm.js" />
     <Content Include="Scripts\AdminTools\AdminMenu.js" />
     <Content Include="Content\mdl-v1.1.2\package.json" />

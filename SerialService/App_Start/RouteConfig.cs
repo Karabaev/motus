@@ -123,8 +123,21 @@
                 defaults: new { controller = "Account", action = "EmailForgotPassword", model = UrlParameter.Optional });
 
             routes.MapRoute(name: "AccountForgotPasswordConfirmation",
-               url: "Account/EmailForgotPassword/{model}",
-               defaults: new { controller = "Account", action = "ForgotPasswordConfirmation", model = UrlParameter.Optional });
+               url: "email_reset",
+               defaults: new { controller = "Account", action = "ForgotPasswordConfirmation" });
+
+            routes.MapRoute(name: "AccountResetPassword",
+                url: "reset_password/{model}",
+                defaults: new { controller = "Account", action = "ResetPassword", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "AccountResetPasswordPost",
+                url: "reset_password/{model}",
+                defaults: new { controller = "Account", action = "ResetPassword", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "AccountResetPasswordConfirmation",
+                url: "reset_password_success",
+                defaults: new { controller = "Account", action = "ResetPasswordConfirmation" });
+
 
             #endregion
 
