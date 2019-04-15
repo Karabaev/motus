@@ -202,16 +202,6 @@
         }
 
         /// <summary>
-        /// Открыть страницу сброса пароля по email
-        /// </summary>
-        /// <returns></returns>
-        [AllowAnonymous]
-        public ActionResult EmailForgotPassword()
-        {
-            return this.View();
-        }
-
-        /// <summary>
         /// Сбросить пароль по email
         /// </summary>
         /// <param name="model">Object with email property</param>
@@ -299,18 +289,13 @@
 
             if (user == null)
                 return Json(new { error = "Пользователь с указанным адресом эл. почты не найден" });
-                //return RedirectToAction("ResetPasswordConfirmation", "Account");
 
             var result = this.userService.ResetPassword(user.Id, model.Code, model.Password);
 
             if (!result.Succeeded)
                 return Json(new { error = string.Join(", ", result.Errors) });
-            // return RedirectToAction("ResetPasswordConfirmation", "Account");
 
             return Json(new { success = Url.Action("ResetPasswordConfirmation") });
-            //AddErrors(result);
-            return this.View();
-
         }
 
         /// <summary>

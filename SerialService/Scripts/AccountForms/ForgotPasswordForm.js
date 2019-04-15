@@ -28,7 +28,7 @@ function GenerateParoleResetModelJson() {
 function Submit() {
     if (IsEmailReset) {
         var json = GenerateEmailResetModelJson();
-        $.post("/Account/EmailForgotPassword",
+        $.post("/email_forgot",
             json,
             function (result) {
                 if (result.error) {

@@ -114,12 +114,8 @@
                 url: "forgot",
                 defaults: new { controller = "Account", action = "ForgotPassword" });
 
-            routes.MapRoute(name: "AccountEmailForgotPasswordGet",
-                url: "email_forgot",
-                defaults: new { controller = "Account", action = "EmailForgotPassword" });
-
             routes.MapRoute(name: "AccountEmailForgotPasswordPost",
-                url: "Account/EmailForgotPassword/{model}",
+                url: "email_forgot/{model}",
                 defaults: new { controller = "Account", action = "EmailForgotPassword", model = UrlParameter.Optional });
 
             routes.MapRoute(name: "AccountForgotPasswordConfirmation",
