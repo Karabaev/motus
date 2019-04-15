@@ -216,7 +216,6 @@
         /// </summary>
         /// <param name="model">Object with email property</param>
         /// <returns></returns>
-        // [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         [HttpPost, AllowAnonymous]
         public ActionResult EmailForgotPassword(EmailForgotPasswordViewModel model)
         {
@@ -291,7 +290,6 @@
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-       // [HttpPost, AllowAnonymous]
         public ActionResult ResetPassword(ResetPasswordViewModel model)
         {
             if (!ModelState.IsValid)
