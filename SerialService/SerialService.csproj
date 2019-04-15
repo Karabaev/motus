@@ -421,7 +421,9 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\AccountForms\CommonForm.js" />
+    <Content Include="Scripts\AccountForms\ForgotPasswordForm.js" />
     <Content Include="Scripts\AccountForms\LoginForm.js" />
+    <Content Include="Scripts\AccountForms\ResetPasswordForm.js" />
     <Content Include="Scripts\AccountForms\RegisterForm.js" />
     <Content Include="Scripts\AdminTools\AdminMenu.js" />
     <Content Include="Content\mdl-v1.1.2\package.json" />
@@ -489,7 +491,6 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Account\EmailForgotPassword.cshtml" />
     <Content Include="Views\Account\ParoleForgotPassword.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\DetailPage\VideoMaterialDetailPage.cshtml" />

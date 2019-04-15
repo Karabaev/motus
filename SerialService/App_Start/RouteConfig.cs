@@ -110,11 +110,36 @@
 				url: "confirmed/{model}",
 				defaults: new { controller = "Account", action = "ConfirmEmail", model = UrlParameter.Optional });
 
-			#endregion
+            routes.MapRoute(name: "AccountForgotPassword",
+                url: "forgot",
+                defaults: new { controller = "Account", action = "ForgotPassword" });
 
-			#region Роуты Redactor и Admin
+            routes.MapRoute(name: "AccountEmailForgotPasswordPost",
+                url: "email_forgot/{model}",
+                defaults: new { controller = "Account", action = "EmailForgotPassword", model = UrlParameter.Optional });
 
-			routes.MapRoute(name: "AdminTools",
+            routes.MapRoute(name: "AccountForgotPasswordConfirmation",
+               url: "email_reset",
+               defaults: new { controller = "Account", action = "ForgotPasswordConfirmation" });
+
+            routes.MapRoute(name: "AccountResetPassword",
+                url: "reset_password/{model}",
+                defaults: new { controller = "Account", action = "ResetPassword", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "AccountResetPasswordPost",
+                url: "reset_password/{model}",
+                defaults: new { controller = "Account", action = "ResetPassword", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "AccountResetPasswordConfirmation",
+                url: "reset_password_success",
+                defaults: new { controller = "Account", action = "ResetPasswordConfirmation" });
+
+
+            #endregion
+
+            #region Роуты Redactor и Admin
+
+            routes.MapRoute(name: "AdminTools",
 				url: "admin_panel/{action}/{id}",
 				defaults: new { controller = "AdminTools", action = "Index", id = UrlParameter.Optional });
 

@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Войти";
 }
+
 <link rel="stylesheet" href="~/Content/AccountForms/AccountForms.css" />
 <div class="mdl-card mdl-shadow--2dp acc-card mdl-cell--4-col mdl-cell--12-col-phone mdl-grid">
     <div class="mdl-card__title">
@@ -21,15 +22,15 @@
                 <label class="mdl-textfield__label" for="password">Пароль...</label>
                 <span class="mdl-textfield__error">Пароль длиной не менее 6 символов, состоящий из букв и цифр</span>
             </div>
-            @*<div class="mdl-cell--12-col forget-password">
-                @Html.ActionLink("Забыли пароль?", "ForgotPassword", null, null, new { @class = "forget-password-link" })
-            </div>*@
             <div class="mdl-cell--12-col"><span style="display:none" class="error"></span></div>
             <label style="margin-top:50px" class="mdl-checkbox mdl-cell--12-col mdl-js-checkbox mdl-js-ripple-effect" for="remember">
                 <input type="checkbox" id="remember" name="RememberMe" class="mdl-checkbox__input" value="true" checked>
                 <span class="mdl-checkbox__label">Запомнить меня</span>
             </label>
         </form>
+        <div class="mdl-cell--12-col forget-password">
+            @Html.ActionLink("Забыли пароль?", "ForgotPassword", null, null, new { @class = "forget-password-link" })
+        </div>
         @*<div class="mdl-cell--12-col">
             <section id="socialLoginForm">
                 @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })

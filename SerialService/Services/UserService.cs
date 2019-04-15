@@ -483,7 +483,22 @@
 			}
 		}
 
-		public IdentityResult Update(ApplicationUser user)
+        public IdentityResult ResetPassword(string userId, string code, string newPassword)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentNullException("userId");
+
+            if (string.IsNullOrWhiteSpace(code))
+                throw new ArgumentNullException("code");
+
+            if (string.IsNullOrWhiteSpace(newPassword))
+                throw new ArgumentNullException("newPassword");
+
+            return this.manager.ResetPassword(userId, code, newPassword);
+        }
+
+
+        public IdentityResult Update(ApplicationUser user)
 		{
 			return this.manager.Update(user);
 		}
