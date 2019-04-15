@@ -73,7 +73,7 @@ namespace SerialService.Models
     public class RegisterViewModel
     {
         [Required]
-        [RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Имя пользователя должно содержать только буквы латинского алфавита и цифры")]
+        [RegularExpression(@"^[A-Za-zА-Яа-яЁё0-9_]*$", ErrorMessage = "Имя пользователя должно содержать только буквы латинского алфавита и цифры")]
         [StringLength(30, ErrorMessage = "Значение {0} должно содержать не менее {2} символов.", MinimumLength = 1)]
         [Display(Name = "Имя пользователя")]
         public string UserName { get; set; }
