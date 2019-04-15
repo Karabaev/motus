@@ -21,22 +21,22 @@
         }
 
         <div class="popover-info-bar">
-            @if (Model.Imdb != null)
+            @if (Model.Imdb != null && Model.Imdb > 0)
             {
                 <div class="info-item imdb-rating"><div class="r-title">IMDb </div>@Model.Imdb</div>
             }
-            @if (Model.KinopoiskRating != null)
+            @if (Model.KinopoiskRating != null && Model.KinopoiskRating > 0)
             {
                 <div class="info-item kp-rating"><div class="r-title">KP </div>@Model.KinopoiskRating</div>
             }
-            @if (Model.Duration>0)
+            @if (Model.Duration > 0)
             {
                 <div class="info-item duration">
                     <div class="mdl-list__item-icon">
                         <i class="watch-icon material-icons">access_time</i>
                     </div>
                     <div>
-                        @Model.Duration <span id="time">min</span>
+                        @Model.Duration <span id="time">мин</span>
                     </div>
                 </div>
             }

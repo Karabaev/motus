@@ -112,15 +112,15 @@
                     </div>
                 }
                 <div class="film-params info-item">
-                    @if (Model.Imdb != null)
+                    @if (Model.Imdb != null && Model.Imdb > 0)
                     {
                         <div class="param"><div class="r-title">IMDb </div>@Model.Imdb</div>
                     }
-                    @if (Model.KinopoiskRating != null)
+                    @if (Model.KinopoiskRating != null && Model.KinopoiskRating > 0)
                     {
                         <div class="param"><div class="r-title">KP </div>@Model.KinopoiskRating</div>
                     }
-                    @if (Model.Duration != 0)
+                    @if (Model.Duration > 0)
                     {
                         <div class="duration param">
                             <div class="mdl-list__item-icon">
