@@ -31,11 +31,11 @@
         <div class="mdl-cell--12-col forget-password">
             @Html.ActionLink("Забыли пароль?", "ForgotPassword", null, null, new { @class = "forget-password-link" })
         </div>
-        @*<div class="mdl-cell--12-col">
+        <div class="mdl-cell--12-col">
             <section id="socialLoginForm">
-                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                @Html.Partial("_ExternalLoginsListPartial")
             </section>
-        </div>*@
+        </div>
     </div>
     <div class="mdl-card__actions mdl-card--border">
         <button type="button" disabled id="submit-btn" class="mdl-button mdl-js-button acc-button">

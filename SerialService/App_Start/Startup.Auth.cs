@@ -12,6 +12,8 @@
     using System.Collections.Generic;
     using DAL.Context;
     using DAL.Repository;
+    using Microsoft.Owin.Security;
+
 
     public partial class Startup
     {
@@ -22,6 +24,9 @@
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
+
+
+
 
             // Включение использования файла cookie, в котором приложение может хранить информацию для пользователя, выполнившего вход,
             // и использование файла cookie для временного хранения информации о входах пользователя с помощью стороннего поставщика входа
@@ -38,16 +43,16 @@
                         validateInterval: TimeSpan.FromMinutes(30),
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
-            });            
+            });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Позволяет приложению временно хранить информацию о пользователе, пока проверяется второй фактор двухфакторной проверки подлинности.
-            app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(5));
+            //app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(5));
 
             // Позволяет приложению запомнить второй фактор проверки имени входа. Например, это может быть телефон или почта.
             // Если выбрать этот параметр, то на устройстве, с помощью которого вы входите, будет сохранен второй шаг проверки при входе.
             // Точно так же действует параметр RememberMe при входе.
-            app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
+            //app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
             // Раскомментируйте приведенные далее строки, чтобы включить вход с помощью сторонних поставщиков входа
             //app.UseMicrosoftAccountAuthentication(
@@ -62,16 +67,22 @@
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            //app.UseGoogleAuthentication("617791642450-0hkdostg0e5ab7obd1b63318nstvhttv.apps.googleusercontent.com", "_L-c1loZvU6sy5rIweyvUABE");
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+            {
+                ClientId = "617791642450-0hkdostg0e5ab7obd1b63318nstvhttv.apps.googleusercontent.com",
+                ClientSecret = "_L-c1loZvU6sy5rIweyvUABE",
+                Caption = "Google+",
+                AuthenticationType = "Google+"
+            });
+            // app.UseVKontakteAuthentication("6949913", "bcQvtVzxt1IXcViKlSpn");
+
             app.UseVKontakteAuthentication(new VKontakteAuthenticationOptions()
             {
-                ClientId = "6714827",
-                ClientSecret = "Ts3xCKdY60lukLVJDcJm",
-                Scope = new List<string>() { "email" }
+                ClientId = "6949913",
+                ClientSecret = "bcQvtVzxt1IXcViKlSpn",
+                Caption = "ВКонтакте",
+                AuthenticationType = "ВКонтакте"
             });
         }
     }

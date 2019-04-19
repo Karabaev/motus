@@ -78,5 +78,6 @@
 
         IdentityResult ResetPassword(string userId, string code, string newPassword);
 
+        IdentityResult AddLogin(string userId, UserLoginInfo info);
     }
 }

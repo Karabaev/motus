@@ -11,7 +11,6 @@
     using System.Threading.Tasks;
     using Infrastructure.Helpers;
     using DAL.Repository;
-    using Infrastructure;
     using Microsoft.AspNet.Identity.EntityFramework;
 
     public class UserService : IUserService // todo: надо полностью перевести логику на сервис
@@ -500,7 +499,31 @@
 
         public IdentityResult Update(ApplicationUser user)
 		{
-			return this.manager.Update(user);
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            return this.manager.Update(user);
 		}
+
+        public IdentityResult AddLogin(string userId, UserLoginInfo info)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentNullException("userId");
+
+            if (info == null)
+                throw new ArgumentNullException("info");
+
+            var user = this.Get(userId);
+
+            if (user == null)
+                throw new EntryNotFoundException("Пользователь не найден");
+
+            var result = this.manager.AddLogin(userId, info);
+
+            if(result.Succeeded)
+                user.ChangeDateTime = DateTime.Now;
+
+            return result;
+        }
     }
 }

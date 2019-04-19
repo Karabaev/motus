@@ -19,8 +19,7 @@
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>
-    </IISExpressSSLPort>
+    <IISExpressSSLPort>44368</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -356,6 +355,10 @@
     <Compile Include="ViewModels\ConfirmNewEmailViewModel.cs" />
     <Compile Include="ViewModels\ConfirmEmailViewModel.cs" />
     <Compile Include="ViewModels\DisplayEmailToConfirmationViewModel.cs" />
+    <Compile Include="ViewModels\ExternalLoginCallbackViewModel.cs" />
+    <Compile Include="ViewModels\ExternalLoginFailureViewModel.cs" />
+    <Compile Include="ViewModels\ExternalLoginViewModel.cs" />
+    <Compile Include="ViewModels\ExternalRegisterViewModel.cs" />
     <Compile Include="ViewModels\RedactorTools\AddFilmViewModel.cs" />
     <Compile Include="ViewModels\CountMarksViewModel.cs" />
     <Compile Include="ViewModels\PersonalAccountViewModel.cs" />
@@ -423,6 +426,7 @@
     <Content Include="Scripts\AccountForms\CommonForm.js" />
     <Content Include="Scripts\AccountForms\ForgotPasswordForm.js" />
     <Content Include="Scripts\AccountForms\LoginForm.js" />
+    <Content Include="Scripts\AccountForms\ExternalRegisterForm.js" />
     <Content Include="Scripts\AccountForms\ResetPasswordForm.js" />
     <Content Include="Scripts\AccountForms\RegisterForm.js" />
     <Content Include="Scripts\AdminTools\AdminMenu.js" />
@@ -483,7 +487,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalRegister.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
@@ -522,6 +526,7 @@
     <Content Include="Views\User\ForHolders.cshtml" />
     <Content Include="Views\Account\DisplayEmailToConfirmation.cshtml" />
     <Content Include="Views\User\ConfirmNewEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -576,7 +581,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:59909/</IISUrl>
+          <IISUrl>https://localhost:44368/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
