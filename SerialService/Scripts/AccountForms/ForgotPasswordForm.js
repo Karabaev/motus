@@ -70,3 +70,41 @@ $(document).ready(function () {
         Submit();
     });
 });
+
+function ClearHidenForm(inputSelector) {
+    $(inputSelector).keydown(function () {
+        var changedInput = $(this).attr('Id');
+        var unselectedInput = $(inputSelector).not(document.getElementById(changedInput));
+        unselectedInput.val('');
+        unselectedInput.parent().removeClass('is-invalid is-dirty');
+    })
+}
+
+function ButtonManage(inputSelector) {
+    var isValide = document.getElementsByClassName('is-invalid').length === 0;
+    var isRequired = false;
+    $(inputSelector).each(function () {
+        if ($(this).val().length > 0) {
+            isRequired = true;
+        }
+    });
+
+    var button = document.getElementById('submit-btn');
+    var attr = 'disabled';
+    var battonIsDisabled = button.hasAttribute(attr);
+
+    if (battonIsDisabled && isValide && isRequired) {
+        button.removeAttribute(attr)
+    }
+    else if (!battonIsDisabled && (!isValide || !isRequired)) {
+        button.setAttribute(attr, attr)
+    }
+}
+
+$(document).ready(function () {
+    const forgonSelector = '.forgot-form-input';
+    ClearHidenForm(forgonSelector);
+    $(forgonSelector).change(function (e) {
+        ButtonManage(forgonSelector);
+    })
+})
