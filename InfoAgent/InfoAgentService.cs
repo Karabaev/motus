@@ -22,7 +22,7 @@
 			this.logger = LogManager.GetCurrentClassLogger();
 		}
 
-		public FilmInfo GetFilmInfo(string id, string token = "6eb82f15e2d7c6cbb2fdcebd05a197a2")
+		public FilmInfo GetFilmInfo(string id, string token = "a3275d42cea4b2dfb65084eea682885d")
         {
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(token))
                 throw new ArgumentNullException("Ошибка вводных");
