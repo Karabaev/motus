@@ -35,8 +35,5 @@ else
                                     routeValues: null,
                                     htmlAttributes: new { id = "registerLink", @class = "mdl-navigation__link" })
 
-    @Html.ActionLink(
-                                    "Войти", "Login", "Account",
-                                    routeValues: new { returnUrl = ViewBag.CurrentURL },
-                                    htmlAttributes: new { id = "loginLink", @class = "mdl-navigation__link" })
+    @Html.ActionLink( "Войти", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "mdl-navigation__link" })
 }
