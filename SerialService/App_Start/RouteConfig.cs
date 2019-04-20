@@ -134,7 +134,21 @@
                 url: "reset_password_success",
                 defaults: new { controller = "Account", action = "ResetPasswordConfirmation" });
 
+            routes.MapRoute(name: "AccountExternalLogin",
+                url: "external_login/{model}",
+                defaults: new { controller = "Account", action = "ExternalLogin", model = UrlParameter.Optional });
 
+            routes.MapRoute(name: "AccountExternalLoginFailure",
+                url: "external_error/{model}",
+                defaults: new { controller = "Account", action = "ExternalLoginFailure", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "AccountExternalRegister",
+                url: "external_register/{model}",
+                defaults: new { controller = "Account", action = "ExternalRegister", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "AccountExternalLoginCallback",
+                url: "external_callback/{model}",
+                defaults: new { controller = "Account", action = "ExternalLoginCallback", model = UrlParameter.Optional });
             #endregion
 
             #region Роуты Redactor и Admin

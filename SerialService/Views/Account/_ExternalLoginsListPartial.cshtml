@@ -1,28 +1,26 @@
-﻿@model SerialService.Models.ExternalLoginListViewModel
-@using Microsoft.Owin.Security
+﻿@using Microsoft.Owin.Security
 
-<h5>Войти через</h5>
-<hr />
+<div class="mdl-card__title">
+    @*<div class="mdl-card__title-text">Авторизация через внешние сервисы</div>*@
+    <div>Еще...</div>
+</div>
 @{
-    var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
-    if (loginProviders.Count() == 0) {
-        <div>
-            <p>
-                Внешние службы проверки подлинности не настроены. В <a href="http://go.microsoft.com/fwlink/?LinkId=403804">этой статье</a>
-                вы можете узнать о том, как в этом приложении ASP.NET настроить вход через внешние службы.
-            </p>
-        </div>
-    }
-    else {
-        using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl })) {
+    var providers = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+
+    if (providers.Count() != 0)
+    {
+        using (Html.BeginForm("ExternalLogin", "Account"))
+        {
             @Html.AntiForgeryToken()
-            <div id="socialLoginList">
-                <p>
-                    @foreach (AuthenticationDescription p in loginProviders) {
-                        <button type="submit" class="mdl-button mdl-js-button" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Войти с помощью учетной записи @p.Caption">@p.AuthenticationType</button>
-                    }
-                </p>
-            </div>
+
+            foreach (AuthenticationDescription item in providers)
+            {
+                <button type="submit" class="mdl-button mdl-js-button acc-button" id="@item.AuthenticationType"
+                        name="Provider" value="@item.AuthenticationType" title="Войти при помощи @item.Caption">
+                    <img alt="" src="http://fm21.ru/Content/_img/vk.png" height="32" width="32" style="vertical-align:middle" />
+                </button>
+            }
         }
+
     }
 }

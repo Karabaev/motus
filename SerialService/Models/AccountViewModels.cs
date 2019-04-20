@@ -14,6 +14,8 @@ namespace SerialService.Models
         [StringLength(30, ErrorMessage = "Значение {0} должно содержать не менее {2} символов.", MinimumLength = 1)]
         [Display(Name = "Имя пользователя")]
         public string UserName { get; set; }
+
+
     }
 
     public class ExternalLoginListViewModel

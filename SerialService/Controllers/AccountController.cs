@@ -15,9 +15,10 @@
 	using ViewModels;
 	using Infrastructure;
 	using System;
+    using System.Linq;
 
-	[Authorize, ExceptionHandler]
-	public class AccountController : Controller
+    [Authorize, ExceptionHandler]
+    public class AccountController : Controller
 	{
 		private readonly IUserService userService;
 
@@ -308,6 +309,157 @@
             return this.View();
         }
 
+        /// <summary>
+        /// Выполнить авторизацию через внешний сервис.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        public ActionResult ExternalLogin(ExternalLoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                return new ChallengeResult(model.Provider, this.Url.Action("ExternalLoginCallback", "Account", new ExternalLoginCallbackViewModel
+                {
+                    ExternalProviderName = model.Provider
+                }));
+            }
+            else
+            {
+                return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel
+                {
+                    Errors = string.Join(", ", ModelState.Values.SelectMany(s => s.Errors.Select(e => e.ErrorMessage))),
+                    ProviderDisplayName = model.Provider
+                });
+            }
+        }
+
+        /// <summary>
+        /// Проверка авторизации, если успех, выполняется вход, если ошибка - переход на страницу ошибки, 
+        /// если такой пользователь не зарегистрирован - переход на страницу регистрации.
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        public ActionResult ExternalLoginCallback(ExternalLoginCallbackViewModel model)
+        {
+            StringBuilder errors = new StringBuilder();
+            var loginInfo = this.AuthenticationManager.GetExternalLoginInfo();
+
+            if (loginInfo == null)
+            {
+                return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel
+                {
+                    Errors = "Не удалось получить данные авторизации от внешнего поставщика",
+                    ProviderDisplayName = model.ExternalProviderName
+                });
+            }
+
+            var user = this.userService.GetByMainStringProperty(loginInfo.Email);
+
+            ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            // Выполнение входа пользователя посредством данного внешнего поставщика входа, если у пользователя уже есть имя входа
+            var result = signInManager.ExternalSignIn(loginInfo, isPersistent: false);
+
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    user.LastAuthorizationDateTime = DateTime.Now;
+                    Task.Run(() => this.userService.Update(user));
+                    return RedirectToAction("Index", "User");
+                case SignInStatus.LockedOut:
+                    errors.Append("Учетная запись заблокирована<br/>");
+                    break;
+                case SignInStatus.Failure:
+                default:
+                    // Если у пользователя нет учетной записи, то ему предлагается создать ее
+                    this.ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+                    return this.View("ExternalRegister", new ExternalRegisterViewModel
+                    {
+                        Email = loginInfo.Email,
+                        UserName = string.IsNullOrWhiteSpace(loginInfo.ExternalIdentity.Name) ? 
+                                                                loginInfo.DefaultUserName : 
+                                                                loginInfo.ExternalIdentity.Name,
+                        LoginProvider = loginInfo.Login.LoginProvider,
+                        ProviderKey = loginInfo.Login.ProviderKey
+                    });
+            }
+
+            return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = errors.ToString() });
+        }
+
+        /// <summary>
+        /// Регистрация после получения параметров от внешнего сервиса.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        public ActionResult ExternalRegister(ExternalRegisterViewModel model)
+        {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("PersonalAccount", "User");
+
+            StringBuilder errors = new StringBuilder();
+
+            if (ModelState.IsValid)
+            {
+                // Получение сведений о пользователе от внешнего поставщика входа
+                var login = new UserLoginInfo(model.LoginProvider, model.ProviderKey);
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, Parole = model.Parole, EmailConfirmed = true };
+                IdentityResult result = null;
+
+                try
+                {
+                    result = this.userService.Create(user, model.Password, Resource.UserRoleName);
+                }
+                catch(EntryAlreadyExistsException ex)
+                {
+                    return Json(new { error = ex.Message });
+                }
+                catch
+                {
+                    return Json(new { error = "Не удалось зарегистрировать пользователя" });
+                }
+                
+                if (result.Succeeded)
+                {
+
+                    result = this.userService.AddLogin(user.Id, login);
+
+                    if (result.Succeeded)
+                    {
+                        ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+                        signInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
+                        return Json(new { success = Url.Action("Index", "User") }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new { error = string.Join("<br/>", result.Errors) });
+                    }
+                }
+                else
+                {
+                    return Json(new { error = string.Join("<br/>", result.Errors) });
+                }
+            }
+            else
+            {
+                return Json(new { error = ModelState.Values.SelectMany(s => s.Errors.Select(e => e.ErrorMessage)) });
+            }
+        }
+
+        /// <summary>
+        /// Вывести ошибку при неудачной авторизации через внешний сервис.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        public ActionResult ExternalLoginFailure(ExternalLoginFailureViewModel model)
+        {
+            return View(model);
+        }
+
+
+
         [AllowAnonymous]
 		public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
 		{
@@ -378,19 +530,6 @@
 		}
 
 
-
-
-
-		[HttpPost]
-		[AllowAnonymous]
-		[ValidateAntiForgeryToken]
-		public ActionResult ExternalLogin(string provider, string returnUrl)
-		{
-			// Запрос перенаправления к внешнему поставщику входа
-			return new ChallengeResult(provider, this.Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
-		}
-
-
 		[AllowAnonymous]
 		public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
 		{
@@ -424,76 +563,6 @@
 			return this.RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
 		}
 
-
-		[AllowAnonymous]
-		public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
-		{
-			var loginInfo = await this.AuthenticationManager.GetExternalLoginInfoAsync();
-			if (loginInfo == null)
-			{
-				return this.RedirectToAction("Login");
-			}
-			ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-			// Выполнение входа пользователя посредством данного внешнего поставщика входа, если у пользователя уже есть имя входа
-			var result = await signInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
-			switch (result)
-			{
-				case SignInStatus.Success:
-					return this.RedirectToLocal(returnUrl);
-				case SignInStatus.LockedOut:
-					return this.View("Lockout");
-				case SignInStatus.RequiresVerification:
-					return this.RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
-				case SignInStatus.Failure:
-				default:
-					// Если у пользователя нет учетной записи, то ему предлагается создать ее
-					this.ViewBag.ReturnUrl = returnUrl;
-					this.ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-					return this.View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
-			}
-		}
-
-		[HttpPost]
-		[AllowAnonymous]
-		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
-		{
-			//if (User.Identity.IsAuthenticated)
-			//{
-			//    return RedirectToAction("Index", "Manage");
-			//}
-
-			//if (ModelState.IsValid)
-			//{
-			//    // Получение сведений о пользователе от внешнего поставщика входа
-			//    var info = await AuthenticationManager.GetExternalLoginInfoAsync();
-			//    if (info == null)
-			//    {
-			//        return View("ExternalLoginFailure");
-			//    }
-			//    var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
-			//    var result = await UserManager.CreateAsync(user);
-			//    if (result.Succeeded)
-			//    {
-			//        result = await UserManager.AddLoginAsync(user.Id, info.Login);
-			//        if (result.Succeeded)
-			//        {
-			//            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-			//            return RedirectToLocal(returnUrl);
-			//        }
-			//    }
-			//    AddErrors(result);
-			//}
-
-			//ViewBag.ReturnUrl = returnUrl;
-			return this.View(model);
-		}
-
-		[AllowAnonymous]
-		public ActionResult ExternalLoginFailure()
-		{
-			return this.View();
-		}
 
 		#region Вспомогательные приложения
 		// Используется для защиты от XSRF-атак при добавлении внешних имен входа
