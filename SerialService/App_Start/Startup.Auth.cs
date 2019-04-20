@@ -82,7 +82,8 @@
                 ClientId = "6949913",
                 ClientSecret = "bcQvtVzxt1IXcViKlSpn",
                 Caption = "ВКонтакте",
-                AuthenticationType = "ВКонтакте"
+                AuthenticationType = "ВКонтакте",
+                Scope = new List<string> { "email" }
             });
         }
     }
