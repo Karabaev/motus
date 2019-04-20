@@ -37,9 +37,8 @@
         /// <param name="returnUrl"></param>
         /// <returns></returns>
 		[AllowAnonymous]
-		public ActionResult Login(string returnUrl = "")
+		public ActionResult Login()
 		{
-			this.ViewBag.ReturnUrl = returnUrl;
 			return this.View();
 		}
 
