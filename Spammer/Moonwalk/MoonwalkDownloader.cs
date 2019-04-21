@@ -1,5 +1,6 @@
 ﻿namespace Updater.Moonwalk
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using NLog;
@@ -55,6 +56,10 @@
                         Task.Run(() => this.logger.Warn("Не удалось загрузить в базу информацию о фильме"));
                     }
 
+                }
+                catch(ArgumentOutOfRangeException ex)
+                {
+                    Task.Run(() => this.logger.Error(ex));
                 }
                 catch (EntryAlreadyExistsException ex)
                 {
