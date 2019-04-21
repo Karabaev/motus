@@ -177,6 +177,7 @@
 			{
 				return this.RedirectToAction("Index");
 			}
+            ViewBag.SearchResult = $"Результат поиска по \"{searchStr}\"";
 			var result = MotusElasticsearch.Search(searchStr);
 			RedirectHelper.SaveLocalURL(this.ViewBag, this.ControllerContext);
 			return this.View("Index", result.ToPagedList(1, PageSize));
