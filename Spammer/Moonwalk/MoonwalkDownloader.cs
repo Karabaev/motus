@@ -59,7 +59,7 @@
                 }
                 catch(ArgumentOutOfRangeException ex)
                 {
-                    Task.Run(() => this.logger.Error(ex));
+                    Task.Run(() => this.logger.Error(ex, "Фильм {0}", item.Title));
                 }
                 catch (EntryAlreadyExistsException ex)
                 {

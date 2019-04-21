@@ -13,7 +13,7 @@
 
 			foreach (var item in data.Translations)
 			{
-				DAL.Entities.Translation translation = translationService.GetByMainStringProperty(item.studioName);
+                DAL.Entities.Translation translation = translationService.GetByMainStringProperty(item.studioName);
 
 				if (translation == null)
 				{
