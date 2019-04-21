@@ -152,6 +152,7 @@
                                                                           .Field(ff => ff.ActorNames.Suffix("ngram"))
                                                                           .Field(ff => ff.FilmMakerNames.Suffix("ngram")))
                                                                       .Query(query)
+                                                                      .MinimumShouldMatch("60%")
                                                                   )
                                                               )
                                                               .Index(index)
