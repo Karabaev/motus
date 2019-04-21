@@ -155,7 +155,6 @@
                                                                   )
                                                               )
                                                               .Index(index)
-                                                              .Size(5)
                                                         ).Result.Documents.ToList();
             return result;
         }
