@@ -1,6 +1,6 @@
 ﻿namespace InfoAgent.Moonwalk.Model
 {
-    interface IVideoMaterial
+    public interface IVideoMaterial
     {
         string title_ru { get; set; }
         string title_en { get; set; }

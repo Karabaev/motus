@@ -1,5 +1,7 @@
 ﻿namespace InfoAgent.Moonwalk.Model
 {
+    using System;
+
     public class Serial : IVideoMaterial
     {
         public string title_ru { get; set; }
@@ -19,6 +21,7 @@
         public string category { get; set; }
         public Block block { get; set; }
         public SeasonEpisodesCount[] season_episodes_count { get; set; }
+        public DateTime? last_episode_time { get; set; }
         public MaterialData material_data { get; set; }
     }
 }

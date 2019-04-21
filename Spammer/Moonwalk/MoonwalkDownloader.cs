@@ -1,45 +1,100 @@
-﻿namespace Spammer.Moonwalk
+﻿namespace Updater.Moonwalk
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using NLog;
     using InfoAgent;
-    using InfoAgent.Exceptions;
     using SerialService.DAL;
-    using SerialService.DAL.Entities;
-    using SerialService.Infrastructure;
     using SerialService.Infrastructure.Exceptions;
-    using SerialService.Infrastructure.Helpers;
-    using KinoPoiskParser;
+    using InfoAgent.Moonwalk;
+    using Shared;
 
-    public class MoonwalkDownloader
+    public class MoonwalkDownloader : IFilmDownloader
     {
-        private MoonwalkDownloader(IAppUnitOfWork unitOfWork)
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        private MoonwalkDownloader(IAppUnitOfWork unitOfWork, string filmAuthorEmail)
         {
             this.unitOfWork = unitOfWork;
+            this.service = new Service();
+            this.authorEmail = filmAuthorEmail;
         }
 
-        private List<FilmInfo> GetFilmInfoList()
+        /// <summary>
+        /// Получить лист объектов FilmInof по всей базе Мунвалка.
+        /// </summary>
+        /// <returns></returns>
+        private List<FilmInfo> GetFullBaseFilmInfoList()
         {
-            List<FilmInfo> result = new List<FilmInfo>();
+            return this.service.GetAllFilmInfoList();
+        }
 
+        /// <summary>
+        /// Загрузить в базу фильмы из списка filmInfoList.
+        /// </summary>
+        /// <param name="authorEmail"></param>
+        /// <param name="filmInfoList"></param>
+        /// <returns></returns>
+        private int DownloadVideoMaterials(IEnumerable<FilmInfo> filmInfoList)
+        {
+            int result = 0;
 
+            foreach (var item in filmInfoList)
+            {
+                try
+                {
+                    if (this.unitOfWork.VideoMaterials.Create(FilmInfoToVideoMaterialConverter.Convert(item, this.authorEmail, this.unitOfWork)))
+                    {
+                        result++;
+                        Task.Run(() => this.logger.Info("Информация о фильме {0} загружена в базу", item.Title));
+                    }
+                    else
+                    {
+                        Task.Run(() => this.logger.Warn("Не удалось загрузить в базу информацию о фильме"));
+                    }
+
+                }
+                catch (EntryAlreadyExistsException ex)
+                {
+                    Task.Run(() => this.logger.Info("Информация о фильме {0} уже есть в базе", item.Title));
+                }
+                catch(EntryNotFoundException ex)
+                {
+                    Task.Run(() => this.logger.Error(ex));
+                }
+            }
 
             return result;
         }
 
-        public static MoonwalkDownloader GetInstance(IAppUnitOfWork unitOfWork)
+        /// <summary>
+        /// Загрузить в базу всю базу фильмов/сериалов Мунвалка.
+        /// </summary>
+        /// <returns></returns>
+        public int DownloadFilms()
+        {
+            return this.DownloadVideoMaterials(this.GetFullBaseFilmInfoList());
+        }
+
+        /// <summary>
+        /// Получить экземплар синглтон класса.
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        /// <returns></returns>
+        public static MoonwalkDownloader GetInstance(IAppUnitOfWork unitOfWork, string filmAuthorEmail)
         {
             if (MoonwalkDownloader.instance == null)
-                MoonwalkDownloader.instance = new MoonwalkDownloader(unitOfWork);
+                MoonwalkDownloader.instance = new MoonwalkDownloader(unitOfWork, filmAuthorEmail);
 
             return MoonwalkDownloader.instance;
         }
 
         private readonly IAppUnitOfWork unitOfWork;
         private readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly Service service;
+        private readonly string authorEmail;
         private static MoonwalkDownloader instance;
     }
     

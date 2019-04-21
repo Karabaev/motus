@@ -10,6 +10,7 @@
     using Newtonsoft.Json;
     using NLog;
     using Model;
+    using AdditionalModel;
 
     public class Service
     {
@@ -17,7 +18,7 @@
         /// Конструктор.
         /// </summary>
         /// <param name="apiKey"></param>
-        public Service(string apiKey)
+        public Service(string apiKey = "a3275d42cea4b2dfb65084eea682885d")
         {
             this.apiKey = apiKey;
         }
@@ -83,106 +84,147 @@
         /// <returns></returns>
         public List<FilmInfo> GetAllFilmInfoList()
         {
-            List<FilmInfo> result = new List<FilmInfo>();
-            List<Response> responses = new List<Response>();
-            responses.Add(this.GetResponseObject(RequestTypes.ForeignFilms));
-            responses.Add(this.GetResponseObject(RequestTypes.RussianFilms));
-            responses.Add(this.GetResponseObject(RequestTypes.AnimeFilms));
-            responses.Add(this.GetResponseObject(RequestTypes.ForeignSerials));
-            responses.Add(this.GetResponseObject(RequestTypes.RussianSerials));
-            responses.Add(this.GetResponseObject(RequestTypes.AnimeSerials));
+            List<VideoMaterialWithTranslations> videoMaterials = new List<VideoMaterialWithTranslations>();
+            //Response response = this.GetResponseObject(RequestTypes.ForeignFilms);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
+            //response = this.GetResponseObject(RequestTypes.RussianFilms);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
+            //response = this.GetResponseObject(RequestTypes.AnimeFilms);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
+            //response = this.GetResponseObject(RequestTypes.ForeignSerials);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
+            //response = this.GetResponseObject(RequestTypes.RussianSerials);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
+            Response response = this.GetResponseObject(RequestTypes.AnimeSerials);
+            videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
+            List<FilmInfo> result = this.GetFilmInfoList(videoMaterials);
             return result;
         }
 
-        private List<FilmInfo> MapResponseToFilmInfoList(Response response)
+        /// <summary>
+        /// Получить лист объетов видеометериалов промежуточной сущности.
+        /// </summary>
+        /// <param name="videoMaterials"></param>
+        /// <returns></returns>
+        private List<VideoMaterialWithTranslations> GetVideoMaterial(IVideoMaterial[] videoMaterials)
         {
-            if (response == null)
+            if (videoMaterials == null)
                 return null;
 
-            List<FilmInfo> result = new List<FilmInfo>();
+            List<VideoMaterialWithTranslations> result = new List<VideoMaterialWithTranslations>();
 
-
-            return result;
-        }
-
-        private FilmInfo GetFilmInfoFromModelEntity(IVideoMaterial modelEntity)
-        {
-            if (modelEntity == null)
-                return null;
-
-            FilmInfo result = new FilmInfo
+            foreach (var item in videoMaterials)
             {
-                Actors = new List<string>(modelEntity.material_data.actors),
-                Countries = new List<string>(modelEntity.material_data.countries),
-                Description = modelEntity.material_data.description,
-                Duration = ((Movie)modelEntity)?.duration.seconds,
-                FilmMakers = new List<string>(modelEntity.material_data.directors),
-                Genres = new List<string>(modelEntity.material_data.genres),
-                IDMB = modelEntity.material_data.imdb_rating,
-                IsBlocked = !modelEntity.block.blocked_at.HasValue,
-                IsSerial = (Movie)modelEntity == null,
-                KinopoiskID = modelEntity.kinopoisk_id?.ToString(),
-                KinopoiskRating = modelEntity.material_data.kinopoisk_rating,
-                MoonWalkAddDate = ((Movie)modelEntity)?.added_at,
-                OriginalTitle = modelEntity.title_en,
-                PosterHref = modelEntity.material_data.poster,
-                ReleaseDate = modelEntity.material_data.year,
-                Tagline = modelEntity.material_data.tagline == "-" ? string.Empty : modelEntity.material_data.tagline,
-                Title = modelEntity.title_ru,
-                Translations = new List<Translation>()
-            };
+                VideoMaterialWithTranslations videoTrans = result.FirstOrDefault(r => r.KinopoiskID == item.kinopoisk_id);
 
-            return result;
-        }
-
-        private List<Translation> GetTranslations(JArray jArr)
-        {
-            List<Translation> result = new List<Translation>();
-
-            foreach (var trn in jArr)
-            {
-                Translation translation = new Translation();
-                translation.listOfSeasons = new List<SeasonInfo>();
-                translation.studioName = trn["translator"].Value<string>();
-
-                try
+                if (videoTrans != null)
                 {
-                    translation.lastEpisodeTime = trn["last_episode_time"].Value<DateTime?>();
+                    videoTrans.Translations.Add(item);
                 }
-                catch (ArgumentNullException ex)
+                else
                 {
-                    this.logger.Warn(ex, "Значение last_episode_time не определено");
-                }
-
-                try
-                {
-                    translation.updateTime = trn["material_data"]["updated_at"].Value<DateTime?>();
-                }
-                catch (ArgumentNullException ex)
-                {
-                    this.logger.Warn(ex, "Значение material_data.updated_at не определено");
-                }
-
-                try
-                {
-                    foreach (var season in trn["season_episodes_count"])
+                    videoTrans = new VideoMaterialWithTranslations
                     {
-                        translation.listOfSeasons.Add(new SeasonInfo
-                        {
-                            seasonNumber = season["season_number"].Value<int?>(),
-                            episodesCount = season["episodes_count"].Value<int?>()
-                        });
-                    }
+                        KinopoiskID = item.kinopoisk_id,
+                        Translations = new List<IVideoMaterial> { item }
+                    };
+                    result.Add(videoTrans);
                 }
-                catch (NullReferenceException ex)
-                {
-                    this.logger.Info("У фильма сезонов нет");
-                }
-
-                result.Add(translation);
             }
 
-            Task.Run(() => this.logger.Info("Окончание парсинга переводов. Результат: \"{0}\"", JsonConvert.SerializeObject(result)));
+            return result;
+        }
+
+        private List<FilmInfo> GetFilmInfoList(List<VideoMaterialWithTranslations> videoMaterials)
+        {
+            if (videoMaterials == null)
+                return null;
+
+            List<FilmInfo> result = new List<FilmInfo>();
+
+            foreach (var item in videoMaterials)
+                result.Add(this.GetFilmInfo(item));
+
+            return result;
+        }
+
+        /// <summary>
+        /// Получить объект выходной сущности FilmInfo из объекта промежуточной сущности VideoMaterialWithTranslations.
+        /// </summary>
+        /// <param name="videoMaterial"></param>
+        /// <returns></returns>
+        private FilmInfo GetFilmInfo(VideoMaterialWithTranslations videoMaterial)
+        {
+            if (videoMaterial == null)
+                return null;
+
+            if (!videoMaterial.Translations.Any())
+                throw new ArgumentOutOfRangeException("videoMaterial", "Свойство Translations не имеет ни одного элемента");
+
+            if(videoMaterial.Translations.Where(t => t == null).Any())
+                throw new ArgumentOutOfRangeException("videoMaterial", "Свойство Translations имеет элемент со значением null");
+
+            IVideoMaterial modelEntity = videoMaterial.Translations[0];
+            FilmInfo result = new FilmInfo();
+
+            result.Actors = modelEntity.material_data?.actors == null ?
+                            new List<string>() : 
+                            new List<string>(modelEntity.material_data?.actors);
+            result.Countries = modelEntity.material_data?.countries == null ?
+                               new List<string>() :
+                               new List<string>(modelEntity.material_data?.countries);
+            result.Description = modelEntity.material_data?.description;
+            result.Duration = (modelEntity as Movie)?.duration?.seconds;
+            result.FilmMakers = modelEntity.material_data?.directors == null ?
+                                new List<string>() :
+                                new List<string>(modelEntity.material_data?.directors);
+            result.Genres = modelEntity.material_data?.genres == null ?
+                            new List<string>() :
+                            new List<string>(modelEntity.material_data?.genres);
+            result.IDMB = modelEntity.material_data?.imdb_rating;
+            result.IsBlocked = !modelEntity.block.blocked_at.HasValue;
+            result.IsSerial = (modelEntity as Movie) == null;
+            result.KinopoiskID = modelEntity.kinopoisk_id?.ToString();
+            result.KinopoiskRating = modelEntity.material_data?.kinopoisk_rating;
+            result.MoonWalkAddDate = (modelEntity as Movie)?.added_at;
+            result.OriginalTitle = modelEntity.title_en;
+            result.PosterHref = modelEntity.material_data?.poster;
+            result.ReleaseDate = modelEntity.material_data?.year;
+            result.Tagline = modelEntity.material_data?.tagline == "-" ? string.Empty : modelEntity.material_data?.tagline;
+            result.Title = modelEntity.title_ru;
+            result.Translations = new List<Translation>();
+
+            foreach (var item in videoMaterial.Translations)
+            {
+                Translation translation = new Translation
+                {
+                    studioName = item.translator,
+                    updateTime = item.material_data?.updated_at,
+                    lastEpisodeTime = null,
+                    listOfSeasons = null
+                };
+                
+                if(item is Serial serial)
+                {
+                    translation.lastEpisodeTime = serial.last_episode_time;
+                    translation.listOfSeasons = new List<SeasonInfo>();
+
+                    foreach (var season in serial.season_episodes_count)
+                    {
+                        SeasonInfo info = new SeasonInfo
+                        {
+                            episodesCount = season.episodes_count,
+                            seasonNumber = season.season_number
+                        };
+
+                        translation.listOfSeasons.Add(info);
+                    }
+                }
+
+                result.Translations.Add(translation);
+
+            }
+
             return result;
         }
 

@@ -1,4 +1,6 @@
-﻿namespace Updater
+﻿using Shared.Mail;
+
+namespace Updater
 {
 	using System;
 	using System.Linq;
@@ -12,7 +14,6 @@
 	using InfoAgent;
 	using Exceptions;
 	using NLog;
-	using Shared.Mail;
 
 	public enum MessageTypes
 	{

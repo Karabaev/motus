@@ -57,6 +57,7 @@
     <Compile Include="Exceptions\NotFoundInFilmBaseException.cs" />
     <Compile Include="FilmInfo.cs" />
     <Compile Include="InfoAgentService.cs" />
+    <Compile Include="Moonwalk\AdditionalModel\VideoMaterialWithTranslations.cs" />
     <Compile Include="Moonwalk\Model\IVideoMaterial.cs" />
     <Compile Include="Moonwalk\RequestTypes.cs" />
     <Compile Include="Moonwalk\Model\Block.cs" />

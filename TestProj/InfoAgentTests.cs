@@ -1,8 +1,10 @@
 ﻿namespace TestProj
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using InfoAgent;
+    using InfoAgent.Moonwalk;
 
     [TestClass]
     public class InfoAgentTests
@@ -10,8 +12,9 @@
         [TestMethod]
         public void GetAllMoonwalkFilmInfoListTest()
         {
-            InfoAgentService service = new InfoAgentService();
-            service.GetAllMoonwalkFilmInfoList();
+            Service service = new Service();
+            var result = service.GetAllFilmInfoList();
+            Assert.IsTrue(result.Any());
         }
     }
 }
