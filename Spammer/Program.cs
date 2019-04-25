@@ -274,7 +274,7 @@ namespace Updater
             int totalDownloaded = -1;
             DateTime startDateTime = DateTime.Now;
             Task.Run(() => Program.Logger.Info("Мунвалк Даунлоадер запущен"));
-            Program.MoonwalkDownloader = Moonwalk.MoonwalkDownloader.GetInstance(new AppUnitOfWork(), authorMail);
+            Program.MoonwalkDownloader = Moonwalk.MoonwalkDownloader.GetInstance(authorMail);
             try
             {
                 totalDownloaded = Program.MoonwalkDownloader.DownloadFilms();

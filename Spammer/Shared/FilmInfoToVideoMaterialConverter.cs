@@ -8,46 +8,61 @@
     using SerialService.Infrastructure;
     using SerialService.Infrastructure.Exceptions;
     using SerialService.Infrastructure.Helpers;
+    using SerialService.Infrastructure.Managers;
 
     public static class FilmInfoToVideoMaterialConverter
     {
-        public static VideoMaterial Convert(FilmInfo info, string authorMail, IAppUnitOfWork unitOfWork)
+        public static VideoMaterial Convert(FilmInfo info, string authorMail)
         {
-            VideoMaterial result = null;
-            ApplicationUser user = unitOfWork.Users.GetByMainStringProperty(authorMail);
+            VideoMaterialManager manager = new VideoMaterialManager();
 
-            if (user == null)
-                throw new EntryNotFoundException(string.Format("Пользователь с email {0} не найден", authorMail));
+            bool watchForUpdates = info.IsSerial.HasValue && info.IsSerial.Value ? true : false;
+            List<SerialSeasonInitializer> seasonInitializerList = new List<SerialSeasonInitializer>();
 
-            result = new VideoMaterial
+            foreach (var translation in info.Translations)
             {
-                Duration = info.Duration,
-                IDMB = info.IDMB.HasValue ? info.IDMB.Value : 0,
-                KinopoiskRating = info.KinopoiskRating,
-                KinopoiskID = info.KinopoiskID,
-                OriginalTitle = info.OriginalTitle,
-                ReleaseDate = info.ReleaseDate,
-                Text = info.Description,
-                Title = info.Title,
-                Tagline = info.Tagline,
-                Pictures = new List<Picture>
+                if (translation.listOfSeasons != null)
                 {
-                    new Picture{ IsPoster = true, URL = info.PosterHref }
-                },
-                Actors = unitOfWork.Persons.AutoSave(info.Actors),
-                FilmMakers = unitOfWork.Persons.AutoSave(info.FilmMakers),
-                Genres = unitOfWork.Genres.AutoSave(info.Genres),
-                Countries = unitOfWork.Countries.AutoSave(info.Countries),
-                Author = user,
-                AuthorID = user.Id,
-                CheckStatus = CheckStatus.Checking,
-                WatchForUpdates = info.IsSerial.HasValue && info.IsSerial.Value ? true : false,
-                SerialSeasons = new List<SerialSeason>(),
-                AddDateTime = DateTime.Now,
-                MoonWalkAddDate = info.MoonWalkAddDate,
-            };
-            TranslationAddHelper translationHelper = new TranslationAddHelper();
-            translationHelper.SaveTranslations(info, result, unitOfWork.Translations);
+                    foreach (var season in translation.listOfSeasons)
+                    {
+                        SerialSeasonInitializer seasonInitializer = new SerialSeasonInitializer(
+                                                                season.seasonNumber ?? 0,
+                                                                season.episodesCount, translation.lastEpisodeTime,
+                                                                translation.studioName);
+                        seasonInitializerList.Add(seasonInitializer);
+                    }
+                }
+                else
+                {
+                    SerialSeasonInitializer seasonInitializer = new SerialSeasonInitializer(0, 1, 
+                                                                translation.lastEpisodeTime, translation.studioName);
+                    seasonInitializerList.Add(seasonInitializer);
+                }
+            }
+
+            VideoMaterialInitializer initializer = new VideoMaterialInitializer(info.Title, 
+                info.OriginalTitle,
+                info.Description,
+                info.Tagline,
+                info.KinopoiskID,
+                info.IDMB ?? 0,
+                info.KinopoiskRating,
+                info.Duration,
+                authorMail,
+                info.MoonWalkAddDate,
+                info.ReleaseDate,
+                info.Countries,
+                info.Genres,
+                info.PosterHref,
+                info.FilmMakers,
+                info.Actors,
+                seasonInitializerList,
+                new List<string>(),
+                CheckStatus.Checking,
+                watchForUpdates,
+                false);
+
+            VideoMaterial result = manager.CreateVideoMaterialInstance(initializer);
             return result;
         }
     }

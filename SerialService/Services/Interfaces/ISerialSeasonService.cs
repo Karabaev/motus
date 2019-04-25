@@ -6,7 +6,9 @@
 
     public interface ISerialSeasonService : IBaseService<SerialSeason>
     {
-		bool Update(int oldID, SerialSeason newSeason);
+        SerialSeason Get(int seasonNumber, int videoMaterialId, int translationId);
+
+        bool Update(int oldID, SerialSeason newSeason);
 
         bool MarkArchive(SerialSeason entity);
 

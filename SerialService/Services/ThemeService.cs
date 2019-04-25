@@ -32,7 +32,15 @@
 
         public bool Create(IEnumerable<Theme> entities)
         {
-            throw new NotImplementedException();
+            if (entities == null)
+                throw new ArgumentNullException("entities");
+
+            bool result = true;
+
+            foreach (var item in entities)
+                result = result && this.Create(item);
+
+            return result;
         }
 
         public Theme Get(int? id)

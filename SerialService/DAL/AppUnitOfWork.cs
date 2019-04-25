@@ -15,68 +15,86 @@
         private IThemeService themeService;
         private ITranslationService translationService;
 		private ISerialSeasonService serialSeasonService;
+        private IUserService userService;
+        private IVideoMarkService videoMarkService;
+        private IRoleService roleService;
+        private static IAppUnitOfWork instance;
 
         private ApplicationDbContext DB = new ApplicationDbContext();
-        
-        IVideoMaterialService IAppUnitOfWork.VideoMaterials
+
+        public IVideoMaterialService VideoMaterials
         {
             get
             {
-                this.videoMaterialService = new VideoMaterialService(DB);
+                if(this.videoMaterialService == null)
+                    this.videoMaterialService = new VideoMaterialService(DB);
+
                 return this.videoMaterialService;
             }
         }
 
-        IPersonService IAppUnitOfWork.Persons
+        public IPersonService Persons
         {
             get
             {
-                this.personService = new PersonService(DB);
+                if (this.personService == null)
+                    this.personService = new PersonService(DB);
+
                 return this.personService;
             }
         }
 
-        ICountryService IAppUnitOfWork.Countries
+        public ICountryService Countries
         {
             get
             {
-                this.countryService = new CountryService(DB);
+                if (this.countryService == null)
+                    this.countryService = new CountryService(DB);
+
                 return this.countryService;
             }
         }
 
-        IPictureService IAppUnitOfWork.Pictures
+        public IPictureService Pictures
         {
             get
             {
-                this.pictureService = new PictureService(DB);
+                if (this.pictureService == null)
+                    this.pictureService = new PictureService(DB);
+
                 return this.pictureService;
             }
         }
 
-        IGenreService IAppUnitOfWork.Genres
+        public IGenreService Genres
         {
             get
             {
-                this.genreService = new GenreService(DB);
+                if (this.genreService == null)
+                    this.genreService = new GenreService(DB);
+
                 return this.genreService;
             }
         }
 
-        IThemeService IAppUnitOfWork.Themes
+        public IThemeService Themes
         {
             get
             {
-                this.themeService = new ThemeService(DB);
+                if (this.themeService == null)
+                    this.themeService = new ThemeService(DB);
+
                 return this.themeService;
             }
         }
 
-        ITranslationService IAppUnitOfWork.Translations
+        public ITranslationService Translations
         {
             get
             {
-                this.translationService = new TranslationService(DB);
+                if (this.translationService == null)
+                    this.translationService = new TranslationService(DB);
+
                 return this.translationService;
             }
         }
@@ -85,7 +103,10 @@
         {
             get
             {
-                return new UserService(DB);
+                if (this.userService == null)
+                    this.userService = new UserService(DB);
+
+                return this.userService;
             }
         }
 
@@ -93,6 +114,9 @@
         {
             get
             {
+                if (this.videoMarkService == null)
+                    this.videoMarkService = new VideoMarkService(this.DB);
+
                 return new VideoMarkService(DB);
             }
         }
@@ -101,8 +125,11 @@
         {
             get
             {
-                return new RoleService(DB);
-			}
+                if(this.roleService == null)
+                    this.roleService = new RoleService(DB);
+
+                return this.roleService;
+            }
 		}
 
 		public ISerialSeasonService SerialSeasons
@@ -115,6 +142,14 @@
 				return this.serialSeasonService;
 			}
 		}
+
+        public static IAppUnitOfWork GetInstance()
+        {
+            if (AppUnitOfWork.instance == null)
+                AppUnitOfWork.instance = new AppUnitOfWork();
+
+            return AppUnitOfWork.instance;
+        }
 
 		//далее копипаста, не выебываемся
 		private bool disposed = false;
