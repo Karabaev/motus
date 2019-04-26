@@ -70,6 +70,9 @@
             if (entity == null)
                 return false;
 
+            if (string.IsNullOrWhiteSpace(entity.KinopoiskID))
+                throw new ArgumentOutOfRangeException("entity", "Свойство KinopoiskID не инициализировано");
+
             if (this.GetAll().Contains(entity))
                 throw new EntryAlreadyExistsException("Видеоматериал с таким Kinopoisk ID уже существует");
 

@@ -1,4 +1,6 @@
-﻿namespace Updater
+﻿using Shared.Mail;
+
+namespace Updater
 {
     using System;
     using System.Threading.Tasks;
@@ -7,7 +9,7 @@
     using System.Collections.Generic;
     using SerialService.Infrastructure.Exceptions;
     using Cleaner;
-    using Shared.Mail;
+    using Shared;
 
     public class Program
 	{
@@ -29,7 +31,7 @@
 							Program.LaunchUpdater();
 							return 1;
 						case 2:
-                            Console.WriteLine("1. Загрузить в интервале ID 2. Загрузить по url");
+                            Console.WriteLine("1. Загрузить в интервале ID 2. Загрузить по url 3. Загрузить базу Мунвалка");
                             switch (int.Parse(Console.ReadLine()))
                             {
                                 case 1:
@@ -38,6 +40,9 @@
                                 case 2:
                                     Program.LaunchUrlDownloader();
                                     Console.ReadLine();
+                                    break;
+                                case 3:
+                                    Program.LaunchMoonwalkDownloader();
                                     break;
                             }
                             return 2;
@@ -242,6 +247,51 @@
             }
         }
 
+        private static void LaunchMoonwalkDownloader()
+        {
+            ConfigManager configManager = ConfigManager.GetInstance(Program.Logger);
+            string authorMail = string.Empty;
+
+            try
+            {
+                authorMail = (string)configManager.Config[ConfigKeys.VIDEO_MATERIAL_AUTHOR_MAIL];
+            }
+            catch (NullReferenceException ex)
+            {
+                Task.Run(() => Program.Logger.Error(ex, "Файл конфигурациине не загружен"));
+                return;
+            }
+            catch (InvalidCastException ex)
+            {
+                Task.Run(() => Program.Logger.Error(ex, "Один из параметров имеет неверный формат"));
+                return;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                Task.Run(() => Program.Logger.Error(ex, "Неверный файл конфигурации"));
+                return;
+            }
+            int totalDownloaded = -1;
+            DateTime startDateTime = DateTime.Now;
+            Task.Run(() => Program.Logger.Info("Мунвалк Даунлоадер запущен"));
+            Program.MoonwalkDownloader = Moonwalk.MoonwalkDownloader.GetInstance(new AppUnitOfWork(), authorMail);
+            try
+            {
+                totalDownloaded = Program.MoonwalkDownloader.DownloadFilms();
+            }
+            catch(Exception ex)
+            {
+                Program.Logger.Error(ex, "Ошибка при загрузке фильмов из базы Мунвалка");
+            }
+            
+            DateTime endDateTime = DateTime.Now;
+            TimeSpan result = endDateTime - startDateTime;
+            Task.Run(() => Program.Logger.Fatal("Фильмов было загружено: {0}", totalDownloaded));
+            Task.Run(() => Program.Logger.Fatal("Потрачено времени на проверку обновлений: {0}", result));
+        }
+
+
+        private static IFilmDownloader MoonwalkDownloader { get; set; }
         private static Logger Logger { get; set; } = LogManager.GetCurrentClassLogger();
 	}
 }

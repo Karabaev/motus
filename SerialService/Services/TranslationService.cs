@@ -51,9 +51,6 @@
 
         public Translation GetByMainStringProperty(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-                return null;
-
             return this.GetScalarWithCondition(vm => vm.Name.ToLower() == value.ToLower());
         }
 
