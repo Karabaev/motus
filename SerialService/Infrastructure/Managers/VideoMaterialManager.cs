@@ -276,7 +276,7 @@
         private Picture GetPicture(string url)
         {
             if (string.IsNullOrWhiteSpace(url))
-                url = "/Media/Avatars/no-poster.png";
+                throw new ArgumentNullException("url");
 
             Picture result = this.unitOfWork.Pictures.GetByMainStringProperty(url);
 

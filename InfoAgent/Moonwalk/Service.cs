@@ -87,16 +87,16 @@
             List<VideoMaterialWithTranslations> videoMaterials = new List<VideoMaterialWithTranslations>();
             Response response = this.GetResponseObject(RequestTypes.ForeignFilms);
             videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
-            //response = this.GetResponseObject(RequestTypes.RussianFilms);
-            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
-            //response = this.GetResponseObject(RequestTypes.AnimeFilms);
-            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
-            //response = this.GetResponseObject(RequestTypes.ForeignSerials);
-            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
-            //response = this.GetResponseObject(RequestTypes.RussianSerials);
-            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
-            //response = this.GetResponseObject(RequestTypes.AnimeSerials);
-            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
+            response = this.GetResponseObject(RequestTypes.RussianFilms);
+            videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
+            response = this.GetResponseObject(RequestTypes.AnimeFilms);
+            videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
+            response = this.GetResponseObject(RequestTypes.ForeignSerials);
+            videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
+            response = this.GetResponseObject(RequestTypes.RussianSerials);
+            videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
+            response = this.GetResponseObject(RequestTypes.AnimeSerials);
+            videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
             List<FilmInfo> result = this.GetFilmInfoList(videoMaterials);
             return result;
         }
