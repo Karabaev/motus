@@ -76,6 +76,8 @@
             if (this.GetAll().Contains(entity))
                 throw new EntryAlreadyExistsException("Видеоматериал с таким Kinopoisk ID уже существует");
 
+            entity.AddDateTime = DateTime.Now;
+            entity.UpdateDateTime = entity.AddDateTime;
             return this.Repository.AddEntity(entity);
         }
 

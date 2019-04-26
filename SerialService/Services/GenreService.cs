@@ -30,7 +30,15 @@
 
         public bool Create(IEnumerable<Genre> entities)
         {
-            throw new NotImplementedException();
+            if (entities == null)
+                throw new ArgumentNullException("entities");
+
+            bool result = true;
+
+            foreach (var item in entities)
+                result = result && this.Create(item);
+
+            return result;
         }
 
         public Genre Get(int? id)

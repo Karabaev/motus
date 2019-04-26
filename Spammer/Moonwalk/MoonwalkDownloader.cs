@@ -6,6 +6,7 @@
     using NLog;
     using InfoAgent;
     using SerialService.DAL;
+    using SerialService.DAL.Entities;
     using SerialService.Infrastructure.Exceptions;
     using InfoAgent.Moonwalk;
     using Shared;
@@ -16,9 +17,9 @@
         /// Конструктор.
         /// </summary>
         /// <param name="unitOfWork"></param>
-        private MoonwalkDownloader(IAppUnitOfWork unitOfWork, string filmAuthorEmail)
+        private MoonwalkDownloader(string filmAuthorEmail)
         {
-            this.unitOfWork = unitOfWork;
+            this.unitOfWork = AppUnitOfWork.GetInstance();
             this.service = new Service();
             this.authorEmail = filmAuthorEmail;
         }
@@ -46,7 +47,18 @@
             {
                 try
                 {
-                    if (this.unitOfWork.VideoMaterials.Create(FilmInfoToVideoMaterialConverter.Convert(item, this.authorEmail, this.unitOfWork)))
+                    VideoMaterial videoMaterial = null;
+
+                    try
+                    {
+                        videoMaterial = FilmInfoToVideoMaterialConverter.Convert(item, this.authorEmail);
+                    }
+                    catch(ArgumentNullException ex)
+                    {
+                        logger.Warn(ex, "Передан пустой параметр");
+                    }
+
+                    if (this.unitOfWork.VideoMaterials.Create(videoMaterial))
                     {
                         result++;
                         Task.Run(() => this.logger.Info("Информация о фильме {0} загружена в базу", item.Title));
@@ -88,10 +100,10 @@
         /// </summary>
         /// <param name="unitOfWork"></param>
         /// <returns></returns>
-        public static MoonwalkDownloader GetInstance(IAppUnitOfWork unitOfWork, string filmAuthorEmail)
+        public static MoonwalkDownloader GetInstance(string filmAuthorEmail)
         {
             if (MoonwalkDownloader.instance == null)
-                MoonwalkDownloader.instance = new MoonwalkDownloader(unitOfWork, filmAuthorEmail);
+                MoonwalkDownloader.instance = new MoonwalkDownloader(filmAuthorEmail);
 
             return MoonwalkDownloader.instance;
         }

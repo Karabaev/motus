@@ -54,6 +54,13 @@
 			return this.Repository.GetEntity((int)id);
         }
 
+        public SerialSeason Get(int seasonNumber, int videoMaterialId, int translationId)
+        {
+            return this.Repository.GetAllEntities().FirstOrDefault(ss => ss.SeasonNumber == seasonNumber &&
+                                                                        ss.VideoMaterialID == videoMaterialId && 
+                                                                        ss.TranslationID == translationId);
+        }
+
         public EntityList<SerialSeason> GetAll()
         {
             return this.Repository.GetAllEntities();
