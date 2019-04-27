@@ -8,14 +8,6 @@ function ParoleBtnClick() {
     IsEmailReset = false;
 }
 
-// Модель сброса пароля по email
-function GenerateEmailResetModelJson() {
-    var json = {
-        Email: $("#email").val(),
-    };
-    return json;
-}
-
 // Модель сброса пароля по parole
 function GenerateParoleResetModelJson() {
     var json = {
@@ -26,50 +18,29 @@ function GenerateParoleResetModelJson() {
 }
 
 function Submit() {
+    var json = $('#login-form').serialize();
+    var action = "";
+
     if (IsEmailReset) {
-        var json = GenerateEmailResetModelJson();
-        $.post("/email_forgot",
-            json,
-            function (result) {
-                if (result.error) {
-                    $('.error').html(result.error);
-                    ShowErrorMessage();
-                }
-                else if (result.success) {
-                    window.location.href = result.success;
-                }
-            },
-            "json");
+        action = "/email_forgot";
     }
     else {
-        var json = GenerateParoleResetModelJson();
-        $.post("",
-            json,
-            function (result) {
-
-            },
-            "json");
+        action = "";
     }
-}
 
-$(document).ready(function () {
-    //$('input').change(function () {
-    //    SubmitButtonManage();
-    //    ValidatePassword();
-    //});
-    $('#by-email-btn').click(function (e) {
-        e.preventDefault();
-        EmailBtnClick();
-    });
-    $('#by-parole-btn').click(function (e) {
-        e.preventDefault();
-        ParoleBtnClick();
-    });
-    $('#submit-btn').click(function (e) {
-        e.preventDefault();
-        Submit();
-    });
-});
+    $.post(action,
+        json,
+        function (result) {
+            if (result.error) {
+                $('.error').html(result.error);
+                ShowErrorMessage();
+            }
+            else if (result.success) {
+                window.location.href = result.success;
+            }
+        },
+        "json");
+}
 
 function ClearHidenForm(inputSelector) {
     $(inputSelector).keydown(function () {
@@ -102,6 +73,18 @@ function ButtonManage(inputSelector) {
 }
 
 $(document).ready(function () {
+    $('#by-email-btn').click(function (e) {
+        e.preventDefault();
+        EmailBtnClick();
+    });
+    $('#by-parole-btn').click(function (e) {
+        e.preventDefault();
+        ParoleBtnClick();
+    });
+    $('#submit-btn').click(function (e) {
+        e.preventDefault();
+        Submit();
+    });
     const forgonSelector = '.forgot-form-input';
     ClearHidenForm(forgonSelector);
     $(forgonSelector).change(function (e) {
