@@ -163,41 +163,24 @@
             </div>
         }
     </div>
-    <div style="margin-bottom:10px" class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card">
-        <div style="width:100%" id="mc-container"></div>
-        <script type="text/javascript">
-            cackle_widget = window.cackle_widget || [];
-            cackle_widget.push({
-                widget: 'Comment', id: 65217, ssoAuth: '@ViewBag.UserToken', msg:
-                {
-                    placeholder: 'Поделитесь своим мнением',
-                    submit: 'Оставить',
-                    sort: 'Порядок',
-                    social: "Авторизуйтесь на сайте"
-                },
-                stream: true, // автообновление комментов при появлении новых
-                ssoPrimary: true, // приоритет авторизации на сайте
-               // shareSocial: [] // соц. сети, куда можно расшарить
-                callback: {
-                //    create: [function (comment) { console.log(comment); }],
-                //    edit: [function (comment) { console.log(comment); }],
-                //    status: [function (comment) { console.log(comment); }],
-                //    vote: [function (comment) { console.log(comment); }],
-                //    submit: [function (comment) { console.log(comment); }],
-                //    ready: [function (comment) { console.log(comment); }]
-                    vote: [function (comment) { alert("лайк коммента");}]
-                },
-                channel: "films" + @Model.ID
-               });
-                (function () {
-                    var mc = document.createElement('script');
-                    mc.type = 'text/javascript';
-                    mc.async = true;
-                    mc.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cackle.me/widget.js';
-                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
-                })();
-        </script>
-    </div>
+    @*<div style="margin-bottom:10px" class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card">
+
+    </div>*@
+    <div class="tolstoycomments-feed"></div>
+    <script type="text/javascript">
+        !(function (w, d, s, l, x) {
+            w[l] = w[l] || [];
+            var f = d.getElementsByTagName(s)[0], j = d.createElement(s); j.async = !0;
+            j.src = '//web.tolstoycomments.com/sitejs/app.js?i=' + l + '&x=' + x + '&t=' + (new Date().getTime());
+            f.parentNode.insertBefore(j, f)
+        })(window, document, 'script', 'tolstoycomments', '2160');
+    </script>
+    <script type="text/javascript">
+        window.tolstoycomments.config = {
+            sso: '@ViewBag.UserToken'
+        };
+    </script>
+
 </div>
 <script src="~/Scripts/User/Mark.js"></script>
 <script src="~/Scripts/User/Subscribe.js"></script>

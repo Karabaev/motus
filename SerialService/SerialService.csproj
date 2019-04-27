@@ -439,7 +439,6 @@
     <Content Include="Content\mdl-v1.1.2\LICENSE" />
     <Content Include="Content\mdl-v1.1.2\bower.json" />
     <Content Include="Scripts\base64js.min.js" />
-    <Content Include="Scripts\Comments\CommonComments.js" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="NLog.config">
@@ -533,6 +532,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\UserFiles\Avatars\" />
+    <Folder Include="Scripts\Comments\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

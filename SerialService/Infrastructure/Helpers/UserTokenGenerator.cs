@@ -20,7 +20,7 @@
 			}
 			else
 			{
-				json = JsonConvert.SerializeObject(new { id, name, email, avatar = avatarUrl });
+				json = JsonConvert.SerializeObject(new { id = id, nick = name, email = email, avatar = avatarUrl });
 			}
 
 			UserTokenGenerator.logger.Info("Json параметро пользователя: {0}", json);
