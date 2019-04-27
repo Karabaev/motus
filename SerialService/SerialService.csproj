@@ -400,6 +400,7 @@
   <ItemGroup>
     <Content Include="Content\AccountForms\AccountForms.css" />
     <Content Include="Content\AdminTools\MainPage.css" />
+    <Content Include="Content\Error\ErrorPage.css" />
     <Content Include="Content\Layout\Filter-panel.css" />
     <Content Include="Content\Layout\Main-layout.css" />
     <Content Include="Content\Logo\20h\h20.png" />
@@ -411,6 +412,7 @@
     <Content Include="Content\mdl-v1.1.2\material.js" />
     <Content Include="Content\mdl-v1.1.2\material.min.css" />
     <Content Include="Content\mdl-v1.1.2\material.min.js" />
+    <Content Include="Content\Media\ErrorBackground.png" />
     <Content Include="Content\Other\PagesBar.css" />
     <Content Include="Content\Other\Search.css" />
     <Content Include="Content\Other\UserContent.css" />
@@ -516,21 +518,15 @@
     <Content Include="Views\User\MotusPopover.cshtml" />
     <Content Include="Views\User\DetailPage\DeviceShortInfo.cshtml" />
     <Content Include="Views\Shared\FilterPanel.cshtml" />
-    <Content Include="Views\Error\NotFound.cshtml" />
-    <Content Include="Views\Error\BadRequest.cshtml" />
-    <Content Include="Views\Error\Unauthorized.cshtml" />
-    <Content Include="Views\Error\Forbidden.cshtml" />
-    <Content Include="Views\Error\InternalServerError.cshtml" />
-    <Content Include="Views\Error\ServiceUnavailable.cshtml" />
     <Content Include="Views\User\AboutProject.cshtml" />
     <Content Include="Views\User\ForHolders.cshtml" />
     <Content Include="Views\Account\DisplayEmailToConfirmation.cshtml" />
     <Content Include="Views\User\ConfirmNewEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Error\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\UserFiles\Avatars\" />
     <Folder Include="Scripts\Comments\" />
   </ItemGroup>
   <ItemGroup>
