@@ -82,12 +82,11 @@
 				this.ViewBag.Description = $"{dvm.Title}. В HD-качестве и озвучках от популярных студий онлайн.";
 			}
 			var user = this.unitOfWork.Users.Get(this.User.Identity.GetUserId());
-			string commentsApiKey = "V2vt2ul0QFpPnsa71RPNXnQ38gH5CWHkhKFJsQIFe9DCzHN2YLyiHZtU2UOIU4c4";
+			string commentsApiKey = "727fd347-51d7-4338-a8c2-33075a2f7c2f";
 
 			if (user != null)
 			{
-				//ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken("V2vt2ul0QFpPnsa71RPNXnQ38gH5CWHkhKFJsQIFe9DCzHN2YLyiHZtU2UOIU4c4", "7", "Max", "maxkarab@yandex.ru", "https://img.icons8.com/ios/1600/folder-invoices.png");
-				this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey, user.Id, user.UserName, user.Email, user.AvatarURL);
+                this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey, user.Id, user.UserName, user.Email, user.AvatarURL);
 				dvm.IsUserSubscribed = this.unitOfWork.VideoMaterials.IsUserSubscribed(id, user.Id);
 			}
 			else
