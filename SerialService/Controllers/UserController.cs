@@ -548,10 +548,9 @@
 			return this.Json(new { success = virtualAvatarPath });
 		}
 
-        public ActionResult Filter(string cryptodata)
+        public ActionResult Filter(FilterData data)
         {
-            string json = Encoding.UTF8.GetString(Convert.FromBase64String(cryptodata));
-            Session["FilterSettings"] = JsonConvert.DeserializeObject<FilterData>(json);
+            Session["FilterSettings"] = data;
             return RenderFilmsList(1);
         }
 

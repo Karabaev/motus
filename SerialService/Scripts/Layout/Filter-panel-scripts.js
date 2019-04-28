@@ -104,14 +104,28 @@ function FilterDataCollect(selectedClassName) {
     var yearTo = $('#to').val();
     var kinopoiskMin = $('#kinopoisk-input').val();
     var imdbMin = $('#imdb-input').val();
-    var result = {
-        Genres: genres,
-        Countries: countries,
-        Translations: translations,
-        MinImdb: imdbMin,
-        MinKinopoisk: kinopoiskMin,
-        MinReliseDateValue: yearFrom,
-        MaxReliseDateValue: yearTo
+    var result = {};
+
+    if (genres.length > 0) {
+        result['Genres'] = genres;
+    }
+    if (countries.length > 0) {
+        result['Countries'] = countries;
+    }
+    if (translations.length > 0) {
+        result['Translations'] = translations;
+    }
+    if (imdbMin > 0) {
+        result['MinImdb'] = imdbMin;
+    }
+    if (kinopoiskMin > 0) {
+        result['MinKinopoisk'] = kinopoiskMin;
+    }
+    if (yearFrom > 0) {
+        result['MinReliseDateValue'] = yearFrom;
+    }
+    if (yearTo > 0) {
+        result['MaxReliseDateValue'] = yearTo;
     }
     return result;
 }
@@ -126,6 +140,6 @@ function SubmitFilter(selector, selectedClassName) {
     $(selector).click(function (e) {
         e.preventDefault();
         var dataObj = FilterDataCollect(selectedClassName);
-        window.location.href = '/User/Filter?cryptodata=' + Base64Encode(JSON.stringify(dataObj));
+        window.location.href = '/User/Filter?' + $.param(dataObj, true);
     });
 }
