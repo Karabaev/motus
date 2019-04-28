@@ -26,26 +26,26 @@
         }
     })
 }
+var time = null;
+var bar = $('#motus-info-bar');
+
+function HideBar() {
+    console.log("Hide");
+    time = setTimeout(function () {
+        bar.slideUp();
+    }, 5000);
+};
+
+
+$('.player').on('mouseover', function (e) {
+    bar.slideDown("fast");
+    !time || clearTimeout(time);
+    HideBar();
+});
 
 document.addEventListener('DOMContentLoaded', function () {
     function RenderPlayerInfoBar() {
-        var bar = $('#motus-info-bar');
-        var player = $('.player');
-        var time = null;
-        function HideBar() {
-            time = setTimeout(function () {
-                bar.slideUp();
-            }, 1000);
-        };
-
         HideBar();
-
-        player.mousemove(function () {
-            bar.slideDown("fast");
-            !time || clearTimeout(time);
-            HideBar()
-        });
-
         Slide();
     }
 
