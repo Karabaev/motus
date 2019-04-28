@@ -21,7 +21,7 @@
         }
     </div>
     <div class="pages">
-        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        @Html.PagedListPager(Model, page => Url.Action("RenderFilmsList", "User", new { page }))
     </div>
 </div>
 <script src="~/Scripts/User/UserMain.js"></script>

@@ -1,27 +1,26 @@
 ﻿namespace SerialService.Controllers
 {
-	using AutoMapper;
-	using DAL.Entities;
-	using Infrastructure;
-	using Infrastructure.Exceptions;
-	using Infrastructure.Helpers;
-	using Microsoft.AspNet.Identity;
-	using Newtonsoft.Json;
-	using NLog;
+    using AutoMapper;
+    using DAL.Entities;
+    using Infrastructure;
+    using Infrastructure.Exceptions;
+    using Infrastructure.Helpers;
+    using Microsoft.AspNet.Identity;
+    using Newtonsoft.Json;
+    using NLog;
     using SerialService.Sitemap;
-    using System.Net.Mime;
     using System.Text;
-	using PagedList;
-	using SerialService.DAL;
-	using SerialService.Infrastructure.Core;
-	using SerialService.Infrastructure.ElasticSearch;
-	using SerialService.Models;
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Threading.Tasks;
-	using System.Web.Mvc;
-	using ViewModels;
+    using PagedList;
+    using SerialService.DAL;
+    using SerialService.Infrastructure.Core;
+    using SerialService.Infrastructure.ElasticSearch;
+    using SerialService.Models;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+    using ViewModels;
 
     [ExceptionHandler]
 	public class UserController : Controller
@@ -29,9 +28,9 @@
 		private readonly Logger logger;
 		private readonly IAppUnitOfWork unitOfWork;
 		private const int PageSize = 54;
-		private const int RandomVideoCount = 3;
+        private const string mainTitle = "Motus-cinema";
 
-		public UserController(IAppUnitOfWork unitOfWork) // инициализировтаь нинжект
+        public UserController(IAppUnitOfWork unitOfWork) // инициализировтаь нинжект
 		{
 			this.unitOfWork = unitOfWork;
 			this.logger = LogManager.GetCurrentClassLogger();
@@ -40,24 +39,44 @@
 		/// <summary>
 		/// Домашняя страница.
 		/// </summary>
-		/// <param name="page"></param>
-		/// <returns></returns>
 		public ActionResult Index(int? page)
 		{
-			this.Session["filter-lists"] = GlobalCache.GetItem("filter-lists");
-			int pageNumber = (page ?? 1);
-			List<ElasticVideoMaterial> videoMaterials = MotusElasticsearch.GetAll();
 			RedirectHelper.SaveLocalURL(this.ViewBag, this.ControllerContext);
-			this.ViewBag.Title = "Motus-cinema";
+			this.ViewBag.Title = mainTitle;
 			this.ViewBag.Description = "Любимые фильмы и сериалы в хорошем качестве. Новинки кино, постоянное обновление базы фильмов и многое другое";
-			return this.View(videoMaterials.ToPagedList(pageNumber, PageSize));
+            Session["FilterSettings"] = null;
+            return RenderFilmsList(page);
 		}
+
+        /// <summary>
+        /// Вывести список фильмов
+        /// </summary>
+        public ActionResult RenderFilmsList(int? page)
+        {
+            if (Session["filter-lists"] == null)
+            {
+                Session["filter-lists"] = GlobalCache.GetItem("filter-lists");
+            }
+
+            List<ElasticVideoMaterial> videoMaterials;
+            if (Session["FilterSettings"] == null)
+            {
+                videoMaterials = MotusElasticsearch.GetAll();
+                ViewBag.Title = mainTitle;
+            }
+            else
+            {
+                ViewBag.Title = "Результаты фильтрации";
+                videoMaterials = SearchWrapper.FilerResults(Session["FilterSettings"] as FilterData).ToList();
+            }
+
+            page = (page ?? 1);
+            return View("Index", videoMaterials.ToPagedList(page.Value, PageSize));
+        }
 
 		/// <summary>
 		/// Страница видеоматериала.
 		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
 		[HttpGet]
 		public ActionResult VideoMaterialDetailPage(int? id)
 		{
@@ -529,14 +548,12 @@
 			return this.Json(new { success = virtualAvatarPath });
 		}
 
-		[HttpGet]
-		public ActionResult Filter(string cryptodata)
-		{
+        public ActionResult Filter(string cryptodata)
+        {
             string json = Encoding.UTF8.GetString(Convert.FromBase64String(cryptodata));
-            var data = JsonConvert.DeserializeObject<FilterData>(json);
-			var result = SearchWrapper.FilerResults(data).ToList();
-			return this.View("Index", result.ToPagedList(1, PageSize));
-		}
+            Session["FilterSettings"] = JsonConvert.DeserializeObject<FilterData>(json);
+            return RenderFilmsList(1);
+        }
 
 		[HttpPost]
 		public JsonResult GetSuggest(string part)

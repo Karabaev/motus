@@ -16,7 +16,7 @@
 
 			routes.MapRoute(name: "UserIndex1",
 				url: "films",
-				defaults: new { controller = "User", action = "Index" });
+				defaults: new { controller = "User", action = "RenderFilmsList" });
 
 			routes.MapRoute(name: "UserDetailPage",
 				url: "films/{id}",
