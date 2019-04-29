@@ -57,21 +57,20 @@
                 return this.Json(new { success = "login" });
 
             ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            var user = this.userService.GetScalarWithCondition(u => u.Email == model.Email);
+            var user = this.userService.GetByMainStringProperty(model.Email);
 
             if (user != null)
             {
                 if (user.EmailConfirmed == true)
                 {
                     var result = await signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, shouldLockout: false);
-                    model.ReturnUrl = "films";
 
                     switch (result)
                     {
                         case SignInStatus.Success:
                             user.LastAuthorizationDateTime = DateTime.Now;
                             Task.Run(() => this.userService.Update(user));
-                            return this.Json(new { success = model.ReturnUrl });
+                            return this.Json(new { success = Url.Action("Index", "User") });
                         case SignInStatus.LockedOut:
                             errors.Append("Учетная запись заблокирована<br/>");
                             break;
@@ -393,33 +392,43 @@
             }
 
             var user = this.userService.GetByMainStringProperty(loginInfo.Email);
-
             ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            // Выполнение входа пользователя посредством данного внешнего поставщика входа, если у пользователя уже есть имя входа
-            var result = signInManager.ExternalSignIn(loginInfo, isPersistent: false);
 
-            switch (result)
+            if (user != null)
             {
-                case SignInStatus.Success:
-                    user.LastAuthorizationDateTime = DateTime.Now;
-                    Task.Run(() => this.userService.Update(user));
-                    return RedirectToAction("Index", "User");
-                case SignInStatus.LockedOut:
-                    errors.Append("Учетная запись заблокирована<br/>");
-                    break;
-                case SignInStatus.Failure:
-                default:
-                    // Если у пользователя нет учетной записи, то ему предлагается создать ее
-                    this.ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return this.View("ExternalRegister", new ExternalRegisterViewModel
-                    {
-                        Email = loginInfo.Email,
-                        UserName = string.IsNullOrWhiteSpace(loginInfo.ExternalIdentity.Name) ?
-                                                                loginInfo.DefaultUserName :
-                                                                loginInfo.ExternalIdentity.Name,
-                        LoginProvider = loginInfo.Login.LoginProvider,
-                        ProviderKey = loginInfo.Login.ProviderKey
-                    });
+                signInManager.SignIn(user, false, false);
+                user.LastAuthorizationDateTime = DateTime.Now;
+                Task.Run(() => this.userService.Update(user));
+                return RedirectToAction("Index", "User");
+            }
+            else
+            {
+                // Выполнение входа пользователя посредством данного внешнего поставщика входа, если у пользователя уже есть имя входа
+                var result = signInManager.ExternalSignIn(loginInfo, isPersistent: false);
+
+                switch (result)
+                {
+                    case SignInStatus.Success:
+                        user.LastAuthorizationDateTime = DateTime.Now;
+                        Task.Run(() => this.userService.Update(user));
+                        return RedirectToAction("Index", "User");
+                    case SignInStatus.LockedOut:
+                        errors.Append("Учетная запись заблокирована<br/>");
+                        break;
+                    case SignInStatus.Failure:
+                    default:
+                        // Если у пользователя нет учетной записи, то ему предлагается создать ее
+                        this.ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+                        return this.View("ExternalRegister", new ExternalRegisterViewModel
+                        {
+                            Email = loginInfo.Email,
+                            UserName = string.IsNullOrWhiteSpace(loginInfo.ExternalIdentity.Name) ?
+                                                                    loginInfo.DefaultUserName :
+                                                                    loginInfo.ExternalIdentity.Name,
+                            LoginProvider = loginInfo.Login.LoginProvider,
+                            ProviderKey = loginInfo.Login.ProviderKey
+                        });
+                }
             }
 
             return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = errors.ToString() });
