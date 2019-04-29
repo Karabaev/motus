@@ -127,6 +127,10 @@
     <value>Name</value>
     <comment>Название свойства содержащего название страны</comment>
   </data>
+  <data name="DefaultUserAvatarFileName" xml:space="preserve">
+    <value>default-avatar.png</value>
+    <comment>Имя файла стандартной аватарки</comment>
+  </data>
   <data name="FirstAdminEmail" xml:space="preserve">
     <value>aartman@rambler.ru</value>
     <comment>Почта главного администратора</comment>
@@ -134,6 +138,10 @@
   <data name="GenreNameProp" xml:space="preserve">
     <value>Name</value>
     <comment>Название свойства содержащего название жанра</comment>
+  </data>
+  <data name="MediaFolder" xml:space="preserve">
+    <value>/Content/Media</value>
+    <comment>Папка хранения служебных медиафайлов</comment>
   </data>
   <data name="ModeratorRoleName" xml:space="preserve">
     <value>Moderator</value>

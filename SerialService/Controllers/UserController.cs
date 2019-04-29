@@ -342,7 +342,11 @@
 				return this.HttpNotFound();
 
 			PersonalAccountViewModel viewModel = Mapper.Map<ApplicationUser, PersonalAccountViewModel>(user);
-			return this.View(viewModel);
+
+            if (string.IsNullOrWhiteSpace(viewModel.CurrentAvatarURL))
+                viewModel.CurrentAvatarURL = string.Format("{0}/{1}", Resource.MediaFolder, Resource.DefaultUserAvatarFileName);
+                
+            return this.View(viewModel);
 		}
 
 		[HttpPost]
