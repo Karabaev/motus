@@ -68,22 +68,22 @@
             //   appSecret: "");
 
             //Рабочий вариант
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
-            //{
-            //    ClientId = "617791642450-0hkdostg0e5ab7obd1b63318nstvhttv.apps.googleusercontent.com",
-            //    ClientSecret = "_L-c1loZvU6sy5rIweyvUABE",
-            //    Caption = "Google+",
-            //    AuthenticationType = "Google+"
-            //});
-
-            //Тестовый вариант
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
             {
-                ClientId = "1094834758913-9sahepj5ctat69aiqoq1gm58t3m4ram9.apps.googleusercontent.com",
-                ClientSecret = "pj9rrqjuaqDdn1pkwscT4g8S",
+                ClientId = "617791642450-0hkdostg0e5ab7obd1b63318nstvhttv.apps.googleusercontent.com",
+                ClientSecret = "_L-c1loZvU6sy5rIweyvUABE",
                 Caption = "Google+",
                 AuthenticationType = "Google+"
             });
+
+            //Тестовый вариант
+            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+            //{
+            //    ClientId = "1094834758913-9sahepj5ctat69aiqoq1gm58t3m4ram9.apps.googleusercontent.com",
+            //    ClientSecret = "pj9rrqjuaqDdn1pkwscT4g8S",
+            //    Caption = "Google+",
+            //    AuthenticationType = "Google+"
+            //});
 
             app.UseVKontakteAuthentication(new VKontakteAuthenticationOptions()
             {
