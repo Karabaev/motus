@@ -88,6 +88,15 @@ namespace SerialService {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на default-avatar.png.
+        /// </summary>
+        internal static string DefaultUserAvatarFileName {
+            get {
+                return ResourceManager.GetString("DefaultUserAvatarFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на aartman@rambler.ru.
         /// </summary>
         internal static string FirstAdminEmail {
@@ -102,6 +111,15 @@ namespace SerialService {
         internal static string GenreNameProp {
             get {
                 return ResourceManager.GetString("GenreNameProp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на /Content/Media.
+        /// </summary>
+        internal static string MediaFolder {
+            get {
+                return ResourceManager.GetString("MediaFolder", resourceCulture);
             }
         }
         
