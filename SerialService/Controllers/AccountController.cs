@@ -150,13 +150,19 @@
                             success = this.Url.Action("DisplayEmailToConfirmation", "Account", new DisplayEmailToConfirmationViewModel { Email = model.Email })
                         });
                     }
-
-                    this.AddErrors(result);
+                    else
+                    {
+                        return this.Json(new { error = string.Join("<br/>", result.Errors) });
+                    }
                 }
                 catch (EntryAlreadyExistsException ex)
                 {
                     return this.Json(new { error = ex.Message });
                 }
+            }
+            else
+            {
+                return this.Json(new { error = string.Join("<br/>", ModelState.Values.SelectMany(s => s.Errors.Select(e => e.ErrorMessage))) });
             }
 
             // Появление этого сообщения означает наличие ошибки; повторное отображение формы

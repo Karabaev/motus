@@ -39,15 +39,21 @@
 				throw new ArgumentNullException("pass");
 
 			if (this.GetScalarWithCondition(au => au.Id == entity.Id) != null)
-                throw new EntryAlreadyExistsException("Пользователь с таким идентификатором уже существует.");
+                throw new EntryAlreadyExistsException("Пользователь с таким идентификатором уже зарегистрирован.");
 
             if (this.GetByMainStringProperty(entity.Email) != null)
-                throw new EntryAlreadyExistsException("Пользователь с такой почтой уже существует.");
+                throw new EntryAlreadyExistsException("Пользователь с такой почтой уже зарегистрирован.");
 
-			entity.RegisterDateTime = DateTime.Now;
+            if (this.GetByUserName(entity.UserName) != null)
+                throw new EntryAlreadyExistsException("Пользователь с таким именем уже зарегистрирован.");
+
+            entity.RegisterDateTime = DateTime.Now;
 			entity.ChangeDateTime = entity.RegisterDateTime;
 			entity.Parole = entity.Parole.CreateMD5();
             IdentityResult result = this.manager.Create(entity, pass);
+
+            if (!result.Succeeded)
+                return result;
 
             foreach (var item in roleNames)
                 this.manager.AddToRole(entity.Id, item);
@@ -87,7 +93,7 @@
         }
 
         /// <summary>
-        /// Получить одного юзера по его главному строковому свойству (Email). Поиск не зависит от регистра.
+        /// Получить одного юзера по его имени (UserName). Поиск не зависит от регистра.
         /// </summary>
         /// <param name="value">Значение для поиска.</param>
         public ApplicationUser GetByUserName(string value)
