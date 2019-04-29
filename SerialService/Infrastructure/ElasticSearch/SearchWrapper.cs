@@ -8,93 +8,80 @@
     {
         public static IEnumerable<ElasticVideoMaterial> FilerResults(FilterData data)
         {
-            List<ElasticVideoMaterial> result = new List<ElasticVideoMaterial>();
+            List<ElasticVideoMaterial> resultByCountries = null;
+            List<ElasticVideoMaterial> resultByGenres = null;
+            List<ElasticVideoMaterial> resultByTranslations = null;
+            List<ElasticVideoMaterial> resultByImdb = null;
+            List<ElasticVideoMaterial> resultByKinopoisk = null;
+            List<ElasticVideoMaterial> resultByReliseDate = null;
 
             if (data.Countries != null && data.Countries.Any())
-            {
+            {                
                 string countries = string.Join(",", data.Countries);
-                var resultByCountries = MotusElasticsearch.SearchByCountrieName(countries);
-
-                if (resultByCountries.Any())
-                {
-                    result.AddRange(resultByCountries);
-                }
+                resultByCountries = MotusElasticsearch.SearchByCountrieName(countries).ToList();                
             }
 
             if (data.Genres != null && data.Genres.Any())
             {
                 string genres = string.Join(",", data.Genres);
-                var resultByGenres = MotusElasticsearch.SearchByGenreTitle(genres);
-
-                if (result.Any() && resultByGenres.Any())
-                {
-                    result.Intersect(resultByGenres);
-                }
-                else if (resultByGenres.Any())
-                {
-                    result.AddRange(resultByGenres);
-                }
+                resultByGenres = MotusElasticsearch.SearchByGenreTitle(genres).ToList();                
             }
 
             if (data.Translations != null && data.Translations.Any())
             {
                 string translations = string.Join(",", data.Translations);
-                var resultByTranslations = MotusElasticsearch.SearchByTranslationTitle(translations);
-
-                if (result.Any() && resultByTranslations.Any())
-                {
-                    result.Intersect(resultByTranslations);
-                }
-                else if (resultByTranslations.Any())
-                {
-                    result.AddRange(resultByTranslations);
-                }
+                resultByTranslations = MotusElasticsearch.SearchByTranslationTitle(translations).ToList();
             }
 
             if (data.MinImdb != 0)
             {
-                var resultByImdb = MotusElasticsearch.SearchByIMDB(data.MinImdb);
-
-                if (result.Any() && resultByImdb.Any())
-                {
-                    result.Intersect(resultByImdb);
-                }
-                else if (resultByImdb.Any())
-                {
-                    result.AddRange(resultByImdb);
-                }
+                resultByImdb = MotusElasticsearch.SearchByIMDB(data.MinImdb).ToList();                
             }
 
             if (data.MinKinopoisk != 0)
             {
-                var resultByKinopoisk = MotusElasticsearch.SearchByKinopoiskRating(data.MinKinopoisk);
-
-                if (result.Any() && resultByKinopoisk.Any())
-                {
-                    result.Intersect(resultByKinopoisk);
-                }
-                else if (resultByKinopoisk.Any())
-                {
-                    result.AddRange(resultByKinopoisk);
-                }
+                resultByKinopoisk = MotusElasticsearch.SearchByKinopoiskRating(data.MinKinopoisk).ToList();               
             }
 
-            if (data.MaxReliseDateValue != 0)
+            if (data.MaxReliseDateValue.HasValue)
             {
                 int min = data.MinReliseDateValue ?? int.MinValue;
-                int max = data.MaxReliseDateValue ?? int.MaxValue;
-                var resultByReliseDate = MotusElasticsearch.SearchByReliseDate(min, max);
-
-                if (result.Any() && resultByReliseDate.Any())
-                {
-                    result.Intersect(resultByReliseDate);
-                }
-                else if (resultByReliseDate.Any())
-                {
-                    result.AddRange(resultByReliseDate);
-                }
+                resultByReliseDate = MotusElasticsearch.SearchByReliseDate(min, data.MaxReliseDateValue.Value).ToList();                
             }
-            return OrderMaterials(result);
+
+            var listOfList = new List<List<ElasticVideoMaterial>>();
+            if (resultByCountries != null)
+            {
+                listOfList.Add(resultByCountries);
+            }
+            if (resultByGenres != null)
+            {
+                listOfList.Add(resultByGenres);
+            }
+            if(resultByTranslations != null)
+            {
+                listOfList.Add(resultByTranslations);
+            }
+            if(resultByImdb != null)
+            {
+                listOfList.Add(resultByImdb);
+            }
+            if (resultByKinopoisk != null)
+            {
+                listOfList.Add(resultByKinopoisk);
+            }
+            if (resultByReliseDate != null)
+            {
+                listOfList.Add(resultByReliseDate);
+            }
+
+            var hashSet = new HashSet<ElasticVideoMaterial>(listOfList.First());
+            foreach (var list in listOfList.Skip(1))
+            {
+                hashSet.IntersectWith(list);
+            }
+
+            return OrderMaterials(hashSet.ToList());
         }
 
         /// <summary>

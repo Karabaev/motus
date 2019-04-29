@@ -4,7 +4,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class ElasticVideoMaterial
+    public class ElasticVideoMaterial:IEquatable<ElasticVideoMaterial>
     {
         public int ID { get; set; }
         public string Title { get; set; }
@@ -23,5 +23,16 @@
         public List<string> ThemeNames { get; set; }
         public string Description { get; set; }
         public CompletionField Suggest { get; set; }
+
+        public bool Equals(ElasticVideoMaterial other)
+        {
+            return other != null &&
+                   other.ID == this.ID;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.ID;
+        }
     }
 }
