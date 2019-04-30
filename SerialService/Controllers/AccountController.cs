@@ -379,7 +379,6 @@
         [AllowAnonymous]
         public ActionResult ExternalLoginCallback(ExternalLoginCallbackViewModel model)
         {
-            StringBuilder errors = new StringBuilder();
             var loginInfo = this.AuthenticationManager.GetExternalLoginInfo();
 
             if (loginInfo == null)
@@ -396,10 +395,19 @@
 
             if (user != null)
             {
-                signInManager.SignIn(user, false, false);
-                user.LastAuthorizationDateTime = DateTime.Now;
-                Task.Run(() => this.userService.Update(user));
-                return RedirectToAction("Index", "User");
+                var result = this.userService.AddLogin(user.Id, loginInfo.Login);
+
+                if(result.Succeeded)
+                {
+                    signInManager.SignIn(user, false, false);
+                    user.LastAuthorizationDateTime = DateTime.Now;
+                    Task.Run(() => this.userService.Update(user));
+                    return RedirectToAction("Index", "User");
+                }
+                else
+                {
+                    return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = string.Join("<br/>", result.Errors) });
+                }
             }
             else
             {
@@ -413,84 +421,50 @@
                         Task.Run(() => this.userService.Update(user));
                         return RedirectToAction("Index", "User");
                     case SignInStatus.LockedOut:
-                        errors.Append("Учетная запись заблокирована<br/>");
-                        break;
+                        return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = "Учетная запись заблокирована" });
                     case SignInStatus.Failure:
                     default:
-                        // Если у пользователя нет учетной записи, то ему предлагается создать ее
-                        this.ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                        return this.View("ExternalRegister", new ExternalRegisterViewModel
+                        IdentityResult createResult = null;
+
+                        try
                         {
-                            Email = loginInfo.Email,
-                            UserName = string.IsNullOrWhiteSpace(loginInfo.ExternalIdentity.Name) ?
-                                                                    loginInfo.DefaultUserName :
-                                                                    loginInfo.ExternalIdentity.Name,
-                            LoginProvider = loginInfo.Login.LoginProvider,
-                            ProviderKey = loginInfo.Login.ProviderKey
-                        });
+                            user = new ApplicationUser { UserName = string.IsNullOrWhiteSpace(loginInfo.ExternalIdentity.Name) ?
+                                                                        loginInfo.DefaultUserName :
+                                                                        loginInfo.ExternalIdentity.Name,
+                                                                        Email = loginInfo.Email,
+                                                                        EmailConfirmed = true };
+                            createResult = this.userService.CreateWithoutPassword(user, Resource.UserRoleName);
+                        }
+                        catch (EntryAlreadyExistsException ex)
+                        {
+                            return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = ex.Message });
+                        }
+                        catch(Exception ex)
+                        {
+                            return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = "Не удалось зарегистрировать пользователя" });
+                        }
+
+                        if (createResult.Succeeded)
+                        {
+                            createResult = this.userService.AddLogin(user.Id, loginInfo.Login);
+
+                            if (createResult.Succeeded)
+                            {
+                                signInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
+                                user.LastAuthorizationDateTime = DateTime.Now;
+                                Task.Run(() => this.userService.Update(user));
+                                return RedirectToAction("Index", "User");
+                            }
+                            else
+                            {
+                                return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = string.Join("<br/>", createResult.Errors) });
+                            }
+                        }
+                        else
+                        {
+                            return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = string.Join("<br/>", createResult.Errors) });
+                        }
                 }
-            }
-
-            return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = errors.ToString() });
-        }
-
-        /// <summary>
-        /// Регистрация после получения параметров от внешнего сервиса.
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-        public ActionResult ExternalRegister(ExternalRegisterViewModel model)
-        {
-            if (User.Identity.IsAuthenticated)
-                return RedirectToAction("PersonalAccount", "User");
-
-            StringBuilder errors = new StringBuilder();
-
-            if (ModelState.IsValid)
-            {
-                // Получение сведений о пользователе от внешнего поставщика входа
-                var login = new UserLoginInfo(model.LoginProvider, model.ProviderKey);
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, Parole = model.Parole, EmailConfirmed = true };
-                IdentityResult result = null;
-
-                try
-                {
-                    result = this.userService.Create(user, model.Password, Resource.UserRoleName);
-                }
-                catch (EntryAlreadyExistsException ex)
-                {
-                    return Json(new { error = ex.Message });
-                }
-                catch
-                {
-                    return Json(new { error = "Не удалось зарегистрировать пользователя" });
-                }
-
-                if (result.Succeeded)
-                {
-
-                    result = this.userService.AddLogin(user.Id, login);
-
-                    if (result.Succeeded)
-                    {
-                        ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-                        signInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
-                        return Json(new { success = Url.Action("Index", "User") }, JsonRequestBehavior.AllowGet);
-                    }
-                    else
-                    {
-                        return Json(new { error = string.Join("<br/>", result.Errors) });
-                    }
-                }
-                else
-                {
-                    return Json(new { error = string.Join("<br/>", result.Errors) });
-                }
-            }
-            else
-            {
-                return Json(new { error = ModelState.Values.SelectMany(s => s.Errors.Select(e => e.ErrorMessage)) });
             }
         }
 
