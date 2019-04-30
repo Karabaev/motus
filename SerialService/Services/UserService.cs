@@ -61,6 +61,30 @@
             return result;
         }
 
+        public IdentityResult CreateWithoutPassword(ApplicationUser entity, params string[] roleNames)
+        {
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
+            if (this.GetByMainStringProperty(entity.Email) != null)
+                throw new EntryAlreadyExistsException("Пользователь с такой почтой уже зарегистрирован.");
+
+            if (this.GetByUserName(entity.UserName) != null)
+                throw new EntryAlreadyExistsException("Пользователь с таким именем уже зарегистрирован.");
+
+            entity.RegisterDateTime = DateTime.Now;
+            entity.ChangeDateTime = entity.RegisterDateTime;
+            IdentityResult result = this.manager.Create(entity);
+
+            if (!result.Succeeded)
+                return result;
+
+            foreach (var item in roleNames)
+                this.manager.AddToRole(entity.Id, item);
+
+            return result;
+        }
+
         /// <summary>
         /// Получить объект по его идентификатору.
         /// </summary>

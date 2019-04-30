@@ -13,6 +13,8 @@
 
         IdentityResult Create(ApplicationUser entity, string pass, params string[] roleNames);
 
+        IdentityResult CreateWithoutPassword(ApplicationUser entity, params string[] roleNames);
+
         IdentityResult Remove(string id);
 
         List<ApplicationUser> GetAll();
