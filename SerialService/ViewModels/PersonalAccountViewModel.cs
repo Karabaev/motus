@@ -14,6 +14,7 @@
         public string ConfirmPassword { get; set; }
         public string CurrentAvatarURL { get; set; }
         public string NewParole { get; set; }
+        public bool IsHaveCurrentPassword { get; set; }
 
         public IEnumerable<VideoMaterialPersonalAccountViewModel> LikedVideoMaterials { get; set; }
         public IEnumerable<VideoMaterialPersonalAccountViewModel> DislikedVideoMaterials { get; set; }

@@ -322,17 +322,37 @@
         /// <returns></returns>
         public IdentityResult SetPassword(string id, string currentPassword, string newPassword)
         {
-            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(newPassword) || currentPassword == null)
+            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(newPassword))
                 return IdentityResult.Failed();
 
-			var result = this.manager.ChangePassword(id, currentPassword, newPassword);
-			var user = this.Get(id);
+            var user = this.Get(id);
 
-			if (result.Succeeded)
+            if (user == null)
+                return IdentityResult.Failed("Пользователь не найден");
+
+            IdentityResult result = null;
+
+            if (string.IsNullOrWhiteSpace(currentPassword) && string.IsNullOrWhiteSpace(user.PasswordHash))
+            {
+                string code = this.GeneratePasswordResetToken(id);
+                result = this.ResetPassword(id, code, newPassword);
+
+                if (result.Succeeded)
+                {
+                    user.ChangeDateTime = DateTime.Now;
+                    Task.Run(() => this.manager.Update(user));
+                }
+
+                return result;
+            }
+
+            result = this.manager.ChangePassword(id, currentPassword, newPassword);
+
+            if (result.Succeeded)
 			{
 				user.ChangeDateTime = DateTime.Now;
-				this.manager.Update(user);
-			}
+                Task.Run(() => this.manager.Update(user));
+            }
 			return result;
         }
 
@@ -405,13 +425,16 @@
         /// <returns></returns>
         public bool CheckPassword(string id, string password)
         {
-            if (string.IsNullOrWhiteSpace(id) || string.IsNullOrWhiteSpace(password))
-                return false;
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentNullException("id");
 
             ApplicationUser user = this.manager.FindById(id);
 
             if (user == null)
                 return false;
+
+            if (string.IsNullOrWhiteSpace(password) && string.IsNullOrWhiteSpace(user.PasswordHash))
+                return true;
 
             return this.manager.CheckPassword(user, password);
         }
@@ -547,6 +570,10 @@
 
             if (user == null)
                 throw new EntryNotFoundException("Пользователь не найден");
+
+            var logins = this.manager.GetLogins(userId);
+            if (logins.FirstOrDefault(l => l.LoginProvider == info.LoginProvider && l.ProviderKey == info.ProviderKey ) != null)
+                return IdentityResult.Success;
 
             var result = this.manager.AddLogin(userId, info);
 

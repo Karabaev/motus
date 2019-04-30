@@ -475,7 +475,6 @@
     <Content Include="Scripts\User\Profile.js" />
     <Content Include="Scripts\User\UserMain.js" />
     <Content Include="Scripts\User\Mark.js" />
-    <Content Include="Scripts\User\PersonalAccount.js" />
     <Content Include="Scripts\User\Subscribe.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
