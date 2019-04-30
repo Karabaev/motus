@@ -64,7 +64,8 @@
             .ForMember(rvm => rvm.CurrentAvatarURL, opt => opt.MapFrom(vm => vm.AvatarURL))
             .ForMember(vm => vm.LikedVideoMaterials, opt => opt.MapFrom(vm => vm.VideoMarks.Where(mark => mark.Value).Select(mark => mark.VideoMaterial)))
             .ForMember(vm => vm.DislikedVideoMaterials, opt => opt.MapFrom(vm => vm.VideoMarks.Where(mark => !mark.Value).Select(mark => mark.VideoMaterial)))
-            .ForMember(vm => vm.SubscribedVideoMaterials, opt => opt.MapFrom(vm => vm.SubscribedVideoMaterials));
+            .ForMember(vm => vm.SubscribedVideoMaterials, opt => opt.MapFrom(vm => vm.SubscribedVideoMaterials))
+            .ForMember(vm => vm.IsHaveCurrentPassword, opt => opt.MapFrom(vm => !string.IsNullOrWhiteSpace(vm.PasswordHash)));
 
             config += cfg => cfg.CreateMap<VideoMaterial, VideoMaterialPersonalAccountViewModel>()
             .ForMember(vm => vm.ID, opt => opt.MapFrom(vm => vm.ID))

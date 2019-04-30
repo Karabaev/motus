@@ -1,11 +1,19 @@
 ﻿function ConfirmChangesShow() {
-    var confirmField = $('#confirm-changes')
-    $('input:not(#InputFile)').change(function () {
-        if (confirmField.is(':visible')) {
-            return;
-        }
-        confirmField.slideDown();
-    })
+    var confirmField = $('#confirm-changes');
+    var haveCur = $("#have-pass").val();
+
+    if (haveCur == "True") {
+        $('input:not(#InputFile)').change(function () {
+            if (confirmField.is(':visible')) {
+                return;
+            }
+            confirmField.slideDown();
+        });
+    }
+    else {
+        $("#password-confirm").removeAttr("required pattern");
+    }
+    
 }
 function PanelShow(id) {
     var panel = $('#' + id)
@@ -16,6 +24,7 @@ function PanelShow(id) {
         panel.slideDown()
     }
 }
+
 function ProfilePanelManage() {
     const rotatedClass = 'rotated'
     var arrow = $('.exp-panel-arrow')
@@ -32,6 +41,7 @@ function ProfilePanelManage() {
         PanelShow($(this).attr('for'));
     });
 }
+
 function readURL(input) {
     var files = input.files;
 
@@ -76,6 +86,7 @@ function AvatarBtnManage() {
         input.click();
     });
 }
+
 function AvatarPanelManage() {
     var continer = document.getElementsByClassName('avatar-container')[0];
     var panel = document.getElementsByClassName('avatar-panel')[0];
@@ -91,6 +102,7 @@ function AvatarPanelManage() {
 function GenerateModelJson() {
     var json = {
         ID: $("#account-id").val(),
+        IsHaveCurrentPassword: $("#have-pass").val(),
         NewUserName: $("#username").val(),
         NewPassword: $("#password").val(),
         ConfirmPassword: $("#confitm-password").val(),
