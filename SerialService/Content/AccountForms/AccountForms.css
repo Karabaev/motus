@@ -7,7 +7,6 @@ body {
 }
 
 .acc-button {
-    float: right;
     color: #1a237e;
 }
 
@@ -29,4 +28,20 @@ body {
     float: right;
     color: rgb(63,81,181);
     font-size: 16px;
+    text-decoration: none;
+}
+
+.login-button {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.mdl-textfield{
+    width:100%;
+}
+.small-text{
+    font-size:smaller;
+}
+.social-container{
+    text-align:center;
 }

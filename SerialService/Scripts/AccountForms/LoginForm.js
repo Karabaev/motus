@@ -33,7 +33,7 @@ function SubmitLoginForm() {
 
 $(document).ready(function () {
     CheckBoxManage()
-    $('input').change(function (e) {
+    $('input').on('input change', function (e) {
         e.preventDefault()
         SubmitButtonManage()
         HideErrorMessage()

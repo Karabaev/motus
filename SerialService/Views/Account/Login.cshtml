@@ -9,38 +9,43 @@
     <div class="mdl-card__title">
         <h2 class="mdl-card__title-text">Войти</h2>
     </div>
-    <div class="acc-form-container mdl-cell--10-col mdl-cell--12-col-phone mdl-grid">
-        <form method="post" class="mdl-cell--12-col" id="login-form">
+    <div class="acc-form-container mdl-cell--10-col mdl-grid">
+        <form method="post" style="width:100%" id="login-form">
             @Html.AntiForgeryToken()
             <input hidden name="ReturnUrl" value="@ViewBag.ReturnUrl">
-            <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col">
-                <input class="mdl-textfield__input" name="Email" required type="email" id="email">
+            <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input required-field" name="Email" type="email" id="email">
                 <label class="mdl-textfield__label" for="email">Email...</label>
             </div>
-            <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col">
-                <input class="mdl-textfield__input" name="Password" required pattern="[A-Za-zА-Яа-яЁё0-9]{6,16}" type="password" id="password">
+            <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input required-field" maxlength="16" name="Password" pattern="[A-Za-zА-Яа-яЁё0-9]{6,16}" type="password" id="password">
                 <label class="mdl-textfield__label" for="password">Пароль...</label>
                 <span class="mdl-textfield__error">Пароль длиной не менее 6 символов, состоящий из букв и цифр</span>
             </div>
             <div class="mdl-cell--12-col"><span style="display:none" class="error"></span></div>
-            <label style="margin-top:50px" class="mdl-checkbox mdl-cell--12-col mdl-js-checkbox mdl-js-ripple-effect" for="remember">
-                <input type="checkbox" id="remember" name="RememberMe" class="mdl-checkbox__input" value="true" checked>
-                <span class="mdl-checkbox__label">Запомнить меня</span>
-            </label>
+            <div style="margin-top:50px" class="mdl-cell--12-col mdl-grid">
+                <label style="width:50%" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="remember">
+                    <input type="checkbox" id="remember" name="RememberMe" class="mdl-checkbox__input" value="true" checked>
+                    <span class="mdl-checkbox__label small-text">Запомнить меня</span>
+                </label>
+                <div style="width:50%" class="forget-password mdl-checkbox__label">
+                    @Html.ActionLink("Забыл пароль?", "ForgotPassword", null, null, new { @class = "forget-password-link small-text" })
+                </div>
+            </div>
+            <div>
+                <button type="button" disabled id="submit-btn" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored login-button acc-button">
+                    Войти
+                </button>
+            </div>
         </form>
-        <div class="mdl-cell--12-col forget-password">
-            @Html.ActionLink("Забыли пароль?", "ForgotPassword", null, null, new { @class = "forget-password-link" })
-        </div>
-        <div class="mdl-cell--12-col">
+    </div>
+    <div class="mdl-card__actions mdl-card--border">
+        <div class="social-container">
+            <span class="small-text">или</span>
             <section id="socialLoginForm">
                 @Html.Partial("_ExternalLoginsListPartial")
             </section>
         </div>
-    </div>
-    <div class="mdl-card__actions mdl-card--border">
-        <button type="button" disabled id="submit-btn" class="mdl-button mdl-js-button acc-button">
-            Войти
-        </button>
     </div>
 </div>
 <script src="~/Scripts/AccountForms/CommonForm.js"></script>

@@ -201,3 +201,16 @@ footer {
     right: 0px;
     text-align:right;
 }
+
+.svg-icon-button {
+    height: 40px;
+    width: 40px;
+}
+
+.svg-icon-button:hover .motus-custom-icons{
+    fill:#383849;
+}
+
+.motus-custom-icons {
+    fill: rgba(0,0,0,.26);
+}
