@@ -21,6 +21,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels;
+    using System.Configuration;
 
     [ExceptionHandler]
 	public class UserController : Controller
@@ -28,13 +29,15 @@
 		private readonly Logger logger;
 		private readonly IAppUnitOfWork unitOfWork;
 		private const int PageSize = 54;
-        private const string mainTitle = "Motus-cinema";
+        private readonly string mainTitle;
 
         public UserController(IAppUnitOfWork unitOfWork) // инициализировтаь нинжект
 		{
 			this.unitOfWork = unitOfWork;
 			this.logger = LogManager.GetCurrentClassLogger();
-		}
+            this.mainTitle = ConfigurationManager.AppSettings["MainTitle"];
+
+        }
 
 		/// <summary>
 		/// Домашняя страница.
@@ -43,7 +46,7 @@
 		{
 			RedirectHelper.SaveLocalURL(this.ViewBag, this.ControllerContext);
 			this.ViewBag.Title = mainTitle;
-			this.ViewBag.Description = "Любимые фильмы и сериалы в хорошем качестве. Новинки кино, постоянное обновление базы фильмов и многое другое";
+			this.ViewBag.Description = ConfigurationManager.AppSettings["IndexDescription"];
             Session["FilterSettings"] = null;
             return RenderFilmsList(page);
 		}
@@ -91,19 +94,17 @@
 			VideoMaterialDetailsViewModel dvm = Mapper.Map<VideoMaterial, VideoMaterialDetailsViewModel>(videoMaterial);
 			ElasticVideoMaterial thisMaterial = Mapper.Map<VideoMaterial, ElasticVideoMaterial>(videoMaterial);
 			dvm.Similar = MotusElasticsearch.GetSimilar(thisMaterial);
-			this.ViewBag.Title = $"{dvm.Title} - cмотреть онлайн";
-			if (videoMaterial.SerialSeasons.Any())
-			{
-				this.ViewBag.Description = $"{dvm.Title}. Самые свежие серии в HD-качестве и озвучках от популярных студий онлайн.";
-			}
-			else
-			{
-				this.ViewBag.Description = $"{dvm.Title}. В HD-качестве и озвучках от популярных студий онлайн.";
-			}
-			var user = this.unitOfWork.Users.Get(this.User.Identity.GetUserId());
-			string commentsApiKey = "727fd347-51d7-4338-a8c2-33075a2f7c2f";
+            this.ViewBag.Title = string.Format("{0} - {1}", dvm.Title, ConfigurationManager.AppSettings["VideoMaterialTitlePart"]);
 
-			if (user != null)
+            string descriptionPart =    videoMaterial.SerialSeasons.TrueForAll( ss => ss.SeasonNumber == 0
+                                                                                && ss.EpisodesCount == 1) 
+                                        ? ConfigurationManager.AppSettings["SerialDescriptionPart"] 
+                                        : ConfigurationManager.AppSettings["FilmDescriptionPart"];
+            this.ViewBag.Description = string.Format("{0}. {1}", dvm.Title, descriptionPart);
+			var user = this.unitOfWork.Users.Get(this.User.Identity.GetUserId());
+            string commentsApiKey = ConfigurationManager.AppSettings["CommentsApiKey"];
+
+            if (user != null)
 			{
                 this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey, user.Id, user.UserName, user.Email, user.AvatarURL);
 				dvm.IsUserSubscribed = this.unitOfWork.VideoMaterials.IsUserSubscribed(id, user.Id);
