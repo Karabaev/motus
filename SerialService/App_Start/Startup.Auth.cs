@@ -13,7 +13,7 @@
     using DAL.Context;
     using DAL.Repository;
     using Microsoft.Owin.Security;
-
+    using System.Configuration;
 
     public partial class Startup
     {
@@ -67,28 +67,18 @@
             //   appId: "",
             //   appSecret: "");
 
-            //Рабочий вариант
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
             {
-                ClientId = "617791642450-0hkdostg0e5ab7obd1b63318nstvhttv.apps.googleusercontent.com",
-                ClientSecret = "_L-c1loZvU6sy5rIweyvUABE",
+                ClientId = ConfigurationManager.AppSettings["GoogleClientID"], 
+                ClientSecret = ConfigurationManager.AppSettings["GoogleClientSecret"],
                 Caption = "Google+",
                 AuthenticationType = "Google+"
             });
 
-            //Тестовый вариант
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
-            //{
-            //    ClientId = "1094834758913-9sahepj5ctat69aiqoq1gm58t3m4ram9.apps.googleusercontent.com",
-            //    ClientSecret = "pj9rrqjuaqDdn1pkwscT4g8S",
-            //    Caption = "Google+",
-            //    AuthenticationType = "Google+"
-            //});
-
             app.UseVKontakteAuthentication(new VKontakteAuthenticationOptions()
             {
-                ClientId = "6949913",
-                ClientSecret = "bcQvtVzxt1IXcViKlSpn",
+                ClientId = ConfigurationManager.AppSettings["VKontakteClientID"],
+                ClientSecret = ConfigurationManager.AppSettings["VKontakteClientSecret"],
                 Caption = "ВКонтакте",
                 AuthenticationType = "ВКонтакте",
                 Scope = new List<string> { "email" }

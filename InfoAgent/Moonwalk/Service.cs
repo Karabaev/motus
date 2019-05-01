@@ -11,6 +11,7 @@
     using NLog;
     using Model;
     using AdditionalModel;
+    using System.Configuration;
 
     public class Service
     {
@@ -18,9 +19,9 @@
         /// Конструктор.
         /// </summary>
         /// <param name="apiKey"></param>
-        public Service(string apiKey = "a3275d42cea4b2dfb65084eea682885d")
+        public Service()
         {
-            this.apiKey = apiKey;
+            this.apiKey = ConfigurationManager.AppSettings["MoonwalkApiKey"];
         }
 
         /// <summary>

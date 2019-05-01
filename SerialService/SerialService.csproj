@@ -129,18 +129,6 @@
     <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="React.Core, Version=3.4.0.0, Culture=neutral, PublicKeyToken=9aed67b161f7db78, processorArchitecture=MSIL">
-      <HintPath>..\packages\React.Core.3.4.1\lib\net40\React.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="React.Web, Version=3.4.0.0, Culture=neutral, PublicKeyToken=9aed67b161f7db78, processorArchitecture=MSIL">
-      <HintPath>..\packages\React.Web.3.4.1\lib\net40\React.Web.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="React.Web.Mvc4, Version=3.4.0.0, Culture=neutral, PublicKeyToken=9aed67b161f7db78, processorArchitecture=MSIL">
-      <HintPath>..\packages\React.Web.Mvc4.3.4.1\lib\net40\React.Web.Mvc4.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />

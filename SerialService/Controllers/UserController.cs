@@ -21,6 +21,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using ViewModels;
+    using System.Configuration;
 
     [ExceptionHandler]
 	public class UserController : Controller
@@ -45,6 +46,7 @@
 			this.ViewBag.Title = mainTitle;
 			this.ViewBag.Description = "Любимые фильмы и сериалы в хорошем качестве. Новинки кино, постоянное обновление базы фильмов и многое другое";
             Session["FilterSettings"] = null;
+            NLog.LogManager.GetCurrentClassLogger().Info("Тест");
             return RenderFilmsList(page);
 		}
 
@@ -101,9 +103,9 @@
 				this.ViewBag.Description = $"{dvm.Title}. В HD-качестве и озвучках от популярных студий онлайн.";
 			}
 			var user = this.unitOfWork.Users.Get(this.User.Identity.GetUserId());
-			string commentsApiKey = "727fd347-51d7-4338-a8c2-33075a2f7c2f";
+            string commentsApiKey = ConfigurationManager.AppSettings["CommentsApiKey"];
 
-			if (user != null)
+            if (user != null)
 			{
                 this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey, user.Id, user.UserName, user.Email, user.AvatarURL);
 				dvm.IsUserSubscribed = this.unitOfWork.VideoMaterials.IsUserSubscribed(id, user.Id);
