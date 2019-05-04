@@ -88,6 +88,14 @@
                 </li>
             </ul>
         </div>
+        <div class="mdl-card__actions mdl-card--border">
+            <div class="social-container">
+                <span class="small-text">привязать внешний аккаунт</span>
+                <section id="socialLoginForm">
+                    @Html.Partial("~/Views/Account/_ExternalLoginsListPartial.cshtml")
+                </section>
+            </div>
+        </div>
         <div class="mdl-cell--12-col"><span style="display:none" class="error"></span></div>
         <div class="mdl-cell--6-col">
             @if (Model.SubscribedVideoMaterials != null && Model.SubscribedVideoMaterials.Any())

@@ -380,6 +380,7 @@
         public ActionResult ExternalLoginCallback(ExternalLoginCallbackViewModel model)
         {
             var loginInfo = this.AuthenticationManager.GetExternalLoginInfo();
+            ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
 
             if (loginInfo == null)
             {
@@ -390,9 +391,27 @@
                 });
             }
 
-            var user = this.userService.GetByMainStringProperty(loginInfo.Email);
-            ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            string userId = this.User.Identity.GetUserId();
 
+            if(!string.IsNullOrWhiteSpace(userId))
+            {
+                var result = this.userService.AddLogin(userId, loginInfo.Login);
+
+                if(result.Succeeded)
+                    return RedirectToAction("Index", "User");
+                else
+                    return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = string.Join("<br/>", result.Errors) });
+            }
+            var user = this.userService.GetByExternalLogin(loginInfo.Login); // ищем юзера по логин
+
+            if(user != null)
+            {
+                signInManager.SignIn(user, false, false);
+                return this.UpdateSignedInUserAndRedirect(user, "User", "Index", null);
+            }
+
+            user = this.userService.GetByMainStringProperty(loginInfo.Email); // ищем юзера по email
+            
             if (user != null)
             {
                 var result = this.userService.AddLogin(user.Id, loginInfo.Login);
@@ -400,9 +419,7 @@
                 if(result.Succeeded)
                 {
                     signInManager.SignIn(user, false, false);
-                    user.LastAuthorizationDateTime = DateTime.Now;
-                    Task.Run(() => this.userService.Update(user));
-                    return RedirectToAction("Index", "User");
+                    return this.UpdateSignedInUserAndRedirect(user, "User", "Index", null);
                 }
                 else
                 {
@@ -417,9 +434,12 @@
                 switch (result)
                 {
                     case SignInStatus.Success:
-                        user.LastAuthorizationDateTime = DateTime.Now;
-                        Task.Run(() => this.userService.Update(user));
-                        return RedirectToAction("Index", "User");
+                        user = this.userService.GetByExternalLogin(loginInfo.Login);
+
+                        if (user != null)
+                            return this.UpdateSignedInUserAndRedirect(user, "User", "Index", null);
+                        else
+                            return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = "Пользователь не найден" });
                     case SignInStatus.LockedOut:
                         return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = "Учетная запись заблокирована" });
                     case SignInStatus.Failure:
@@ -460,9 +480,7 @@
                             if (createResult.Succeeded)
                             {
                                 signInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
-                                user.LastAuthorizationDateTime = DateTime.Now;
-                                Task.Run(() => this.userService.Update(user));
-                                return RedirectToAction("Index", "User");
+                                return this.UpdateSignedInUserAndRedirect(user, "User", "Index", null);
                             }
                             else
                             {
@@ -505,6 +523,16 @@
                 result = this.userService.AddLogin(user.Id, login);
 
             return result;
+        }
+
+        private RedirectToRouteResult UpdateSignedInUserAndRedirect(  ApplicationUser user, 
+                                                                string controller,
+                                                                string action, 
+                                                                object routeValues)
+        {
+            user.LastAuthorizationDateTime = DateTime.Now;
+            Task.Run(() => this.userService.Update(user));
+            return RedirectToAction(action, controller, routeValues);
         }
 
         /// <summary>

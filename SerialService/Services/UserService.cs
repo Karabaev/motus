@@ -582,5 +582,14 @@
 
             return result;
         }
+
+        public ApplicationUser GetByExternalLogin(UserLoginInfo login)
+        {
+            if (login == null)
+                throw new ArgumentNullException("login");
+
+            ApplicationUser result = this.manager.Find(login);
+            return result;
+        }
     }
 }
