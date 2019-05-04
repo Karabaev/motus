@@ -118,6 +118,10 @@
                 url: "email_forgot/{model}",
                 defaults: new { controller = "Account", action = "EmailForgotPassword", model = UrlParameter.Optional });
 
+            routes.MapRoute(name: "ParoleForgotPassword",
+                url: "parole_forgot/{model}",
+                defaults: new { controller = "Account", action = "ParoleForgotPassword", model = UrlParameter.Optional });
+
             routes.MapRoute(name: "AccountForgotPasswordConfirmation",
                url: "email_reset",
                defaults: new { controller = "Account", action = "ForgotPasswordConfirmation" });

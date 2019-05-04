@@ -1,17 +1,8 @@
-﻿var IsEmailReset = true;
-
-function EmailBtnClick() {
-    IsEmailReset = true;
-}
-
-function ParoleBtnClick() {
-    IsEmailReset = false;
-}
-
-// Модель сброса пароля по parole
+﻿// Модель сброса пароля по parole
 function GenerateParoleResetModelJson() {
     var json = {
-        Email: $("#email").val(),
+        __RequestVerificationToken: $("input[name = '__RequestVerificationToken']").val(),
+        Email: $("#identity-email").val(),
         Parole: $("#parole").val(),
     };
     return json;
@@ -21,11 +12,12 @@ function Submit() {
     var json = $('#login-form').serialize();
     var action = "";
 
-    if (IsEmailReset) {
+    if ($('.is-active').first().attr('href') === '#by-email') {
         action = "/email_forgot";
     }
     else {
-        action = "";
+        json = GenerateParoleResetModelJson();
+        action = "/parole_forgot";
     }
 
     $.post(action,
@@ -44,19 +36,22 @@ function Submit() {
 
 function ClearHidenForm(inputSelector) {
     $(inputSelector).keydown(function () {
-        var changedInput = $(this).attr('Id');
-        var unselectedInput = $(inputSelector).not(document.getElementById(changedInput));
-        unselectedInput.val('');
-        unselectedInput.parent().removeClass('is-invalid is-dirty');
+        var hiddenTabs = $('.mdl-tabs__panel').filter(function (index) {
+            return $(this).is(':hidden');
+        });
+        console.log(hiddenTabs.length);
+        var hiddenInputs = hiddenTabs.find('input');
+        hiddenInputs.val('');
+        hiddenInputs.parent().removeClass('is-invalid is-dirty');
     })
 }
 
 function ButtonManage(inputSelector) {
     var isValide = document.getElementsByClassName('is-invalid').length === 0;
-    var isRequired = false;
-    $(inputSelector).each(function () {
-        if ($(this).val().length > 0) {
-            isRequired = true;
+    var isRequired = true;
+    $('.is-active input').each(function () {
+        if ($(this).val().length === 0) {
+            isRequired = false;
         }
     });
 
@@ -85,9 +80,9 @@ $(document).ready(function () {
         e.preventDefault();
         Submit();
     });
-    const forgonSelector = '.forgot-form-input';
-    ClearHidenForm(forgonSelector);
-    $(forgonSelector).change(function (e) {
-        ButtonManage(forgonSelector);
+    const forgotSelector = '.forgot-form-input';
+    ClearHidenForm(forgotSelector);
+    $(forgotSelector).change(function (e) {
+        ButtonManage(forgotSelector);
     })
 })
