@@ -131,7 +131,7 @@
                 try
                 {
                     ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-                    IdentityResult result = this.userService.Create(user, model.Password, Resource.UserRoleName);
+                    IdentityResult result = this.RegisterMethod(user, new string[] { Resource.UserRoleName }, null, model.Password);
 
                     if (result.Succeeded)
                     {
@@ -428,25 +428,34 @@
 
                         try
                         {
-                            user = new ApplicationUser { UserName = string.IsNullOrWhiteSpace(loginInfo.ExternalIdentity.Name) ?
+                            if (string.IsNullOrEmpty(loginInfo.Email))
+                            {
+                                return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel
+                                {
+                                    Errors = "Не удалось получить адрес эл. почты",
+                                    ProviderDisplayName = model.ExternalProviderName
+                                });
+                            }
+
+                            if (string.IsNullOrEmpty(loginInfo.DefaultUserName) && string.IsNullOrEmpty(loginInfo.ExternalIdentity.Name))
+                            {
+                                return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel
+                                {
+                                    Errors = "Не удалось получить адрес эл. почты",
+                                    ProviderDisplayName = model.ExternalProviderName
+                                });
+                            }
+
+                            user = new ApplicationUser
+                            {
+                                UserName = string.IsNullOrWhiteSpace(loginInfo.ExternalIdentity.Name) ?
                                                                         loginInfo.DefaultUserName :
                                                                         loginInfo.ExternalIdentity.Name,
-                                                                        Email = loginInfo.Email,
-                                                                        EmailConfirmed = true };
-                            createResult = this.userService.CreateWithoutPassword(user, Resource.UserRoleName);
-                        }
-                        catch (EntryAlreadyExistsException ex)
-                        {
-                            return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = ex.Message });
-                        }
-                        catch(Exception ex)
-                        {
-                            return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = "Не удалось зарегистрировать пользователя" });
-                        }
+                                Email = loginInfo.Email,
+                                EmailConfirmed = true
+                            };
 
-                        if (createResult.Succeeded)
-                        {
-                            createResult = this.userService.AddLogin(user.Id, loginInfo.Login);
+                            createResult = this.RegisterMethod(user, new string[] { Resource.UserRoleName }, loginInfo.Login);
 
                             if (createResult.Succeeded)
                             {
@@ -460,12 +469,42 @@
                                 return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = string.Join("<br/>", createResult.Errors) });
                             }
                         }
-                        else
+                        catch (EntryAlreadyExistsException ex)
                         {
-                            return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = string.Join("<br/>", createResult.Errors) });
+                            return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = ex.Message });
+                        }
+                        catch (Exception ex)
+                        {
+                            return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = "Не удалось зарегистрировать пользователя" });
                         }
                 }
             }
+        }
+
+        /// <summary>
+        /// Метод регистрации юзера.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="roles"></param>
+        /// <param name="login"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        private IdentityResult RegisterMethod(ApplicationUser user, string[] roles, UserLoginInfo login, string password = "")
+        {
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            IdentityResult result = null;
+
+            if(string.IsNullOrWhiteSpace(password))
+                result = this.userService.CreateWithoutPassword(user, roles);
+            else
+                result = this.userService.Create(user, password, roles);
+
+            if(result.Succeeded && login != null)
+                result = this.userService.AddLogin(user.Id, login);
+
+            return result;
         }
 
         /// <summary>
