@@ -488,13 +488,24 @@
 			return this.Json(new { success = true, email = user.Email, name = user.UserName, message = advancedMessage });
 		}
 
+        public ActionResult AddExternalLogin()
+        {
+            string id = this.User.Identity.GetUserId();
+
+            if (string.IsNullOrWhiteSpace(id))
+                return this.HttpNotFound();
+
+
+            return View();
+        }
+
 		public ActionResult ConfirmNewEmail(ConfirmNewEmailViewModel model)
 		{
 			if (model == null || !ModelState.IsValid)
 				return HttpNotFound();
 
 			IdentityResult result = this.unitOfWork.Users.ChangeEmail(model.UserID, model.NewEmail, model.Code);
-			string oursEmail = "help@motus-cinema.com";
+            string oursEmail = ConfigurationManager.AppSettings["SupportEmail"];
 
 			if (result.Succeeded)
 				model.ResultMessage = "Адрес электронной почты успешно изменен";

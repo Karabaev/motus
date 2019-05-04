@@ -390,6 +390,22 @@
                 });
             }
 
+            string userId = this.User.Identity.GetUserId();
+
+            if(!string.IsNullOrWhiteSpace(userId))
+            {
+                var result = this.userService.AddLogin(userId, loginInfo.Login);
+
+                if(result.Succeeded)
+                {
+                    return RedirectToAction("Index", "User");
+                }
+                else
+                {
+                    return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = string.Join("<br/>", result.Errors) });
+                }
+            }
+
             var user = this.userService.GetByMainStringProperty(loginInfo.Email);
             ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
 
