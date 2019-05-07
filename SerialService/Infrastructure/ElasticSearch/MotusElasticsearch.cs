@@ -131,6 +131,12 @@
                 count++;
             };
             StoreSize = count;
+
+            var updateIndexSettingsResponse = client.UpdateIndexSettings(index, u => u
+                .IndexSettings(di => di
+                    .Setting("index.max_result_window", StoreSize)
+                )
+            );
         }
 
         /// <summary>
