@@ -7,6 +7,7 @@
 <link href="~/Content/Other/UserContent.css" rel="stylesheet" />
 <link href="~/Content/mdl-v1.1.2/material.css" rel="stylesheet" type="text/css" />
 <link href="~/Content/User/DetailPage.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/Content/User/Posters.css" />
 @{
     bool originalTitleHasValue = !string.IsNullOrEmpty(Model.OriginalTitle);
     bool posterUrlHasValue = !string.IsNullOrEmpty(Model.PosterURL);
@@ -155,7 +156,11 @@
                         if (item != null && !string.IsNullOrEmpty(item.PosterURL))
                         {
                             <div class="mini-poster mdl-card mdl-shadow--2dp mdl-cell--2-col" onclick="location.href='@Url.Action("VideoMaterialDetailPage", new { id = item.ID })'">
-                                <img class="mini-poster-image" src="@item.PosterURL" alt="Постер @item.Title" />
+                                <div class="poster-relative">
+                                    <div class="poster-absolute">
+                                        <img class="mini-poster-image" src="@item.PosterURL" alt="Постер @item.Title" />
+                                    </div>
+                                </div>
                             </div>
                         }
                     }

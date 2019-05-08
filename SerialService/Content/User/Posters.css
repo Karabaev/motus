@@ -1,0 +1,13 @@
+﻿.poster-relative {
+    width: 100%;
+    padding-top: 142%;
+    position: relative;
+}
+
+.poster-absolute {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}

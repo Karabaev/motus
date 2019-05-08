@@ -411,6 +411,7 @@
     <Content Include="Content\User\DetailPage.css" />
     <Content Include="Content\User\Index.css" />
     <Content Include="Content\User\PeronalAccout.css" />
+    <Content Include="Content\User\Posters.css" />
     <Content Include="Content\User\Profile.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
