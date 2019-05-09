@@ -41,7 +41,8 @@
 			modelBuilder.Entity<ApplicationUser>().Property(a => a.RegisterDateTime).IsRequired();
 			modelBuilder.Entity<ApplicationUser>().Property(a => a.LastAuthorizationDateTime).IsRequired();
 			modelBuilder.Entity<ApplicationUser>().Property(a => a.ChangeDateTime).IsRequired();
-			base.OnModelCreating(modelBuilder);
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public static ApplicationDbContext Create()
