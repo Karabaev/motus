@@ -36,22 +36,22 @@
             switch (requestType)
             {
                 case RequestTypes.ForeignFilms:
-                    result = string.Format("http://moonwalk.cc/api/movies_foreign.json?api_token={0}", apiKey);
+                    result = string.Format("http://moonwalk.cc/api/movies_foreign.json?api_token={0}", this.apiKey);
                     break;
                 case RequestTypes.RussianFilms:
-                    result = string.Format("http://moonwalk.cc/api/movies_russian.json?api_token={0}", apiKey);
+                    result = string.Format("http://moonwalk.cc/api/movies_russian.json?api_token={0}", this.apiKey);
                     break;
                 case RequestTypes.ForeignSerials:
-                    result = string.Format("http://moonwalk.cc/api/serials_foreign.json?api_token={0}", apiKey);
+                    result = string.Format("http://moonwalk.cc/api/serials_foreign.json?api_token={0}", this.apiKey);
                     break;
                 case RequestTypes.RussianSerials:
-                    result = string.Format("http://moonwalk.cc/api/serials_russian.json?api_token={0}", apiKey);
+                    result = string.Format("http://moonwalk.cc/api/serials_russian.json?api_token={0}", this.apiKey);
                     break;
                 case RequestTypes.AnimeFilms:
-                    result = string.Format("http://moonwalk.cc/api/movies_anime.json?api_token={0}", apiKey);
+                    result = string.Format("http://moonwalk.cc/api/movies_anime.json?api_token={0}", this.apiKey);
                     break;
                 case RequestTypes.AnimeSerials:
-                    result = string.Format("http://moonwalk.cc/api/serials_anime.json?api_token={0}", apiKey);
+                    result = string.Format("http://moonwalk.cc/api/serials_anime.json?api_token={0}", this.apiKey);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("Некорректный тип запроса");
@@ -86,16 +86,16 @@
         public List<FilmInfo> GetAllFilmInfoList()
         {
             List<VideoMaterialWithTranslations> videoMaterials = new List<VideoMaterialWithTranslations>();
-            Response response = this.GetResponseObject(RequestTypes.ForeignFilms);
+            //Response response = this.GetResponseObject(RequestTypes.ForeignFilms);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
+            //response = this.GetResponseObject(RequestTypes.RussianFilms);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
+            Response response = this.GetResponseObject(RequestTypes.AnimeFilms);
             videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
-            response = this.GetResponseObject(RequestTypes.RussianFilms);
-            videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
-            response = this.GetResponseObject(RequestTypes.AnimeFilms);
-            videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
-            response = this.GetResponseObject(RequestTypes.ForeignSerials);
-            videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
-            response = this.GetResponseObject(RequestTypes.RussianSerials);
-            videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
+            //response = this.GetResponseObject(RequestTypes.ForeignSerials);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
+            //response = this.GetResponseObject(RequestTypes.RussianSerials);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
             response = this.GetResponseObject(RequestTypes.AnimeSerials);
             videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
             List<FilmInfo> result = this.GetFilmInfoList(videoMaterials);
