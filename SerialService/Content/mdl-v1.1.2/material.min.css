@@ -66,14 +66,14 @@ textarea {
     width: 1px
 }
 
-    .visuallyhidden.focusable:active, .visuallyhidden.focusable:focus {
-        clip: auto;
-        height: auto;
-        margin: 0;
-        overflow: visible;
-        position: static;
-        width: auto
-    }
+.visuallyhidden.focusable:active, .visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto
+}
 
 .invisible {
     visibility: hidden
@@ -175,15 +175,6 @@ h1, h2, h3, h4, h5, h6, p {
     padding: 0
 }
 
-    h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
-        font-family: "Roboto","Helvetica","Arial",sans-serif;
-        font-weight: 400;
-        line-height: 1.35;
-        letter-spacing: -.02em;
-        opacity: .54;
-        font-size: .6em
-    }
-
 h1 {
     font-size: 56px;
     line-height: 1.35;
@@ -199,20 +190,6 @@ h1, h2 {
 h2 {
     font-size: 45px;
     line-height: 48px
-}
-
-h2, h3 {
-    margin: 24px 0
-}
-
-h3 {
-    font-size: 34px;
-    line-height: 40px
-}
-
-h3, h4 {
-    font-family: "Roboto","Helvetica","Arial",sans-serif;
-    font-weight: 400
 }
 
 h4 {

@@ -158,7 +158,7 @@
                             <div class="mini-poster mdl-card mdl-shadow--2dp mdl-cell--2-col" onclick="location.href='@Url.Action("VideoMaterialDetailPage", new { id = item.ID })'">
                                 <div class="poster-relative">
                                     <div class="poster-absolute">
-                                        <img class="mini-poster-image" src="@item.PosterURL" alt="Постер @item.Title" />
+                                        <img class="mini-poster-image" src="@item.PosterURL.Replace("iphone360","iphone180")" alt="Постер @item.Title" />
                                     </div>
                                 </div>
                             </div>
@@ -168,9 +168,6 @@
             </div>
         }
     </div>
-    @*<div style="margin-bottom:10px" class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card">
-
-    </div>*@
     <div class="tolstoycomments-feed"></div>
     <script type="text/javascript">
         !(function (w, d, s, l, x) {

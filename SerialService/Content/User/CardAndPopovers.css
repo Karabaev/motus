@@ -21,10 +21,6 @@
     margin-bottom: 10px;
 }
 
-.phone-title {
-    margin-bottom: 5px;
-}
-
 .motus-film-card {
     font-size:small!important;
     min-height: 0 !important;
@@ -36,9 +32,21 @@
     display: flex;
 }
 
-.phone-info {
-    padding: 8px;
+.motus-film-card-info {
+    display: grid;
+    padding: 12px;
 }
+
+.motus-film-card-title {
+    all: initial;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold !important;
+    margin: 0 !important;
+    line-height: 1.5rem !important;
+    font-size: small;
+    color: #383849;
+}
+
 .popover-info-bar{
     display:inline-flex;
     margin-top:10px;

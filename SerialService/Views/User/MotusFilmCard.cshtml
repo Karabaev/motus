@@ -6,25 +6,23 @@
         <div class="poster-absolute">
             @if (!string.IsNullOrEmpty(Model.PosterURL))
             {
-                <img style="width:100%;height:100%; min-width:0!important;min-height:0!important" src="@Model.PosterURL" alt="Постер @Model.Title" />
+                <picture>
+                  <source media="(min-width: 1000px) and (max-width: 1600px)" srcset="@Model.PosterURL.Replace("iphone360","iphone180")">
+                  <source media="(min-width: 800px) and (max-width: 1000px)" srcset="@Model.PosterURL.Replace("iphone360","iphone120")">
+                  <img src="@Model.PosterURL" alt="Постер @Model.Title" style="width:100%;height:100%; min-width:0!important;min-height:0!important">
+                </picture>
             }
         </div>
     </div>
-    <div class="phone-info mdl-cell--hide-desktop mdl-cell--hide-tablet">
-        <div class="phone-title">
-            @if (Model.Title.Length < 30)
-            {
-                <p>@Html.DisplayFor(m => m.Title).ToString().</p>
-            }
-            else
-            {
-                <p>@Html.DisplayFor(m => m.Title).ToString().Substring(0, 25)...</p>
-            }
-        </div>
-        <div>
-            <p>
-                @Html.CreateEnumeration(Model.GenreTitles.Where(g => Model.GenreTitles.IndexOf(g) <= 1).ToList())
-            </p>
-        </div>
+    <div class="motus-film-card-info">
+        @if (Model.Title.Length < 30)
+        {
+            <h3 class="motus-film-card-title">@Html.DisplayFor(m => m.Title).ToString()</h3>
+        }
+        else
+        {
+            <h3 class="motus-film-card-title">@Html.DisplayFor(m => m.Title).ToString().Substring(0, 25)...</h3>
+        }
+        <span>@Model.ReleaseDate</span>
     </div>
 </div>
