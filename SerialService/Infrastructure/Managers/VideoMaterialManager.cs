@@ -45,6 +45,7 @@
             result.CheckStatus = initializer.CheckStatus;
             result.WatchForUpdates = initializer.WatchForUpdates;
             result.IsArchived = initializer.IsArchived;
+            result.IsSerial = initializer.IsSerial;
 
             if (author != null)
             {

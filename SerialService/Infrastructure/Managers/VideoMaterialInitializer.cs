@@ -29,7 +29,8 @@
             IEnumerable<string> themes,
             CheckStatus checkStatus,
             bool watchForUpdates,
-            bool isArchived)
+            bool isArchived,
+            bool isSerial)
         {
             this.Title = title;
             this.OriginalTitle = originalTitle;
@@ -52,6 +53,7 @@
             this.Actors = new List<string>(actors);
             this.SerialSeasonInitializers = new List<SerialSeasonInitializer>(serialSeasons);
             this.Themes = new List<string>(themes);
+            this.IsSerial = isSerial;
         }
 
         public string Title { get; set; }
@@ -68,6 +70,7 @@
         public CheckStatus CheckStatus { get; set; }
         public bool WatchForUpdates { get; set; }
         public bool IsArchived { get; set; }
+        public bool IsSerial { get; set; }
         public List<string> Countries { get; set; }
         public List<string> Genres { get; set; }
         public string PosterURL { get; set; }

@@ -60,7 +60,8 @@
                 new List<string>(),
                 CheckStatus.Checking,
                 watchForUpdates,
-                false);
+                false,
+                info.IsSerial ?? false);
 
             VideoMaterial result = manager.CreateVideoMaterialInstance(initializer);
             return result;
