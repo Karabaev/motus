@@ -118,6 +118,11 @@
             int count = 1;
             foreach (var model in models)
             {
+                //Пустые поля и null приводят к отмене индексации
+                if (string.IsNullOrEmpty(model.OriginalTitle))
+                {
+                    model.OriginalTitle = " ";
+                }
                 List<string> suggestArr = new List<string> { model.OriginalTitle, model.Title};
                 suggestArr = suggestArr.Concat(model.ActorNames)
                           .Concat(model.FilmMakerNames)
