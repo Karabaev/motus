@@ -1,4 +1,4 @@
-﻿namespace Updater
+﻿namespace Tools
 {
     using NLog;
     using Modules;
@@ -7,6 +7,19 @@
     public class Program
     {
         static int Main(string[] args)
+        {
+            RegisterModules();
+
+            while (true)
+            {
+                foreach (var item in modules)
+                    item.Show();
+
+                BaseModule.SelectAndLaunchModule(modules);
+            }
+        }
+
+        static private void RegisterModules()
         {
             IModule updater = new VideoMaterialUpdateModule
             {
@@ -53,14 +66,6 @@
             };
 
             modules = new IModule[] { updater, downloadModulesParent, extendedModulesParent };
-
-            while (true)
-            {
-                foreach (var item in modules)
-                    item.Show();
-
-                BaseModule.SelectAndLaunchModule(modules);
-            }
         }
 
         private static IModule[] modules;

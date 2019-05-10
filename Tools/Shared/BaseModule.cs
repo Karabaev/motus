@@ -1,4 +1,4 @@
-﻿namespace Updater.Shared
+﻿namespace Tools.Shared
 {
     using System;
     using System.Linq;

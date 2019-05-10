@@ -1,6 +1,6 @@
 ﻿using Shared.Mail;
 
-namespace Updater.Modules
+namespace Tools.Modules
 {
 	using System;
 	using System.Linq;

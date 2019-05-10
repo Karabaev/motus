@@ -1,4 +1,4 @@
-﻿namespace Updater.Modules
+﻿namespace Tools.Modules
 {
     using InfoAgent;
     using NLog;

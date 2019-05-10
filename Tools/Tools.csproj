@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{47C7AAE4-65DF-4C65-9643-A0A83E42119B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Updater</RootNamespace>
-    <AssemblyName>Updater</AssemblyName>
+    <RootNamespace>Tools</RootNamespace>
+    <AssemblyName>Tools</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

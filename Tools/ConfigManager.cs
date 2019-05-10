@@ -1,4 +1,4 @@
-﻿namespace Updater
+﻿namespace Tools
 {
 	using System;
 	using System.Threading.Tasks;

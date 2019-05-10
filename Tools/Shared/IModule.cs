@@ -1,4 +1,4 @@
-﻿namespace Updater.Shared
+﻿namespace Tools.Shared
 {
     public interface IModule
     {
