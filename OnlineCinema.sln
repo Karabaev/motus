@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KPParser", "KinoPoiskParser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoAgent", "InfoAgent\InfoAgent.csproj", "{1A57A926-D37D-45DE-8216-6E1271B2F568}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Spammer\Updater.csproj", "{47C7AAE4-65DF-4C65-9643-A0A83E42119B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Tools\Tools.csproj", "{47C7AAE4-65DF-4C65-9643-A0A83E42119B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{5C22B0C3-D603-4C71-9EE7-9F8BA3E21F41}"
 EndProject

@@ -1,4 +1,4 @@
-﻿namespace Updater.Shared
+﻿namespace Tools.Shared
 {
     using System;
     using System.Linq;
@@ -8,9 +8,11 @@
     {
         public int Index { get; set; }
         public string Name { get; set; }
-        public IModule ParentModule { get; set; }
         protected readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Запустить модуль.
+        /// </summary>
         public virtual void Launch()
         {
             Console.WriteLine(this.ToString());
@@ -21,11 +23,18 @@
             return string.Format("{0} - {1}", this.Index, this.Name);
         }
 
+        /// <summary>
+        /// Вывести в консоль имя и номер пункта меню.
+        /// </summary>
         public void Show()
         {
             Console.WriteLine("{0} ", this.ToString());
         }
 
+        /// <summary>
+        /// Выводит на экран консоли запрос пункта меню, если пункт меню корректных, запускает выбранный модуль.
+        /// </summary>
+        /// <param name="modules"></param>
         public static void SelectAndLaunchModule(IModule[] modules)
         {
             while (true)
@@ -35,10 +44,19 @@
                     Console.WriteLine("Выбери пункт:");
                     int switcher = int.Parse(Console.ReadLine());
                     IModule module = modules.FirstOrDefault(m => m.Index == switcher);
-                    Console.WriteLine("Модуль \"{0}\" начал работу", module.Name);
-                    module.Launch();
-                    Console.WriteLine("Модуль \"{0}\" закончил работу \n", module.Name);
-                    return;
+
+                    if(module != null)
+                    {
+                        Console.WriteLine("Модуль \"{0}\" начал работу", module.Name);
+                        module.Launch();
+                        Console.WriteLine("Модуль \"{0}\" закончил работу \n", module.Name);
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Неверный пункт меню");
+                        continue;
+                    }
                 }
                 catch (FormatException)
                 {

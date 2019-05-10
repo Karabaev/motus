@@ -1,4 +1,4 @@
-﻿namespace Updater
+﻿namespace Tools
 {
 	using System;
 	using System.Threading.Tasks;
@@ -58,7 +58,7 @@
 		/// <summary>
 		/// Объект логгера.
 		/// </summary>
-		private readonly Logger logger;
+		private readonly Logger logger = LogManager.GetCurrentClassLogger();
 		/// <summary>
 		/// Параметры конфигурации.
 		/// </summary>
@@ -68,10 +68,8 @@
 		/// Инициализирует объект в памяти и загружает конфигурацию из файла. В случае, если заведена некорректная информация
 		/// в файле конфигурации или файл конфигурации будет не найден будет создан файл с параметрами по умолчанию.
 		/// </summary>
-		/// <param name="logger"></param>
-		private ConfigManager(Logger logger)
+		private ConfigManager()
 		{
-			this.logger = logger;
 			this.Initialization();
 		}
 
@@ -139,10 +137,10 @@
 		/// Если не создан объект в памяти, сохдает его и возвращает.
 		/// </summary>
 		/// <param name="logger">Объект логгера.</param>
-		public static ConfigManager GetInstance(Logger logger)
+		public static ConfigManager GetInstance()
 		{
 			if (ConfigManager.instance == null)
-				ConfigManager.instance = new ConfigManager(logger);
+				ConfigManager.instance = new ConfigManager();
 
 			return ConfigManager.instance;
 		}

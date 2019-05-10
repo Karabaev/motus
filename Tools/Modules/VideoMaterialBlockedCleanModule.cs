@@ -1,4 +1,4 @@
-﻿namespace Updater.Modules
+﻿namespace Tools.Modules
 {
     using InfoAgent;
     using NLog;
@@ -12,37 +12,15 @@
     using InfoAgent.Exceptions;
     using Shared;
 
-    public class VideoMaterialBlockedCleaner
+    public class VideoMaterialBlockedCleanModule : BaseModule
     {
-        private readonly InfoAgentService infoAgent;
-        private readonly IAppUnitOfWork unitOfWork;
-        private readonly Logger logger;
+        private readonly InfoAgentService infoAgent = new InfoAgentService();
+        private readonly IAppUnitOfWork unitOfWork = AppUnitOfWork.GetInstance();
 
-        /// <summary>
-		/// Инициализирует объект в памяти.
-		/// </summary>
-		/// <param name="unitOfWork">Объект, агрегирующий сервисы для работы с данными.</param>
-		/// /// <param name="logger">Объект логгера.</param>
-		private VideoMaterialBlockedCleaner(IAppUnitOfWork unitOfWork, Logger logger)
-        {
-            this.unitOfWork = unitOfWork;
-            this.logger = logger;
-            this.infoAgent = new InfoAgentService(this.logger);
-        }
-
-        public static VideoMaterialBlockedCleaner instance;
-
-        public static VideoMaterialBlockedCleaner Initialize(IAppUnitOfWork unitOfWork, Logger logger)
-        {
-            if (VideoMaterialBlockedCleaner.instance == null)
-                VideoMaterialBlockedCleaner.instance = new VideoMaterialBlockedCleaner(unitOfWork, logger);
-
-            return VideoMaterialBlockedCleaner.instance;
-        }
         /// <summary>
         /// Изменить статус недоступных через API фильмов на Rejected
         /// </summary>
-        public void Clean()
+        private void Clean()
         {
             long count = 0;
             foreach(var material in FindBlocked())
@@ -78,8 +56,6 @@
                 count++;
             }
             Task.Run(() => this.logger.Info($"Очистка зваершена. Очищено {count} елементов"));
-            Console.WriteLine("Очистка зваершена:");
-            Console.ReadKey();
         }
 
         /// <summary>
@@ -121,6 +97,11 @@
             Task.Run(() => this.logger.Info($"Загрузка завершена.Включено {result.Count} елементов"));
 
             return result;
+        }
+
+        public override void Launch()
+        {
+            Clean();
         }
     }
 }

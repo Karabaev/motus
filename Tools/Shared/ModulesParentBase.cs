@@ -1,14 +1,13 @@
-﻿namespace Updater.Modules
+﻿namespace Tools.Shared
 {
     using System;
     using System.Text;
-    using Shared;
 
-    public class ExtendedModulesParent : BaseModule, IModuleParent
+    public class ModulesParentBase : BaseModule, IModuleParent
     {
         public IModule[] DependentModules { get; set; }
 
-        public ExtendedModulesParent(params IModule[] modules)
+        public ModulesParentBase(params IModule[] modules)
         {
             this.DependentModules = modules;
         }

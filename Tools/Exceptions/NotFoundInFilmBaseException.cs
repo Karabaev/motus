@@ -1,4 +1,4 @@
-﻿namespace Updater.Exceptions
+﻿namespace Tools.Exceptions
 {
     using System;
 

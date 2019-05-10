@@ -1,19 +1,17 @@
 ﻿using Shared.Mail;
 
-namespace Updater
+namespace Tools.Modules
 {
 	using System;
 	using System.Linq;
-	using System.Text;
 	using System.Threading.Tasks;
 	using System.Collections.Generic;
 	using SerialService.DAL.Entities;
 	using SerialService.Infrastructure.Exceptions;
-	using SerialService.Infrastructure.Core.Extensions;
 	using SerialService.DAL;
 	using InfoAgent;
 	using Exceptions;
-	using NLog;
+    using Shared;
 
 	public enum MessageTypes
 	{
@@ -24,28 +22,14 @@ namespace Updater
 
 
 	/// <summary>
-	/// Класс апдейтера видеоматериалов.
+	/// Модуль апдейтера видеоматериалов.
 	/// </summary>
-	public class VideoMaterialUpdater
-	{
-		/// <summary>
-		/// Инициализирует объект в памяти.
-		/// </summary>
-		/// <param name="unitOfWork">Объект, агрегирующий сервисы для работы с данными.</param>
-		/// /// <param name="logger">Объект логгера.</param>
-		public VideoMaterialUpdater(IAppUnitOfWork unitOfWork, MailClient mailClient, ConfigManager configManager, Logger logger)
-		{
-			this.mailClient = mailClient;
-			this.configManager = configManager;
-			this.unitOfWork = unitOfWork;
-			this.logger = logger;
-			this.infoAgent = new InfoAgentService(this.logger);
-		}
-
+	public class VideoMaterialUpdateModule : BaseModule
+    {
 		/// <summary>
 		/// Проверить обновления всех видеоматериалов, помеченных флагом проверки обновлений, обновить в случае необходимости и оповестить подписчиков.
 		/// </summary>
-		public int CheckUpdatesOfAllVideoMaterials()
+		private int CheckUpdatesOfAllVideoMaterials()
 		{
 			var videoMaterials = this.unitOfWork.VideoMaterials.GetWithCondition(vm => vm.WatchForUpdates == true);
 			Task.Run(() => this.logger.Info("Количество видеоматериалов для проверки: {0}", videoMaterials.Count()));
@@ -60,11 +44,11 @@ namespace Updater
 			return videoMaterials.Count;
 		}
 
-		/// <summary>
-		/// Проверить обновления видеоматериала, обновить в случае необходимости и оповестить подписчиков.
-		/// </summary>
-		/// <param name="videoMaterial">Объект видеоматериала.</param>
-		public void CheckUpdate(VideoMaterial videoMaterial)
+        /// <summary>
+        /// Проверить обновления видеоматериала, обновить в случае необходимости и оповестить подписчиков.
+        /// </summary>
+        /// <param name="videoMaterial">Объект видеоматериала.</param>
+        private void CheckUpdate(VideoMaterial videoMaterial)
 		{
 			Task.Run(() => this.logger.Info("Начало получения и парсинга информации о видеоматериале"));
 
@@ -315,10 +299,60 @@ namespace Updater
 			}
 		}
 
-		/// <summary>
-		/// Вернет true, если у фильма найдется сезон с таким же номером.
-		/// </summary>
-		private class SerialSeasonIsNewSeasonComparer : IEqualityComparer<SerialSeason>
+        public override void Launch()
+        {
+            DateTime startDateTime = DateTime.Now;
+            Task.Run(() => this.logger.Info("Апдейтер запущен"));
+            int totalCheckedFilms = -1;
+
+            try
+            {
+                string host = (string)this.configManager.Config[ConfigKeys.SMTP_HOST];
+                ushort port = (ushort)(long)this.configManager.Config[ConfigKeys.SMTP_PORT];
+                string senderMail = (string)this.configManager.Config[ConfigKeys.SENDER_MAIL];
+                string senderName = (string)this.configManager.Config[ConfigKeys.SENDER_NAME];
+                string login = (string)this.configManager.Config[ConfigKeys.MAIL_LOGIN];
+                string password = (string)this.configManager.Config[ConfigKeys.MAIL_PASSWORD];
+                bool useSsl = (bool)this.configManager.Config[ConfigKeys.SMTP_USE_SSL];
+                this.mailClient = new MailClient(host, port, senderMail, senderName, login, password, useSsl);
+            }
+            catch (NullReferenceException ex)
+            {
+                Task.Run(() => this.logger.Error(ex, "Файл конфигурациине не загружен"));
+                return;
+            }
+            catch (InvalidCastException ex)
+            {
+                Task.Run(() => this.logger.Error(ex, "Один из параметров имеет неверный формат"));
+                return;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                Task.Run(() => this.logger.Error(ex, "Неверный файл конфигурации"));
+                return;
+            }
+
+            try
+            {
+                Task.Run(() => this.logger.Info("Начало проверки обновлений"));
+                totalCheckedFilms = this.CheckUpdatesOfAllVideoMaterials();
+                Task.Run(() => this.logger.Info("Окончание проверки обновлений"));
+            }
+            catch (Exception ex)
+            {
+                Task.Run(() => this.logger.Error(ex, "Критическая ошибка"));
+            }
+
+            DateTime endDateTime = DateTime.Now;
+            TimeSpan result = endDateTime - startDateTime;
+            Task.Run(() => this.logger.Fatal("Фильмов было проверено: {0}", totalCheckedFilms));
+            Task.Run(() => this.logger.Fatal("Потрачено времени на проверку обновлений: {0}", result));
+        }
+
+        /// <summary>
+        /// Вернет true, если у фильма найдется сезон с таким же номером.
+        /// </summary>
+        private class SerialSeasonIsNewSeasonComparer : IEqualityComparer<SerialSeason>
 		{
 			public bool Equals(SerialSeason x, SerialSeason y)
 			{
@@ -332,12 +366,9 @@ namespace Updater
 			}
 		}
 
-
-
-		private readonly MailClient mailClient;
-		private readonly InfoAgentService infoAgent;
-		private readonly IAppUnitOfWork unitOfWork;
-		private readonly Logger logger;
-		private readonly ConfigManager configManager;
+		private MailClient mailClient;
+		private readonly InfoAgentService infoAgent = new InfoAgentService();
+		private readonly IAppUnitOfWork unitOfWork = AppUnitOfWork.GetInstance();
+		private readonly ConfigManager configManager = ConfigManager.GetInstance();
 	}
 }
