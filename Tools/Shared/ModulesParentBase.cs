@@ -2,7 +2,6 @@
 {
     using System;
     using System.Text;
-    using Shared;
 
     public class ModulesParentBase : BaseModule, IModuleParent
     {

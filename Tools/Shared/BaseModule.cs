@@ -54,7 +54,8 @@
                     }
                     else
                     {
-                        return;
+                        Console.WriteLine("Неверный пункт меню");
+                        continue;
                     }
                 }
                 catch (FormatException)

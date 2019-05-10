@@ -6,17 +6,14 @@
 
     public class Program
     {
-        static int Main(string[] args)
+        static void Main(string[] args)
         {
             RegisterModules();
 
-            while (true)
-            {
-                foreach (var item in modules)
-                    item.Show();
+            foreach (var item in modules)
+                item.Show();
 
-                BaseModule.SelectAndLaunchModule(modules);
-            }
+            BaseModule.SelectAndLaunchModule(modules);
         }
 
         static private void RegisterModules()
