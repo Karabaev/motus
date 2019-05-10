@@ -28,7 +28,7 @@
 	{
 		private readonly Logger logger;
 		private readonly IAppUnitOfWork unitOfWork;
-		private const int PageSize = 54;
+		private const int PageSize = 24;
         private readonly string mainTitle;
 
         public UserController(IAppUnitOfWork unitOfWork) // инициализировтаь нинжект
