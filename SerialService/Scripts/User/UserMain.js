@@ -20,9 +20,14 @@
 }
 function OnHoverShow() {
     $('.motus-popover').hide();
+    var setTimeoutVar;
     $(".motus-film-card").hover(function () {
         var itemId = $(this).attr("id");
-        ShowPopover(itemId, "po-" + itemId)
+        setTimeoutVar = setTimeout(function () {
+            ShowPopover(itemId, "po-" + itemId);
+        },800);
+    }, function () {
+        clearTimeout(setTimeoutVar);
     })
 }
 $(document).ready(function () {
