@@ -1,9 +1,8 @@
-﻿namespace Updater.Moonwalk
+﻿namespace Updater.Modules
 {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using NLog;
     using InfoAgent;
     using SerialService.DAL;
     using SerialService.DAL.Entities;
@@ -11,19 +10,8 @@
     using InfoAgent.Moonwalk;
     using Shared;
 
-    public class MoonwalkDownloader : IFilmDownloader
+    public class MoonwalkDownloadModule : BaseModule
     {
-        /// <summary>
-        /// Конструктор.
-        /// </summary>
-        /// <param name="unitOfWork"></param>
-        private MoonwalkDownloader(string filmAuthorEmail)
-        {
-            this.unitOfWork = AppUnitOfWork.GetInstance();
-            this.service = new Service();
-            this.authorEmail = filmAuthorEmail;
-        }
-
         /// <summary>
         /// Получить лист объектов FilmInof по всей базе Мунвалка.
         /// </summary>
@@ -39,7 +27,7 @@
         /// <param name="authorEmail"></param>
         /// <param name="filmInfoList"></param>
         /// <returns></returns>
-        private int DownloadVideoMaterials(IEnumerable<FilmInfo> filmInfoList)
+        private int DownloadVideoMaterials(IEnumerable<FilmInfo> filmInfoList, string authorEmail)
         {
             int result = 0;
 
@@ -51,7 +39,7 @@
 
                     try
                     {
-                        videoMaterial = FilmInfoToVideoMaterialConverter.Convert(item, this.authorEmail);
+                        videoMaterial = FilmInfoToVideoMaterialConverter.Convert(item, authorEmail);
                     }
                     catch(ArgumentNullException ex)
                     {
@@ -90,29 +78,56 @@
         /// Загрузить в базу всю базу фильмов/сериалов Мунвалка.
         /// </summary>
         /// <returns></returns>
-        public int DownloadFilms()
+        public int DownloadFilms(string authorEmail)
         {
-            return this.DownloadVideoMaterials(this.GetFullBaseFilmInfoList());
+            return this.DownloadVideoMaterials(this.GetFullBaseFilmInfoList(), authorEmail);
         }
 
-        /// <summary>
-        /// Получить экземплар синглтон класса.
-        /// </summary>
-        /// <param name="unitOfWork"></param>
-        /// <returns></returns>
-        public static MoonwalkDownloader GetInstance(string filmAuthorEmail)
+        public override void Launch()
         {
-            if (MoonwalkDownloader.instance == null)
-                MoonwalkDownloader.instance = new MoonwalkDownloader(filmAuthorEmail);
+            ConfigManager configManager = ConfigManager.GetInstance();
+            string authorMail = string.Empty;
 
-            return MoonwalkDownloader.instance;
+            try
+            {
+                authorMail = (string)configManager.Config[ConfigKeys.VIDEO_MATERIAL_AUTHOR_MAIL];
+            }
+            catch (NullReferenceException ex)
+            {
+                Task.Run(() => this.logger.Error(ex, "Файл конфигурациине не загружен"));
+                return;
+            }
+            catch (InvalidCastException ex)
+            {
+                Task.Run(() => this.logger.Error(ex, "Один из параметров имеет неверный формат"));
+                return;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                Task.Run(() => this.logger.Error(ex, "Неверный файл конфигурации"));
+                return;
+            }
+            int totalDownloaded = -1;
+            DateTime startDateTime = DateTime.Now;
+            Task.Run(() => this.logger.Info("Мунвалк Даунлоадер запущен"));
+            
+            try
+            {
+                totalDownloaded = this.DownloadFilms(authorMail);
+            }
+            catch (Exception ex)
+            {
+                this.logger.Error(ex, "Ошибка при загрузке фильмов из базы Мунвалка");
+            }
+
+            DateTime endDateTime = DateTime.Now;
+            TimeSpan result = endDateTime - startDateTime;
+            Task.Run(() => this.logger.Fatal("Фильмов было загружено: {0}", totalDownloaded));
+            Task.Run(() => this.logger.Fatal("Потрачено времени на проверку обновлений: {0}", result));
         }
 
-        private readonly IAppUnitOfWork unitOfWork;
-        private readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private readonly Service service;
-        private readonly string authorEmail;
-        private static MoonwalkDownloader instance;
+        private readonly IAppUnitOfWork unitOfWork = AppUnitOfWork.GetInstance();
+        private readonly Service service = new Service();
     }
     
 }
