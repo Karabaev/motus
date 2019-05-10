@@ -1,4 +1,4 @@
-﻿namespace Cleaner
+﻿namespace Updater.Modules
 {
     using InfoAgent;
     using NLog;
@@ -10,6 +10,7 @@
     using SerialService.Infrastructure;
     using System.Threading.Tasks;
     using InfoAgent.Exceptions;
+    using Shared;
 
     public class VideoMaterialBlockedCleaner
     {

@@ -116,10 +116,15 @@
   <ItemGroup>
     <Compile Include="ConfigManager.cs" />
     <Compile Include="Exceptions\NotFoundInFilmBaseException.cs" />
+    <Compile Include="Modules\ExtendedModulesParent.cs" />
+    <Compile Include="Modules\SerialCheckerModule.cs" />
     <Compile Include="Moonwalk\MoonwalkDownloader.cs" />
+    <Compile Include="Shared\BaseModule.cs" />
     <Compile Include="Shared\FilmInfoToVideoMaterialConverter.cs" />
     <Compile Include="Shared\IFilmDownloader.cs" />
-    <Compile Include="VideoMaterialBlockedCleaner.cs" />
+    <Compile Include="Shared\IModule.cs" />
+    <Compile Include="Modules\VideoMaterialBlockedCleaner.cs" />
+    <Compile Include="Shared\IModuleParent.cs" />
     <Compile Include="VideoMaterialDownloader.cs" />
     <Compile Include="VideoMaterialUpdater.cs" />
     <Compile Include="Program.cs" />
