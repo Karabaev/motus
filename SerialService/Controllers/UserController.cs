@@ -44,7 +44,6 @@
 		/// </summary>
 		public ActionResult Index(int? page)
 		{
-			RedirectHelper.SaveLocalURL(this.ViewBag, this.ControllerContext);
 			this.ViewBag.Title = mainTitle;
 			this.ViewBag.Description = ConfigurationManager.AppSettings["IndexDescription"];
             Session["FilterSettings"] = null;
@@ -95,15 +94,8 @@
 			ElasticVideoMaterial thisMaterial = Mapper.Map<VideoMaterial, ElasticVideoMaterial>(videoMaterial);
 			dvm.Similar = MotusElasticsearch.GetSimilar(thisMaterial);
             this.ViewBag.Title = string.Format("{0} - {1}", dvm.Title, ConfigurationManager.AppSettings["VideoMaterialTitlePart"]);
-
-            //string descriptionPart =    videoMaterial.SerialSeasons.TrueForAll( ss => ss.SeasonNumber == 0
-            //                                                                    && ss.EpisodesCount == 1) 
-            //                            ? ConfigurationManager.AppSettings["SerialDescriptionPart"] 
-            //                            : ConfigurationManager.AppSettings["FilmDescriptionPart"];
-
             string descriptionPart = videoMaterial.IsSerial ? ConfigurationManager.AppSettings["SerialDescriptionPart"]
                                                             : ConfigurationManager.AppSettings["FilmDescriptionPart"];
-
             this.ViewBag.Description = string.Format("{0}. {1}", dvm.Title, descriptionPart);
 			var user = this.unitOfWork.Users.Get(this.User.Identity.GetUserId());
             string commentsApiKey = ConfigurationManager.AppSettings["CommentsApiKey"];
@@ -118,7 +110,6 @@
 				this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey);
 			}
 
-			RedirectHelper.SaveLocalURL(this.ViewBag, this.ControllerContext);
 			return this.View("DetailPage/VideoMaterialDetailPage", dvm);
 		}
 
@@ -202,7 +193,6 @@
 			}
             ViewBag.SearchResult = $"Результат поиска по \"{searchStr}\"";
 			var result = MotusElasticsearch.Search(searchStr);
-			RedirectHelper.SaveLocalURL(this.ViewBag, this.ControllerContext);
 			return this.View("Index", result.ToPagedList(1, PageSize));
 		}
 
