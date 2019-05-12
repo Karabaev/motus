@@ -7,6 +7,7 @@
     using System.Linq;
     using Models;
     using ViewModels.RedactorTools;
+    using ViewModels.Account;
 
     public class AutoMapperConfig
     {

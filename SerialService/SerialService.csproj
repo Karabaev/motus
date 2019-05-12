@@ -330,7 +330,6 @@
     <Compile Include="Infrastructure\Exceptions\NotEnoughRightsException.cs" />
     <Compile Include="Infrastructure\Exceptions\OperationAbortedException.cs" />
     <Compile Include="Infrastructure\Helpers\CalculatorMD5.cs" />
-    <Compile Include="Infrastructure\Helpers\RedirectHelper.cs" />
     <Compile Include="Infrastructure\Helpers\TextEnumerationBuilder.cs" />
     <Compile Include="Infrastructure\Helpers\TranslationAddHelper.cs" />
     <Compile Include="Infrastructure\Helpers\UserTokenGenerator.cs" />
@@ -350,6 +349,9 @@
     <Compile Include="Services\RoleService.cs" />
     <Compile Include="Sitemap\SitemapGenerator.cs" />
     <Compile Include="Sitemap\SitemapNode.cs" />
+    <Compile Include="ViewModels\Account\LoginViewModel.cs" />
+    <Compile Include="ViewModels\Account\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\Account\ReturnUrlViewModel.cs" />
     <Compile Include="ViewModels\AdminTools\AdministratableUserInfo.cs" />
     <Compile Include="ViewModels\ConfirmNewEmailViewModel.cs" />
     <Compile Include="ViewModels\ConfirmEmailViewModel.cs" />

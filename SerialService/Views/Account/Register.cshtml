@@ -1,4 +1,4 @@
-﻿@model SerialService.Models.RegisterViewModel
+﻿@model SerialService.ViewModels.Account.RegisterViewModel
 @{
     ViewBag.Title = "Регистрация";
 }
@@ -14,8 +14,6 @@
         <form method="post" id="reg-form" class="mdl-cell--12-col" data-ajax="true">
             @Html.AntiForgeryToken()
             <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col">
-              @*  [A-Za-zА-Яа-яЁё0-9]*@
-                @*<input class="mdl-textfield__input" name="UserName" required pattern="^[A-Za-z0-9_]{5,15}$" type="text" id="username">*@
                 <input class="mdl-textfield__input" name="UserName" required pattern="^[A-Za-zА-Яа-яЁё0-9_]{3,15}$" type="text" id="username">
                 <label class="mdl-textfield__label" for="username">Имя пользователя...</label>
                 <span class="mdl-textfield__error">Имя пользователя длиной не менее 3 символов, состоящий из букв и цифр</span>

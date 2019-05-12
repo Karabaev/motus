@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@using SerialService.ViewModels.Account
 @if (Request.IsAuthenticated)
 {
     if (User.IsInRole("Redactor"))
@@ -21,7 +22,7 @@
             class="mdl-button motus-tools mdl-js-button mdl-button--icon">
         <i class="material-icons">account_circle</i>
     </button>
-    using (Html.BeginForm("LogOff", "Account", new { returnUrl = ViewBag.CurrentURL }, FormMethod.Post, new { id = "logoutForm" }))
+    using (Html.BeginForm("LogOff", "Account", new ReturnUrlViewModel { ReturnUrl = ViewBag.CurrentUrl }, FormMethod.Post, new { id = "logoutForm" }))
         {
             @Html.AntiForgeryToken()
 
@@ -35,5 +36,5 @@ else
                                     routeValues: null,
                                     htmlAttributes: new { id = "registerLink", @class = "mdl-navigation__link" })
 
-    @Html.ActionLink( "Войти", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "mdl-navigation__link" })
+    @Html.ActionLink( "Войти", "Login", "Account", new ReturnUrlViewModel { ReturnUrl = ViewBag.CurrentUrl }, htmlAttributes: new { id = "loginLink", @class = "mdl-navigation__link" })
 }
