@@ -2,8 +2,10 @@
 @{
     ViewBag.Title = "Личный профиль";
 }
+<link rel="stylesheet" href="~/Content/Croppie/croppie.css" />
 <link rel="stylesheet" href="~/Content/User/Profile.css" />
 <link rel="stylesheet" href="~/Content/AccountForms/AccountForms.css" />
+<script src="~/Scripts/Croppie/croppie.min.js"></script>
 <div class="mdl-card mdl-shadow--2dp acc-card mdl-cell--7-col mdl-cell--12-col-phone mdl-grid">
     @Html.HiddenFor(m => m.ID, new { id = "account-id" })
     @Html.HiddenFor(m => m.IsHaveCurrentPassword, new { id = "have-pass" })
@@ -17,8 +19,8 @@
                     <i class="material-icons">image_search</i>
                 </button>
             </div>
-            <img id="CurrentAvatarURLImg" src="@Model.CurrentAvatarURL" />
-            <input id="InputFile" hidden type="file" name="avatar" accept="image/x-png,image/jpeg">
+            <img id="CurrentAvatarURLImg" class="avatar-image" src="@Model.CurrentAvatarURL"/>
+            <input id="InputFile" hidden type="text" name="avatar">
         </div>
         <div class="profile-info mdl-list mdl-cell--6-col">
             <ul class="panels-list">
@@ -88,7 +90,7 @@
                 </li>
             </ul>
         </div>
-        <div class="mdl-card__actions mdl-card--border">
+        <div class="mdl-card__actions mdl-card--border" style="margin:10px">
             <div class="social-container">
                 <span class="small-text">привязать внешний аккаунт</span>
                 <section id="socialLoginForm">
@@ -128,6 +130,18 @@
             }
         </div>
     </div>
+    <dialog id="crop-dialog" class="mdl-dialog crop-dialog">
+        <div class="mdl-dialog__content crop-dialog_content">
+            <input type="file" id="upload-file" hidden accept="image/jpeg,image/png"/>
+            <div id="cropper">
+            </div>
+        </div>
+        <div class="mdl-dialog__actions crop-dialog_actions">
+            <button id="crop-btn" style="width:100%" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored login-button acc-button">
+                Сохранить
+            </button>
+        </div>
+    </dialog>
     <div class="mdl-card__actions mdl-card--border">
         <button type="button" disabled id="submit-btn" class="mdl-button mdl-js-button acc-button">
             Сохранить
