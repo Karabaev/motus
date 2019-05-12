@@ -214,3 +214,7 @@ footer {
 .motus-custom-icons {
     fill: rgba(0,0,0,.26);
 }
+
+.avatar-image{
+    border-radius:50%;
+}

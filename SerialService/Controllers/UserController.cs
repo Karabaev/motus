@@ -22,6 +22,9 @@
     using System.Web.Mvc;
     using ViewModels;
     using System.Configuration;
+    using System.Drawing;
+    using System.IO;
+    using System.Drawing.Imaging;
 
     [ExceptionHandler]
 	public class UserController : Controller
@@ -514,31 +517,39 @@
 		}
 
 		[HttpPost]
-		public JsonResult UploadAvatar()
+		public JsonResult UploadAvatar(string base64)
 		{
-			var files = this.Request.Files;
+            var file = Base64ToImage(base64);
 			JsonResult badResult = this.Json(new { error = "Не удалось загрузить аватарку." });
 
-			if (files.Count == 0)
+			if (file == null)
 			{
 				Task.Run(() => this.logger.Warn("Аватарка не была загружена. Завершение UserController.PersonalAccountSaveChanges."));
 				return badResult;
 			}
 
-			string virtualAvatarPath = string.Format("{0}{1}_{2}", Resource.UserAvatarFolder, Guid.NewGuid(), files[0].FileName);
+			string virtualAvatarPath = string.Format("{0}{1}.jpeg", Resource.UserAvatarFolder, Guid.NewGuid());
 			string absoluteAvatarPath = this.Server.MapPath(virtualAvatarPath);
 
-			if (files[0].ContentLength > 0)
+            try
 			{
-				try
-				{
-					files[0].SaveAs(absoluteAvatarPath);
-				}
-				catch (Exception ex)
-				{
-					Task.Run(() => this.logger.Error(ex, "Не удалось сохранить файл аватарки " + absoluteAvatarPath));
-					return this.Json(new { error = "Не удалось загрузить файл на сервер. Попробуйте позже." });
-				}
+                using (MemoryStream memory = new MemoryStream())
+                {
+                    using (FileStream fs = new FileStream(absoluteAvatarPath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                    {
+                        var encoderParameters = new EncoderParameters(1);
+                        var encoderParameter = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 100L);
+                        encoderParameters.Param[0] = encoderParameter;
+                        file.Save(memory, GetEncoderInfo("image/jpeg"), encoderParameters);
+                        byte[] bytes = memory.ToArray();
+                        fs.Write(bytes, 0, bytes.Length);
+                    }
+                }
+            }
+            catch (Exception ex)
+			{
+				Task.Run(() => this.logger.Error(ex, "Не удалось сохранить файл аватарки " + absoluteAvatarPath));
+				return this.Json(new { error = "Не удалось загрузить файл на сервер. Попробуйте позже." });
 			}
 
 			string oldAvatarPath = this.unitOfWork.Users.Get(this.User.Identity.GetUserId()).AvatarURL;
@@ -605,6 +616,37 @@
             var sitemapNodes = generator.GetNodes(this.Url);
             string xml = generator.GetSitemapDocument(sitemapNodes);
             return this.Content(xml, "text/xml", Encoding.UTF8);
+        }
+
+        private Image Base64ToImage(string base64String)
+        {
+            // Convert Base64 String to byte[]
+            const string ExpectedImagePrefix = "data:image/jpeg;base64,";
+
+            if (base64String.StartsWith(ExpectedImagePrefix))
+            {
+                base64String = base64String.Substring(ExpectedImagePrefix.Length);
+            }
+            byte[] imageBytes = Convert.FromBase64String(base64String);
+            MemoryStream ms = new MemoryStream(imageBytes, 0,
+              imageBytes.Length);
+
+            // Convert byte[] to Image
+            ms.Write(imageBytes, 0, imageBytes.Length);
+            Image image = Image.FromStream(ms, true);
+            return image;
+        }
+
+        private static ImageCodecInfo GetEncoderInfo(string mimeType)
+        {
+            int j;
+            ImageCodecInfo[] encoders = ImageCodecInfo.GetImageDecoders();
+            for (j = 0; j < encoders.Length; ++j)
+            {
+                if (encoders[j].MimeType == mimeType)
+                    return encoders[j];
+            }
+            return null;
         }
 
         private string GetCurrentURL(object routeValues = null)

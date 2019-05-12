@@ -55,12 +55,29 @@
 }
 
 .image-wrap {
-    width: 250px;
-    height: 250px;
+    margin: auto;
+    margin-top: 20px;
+    width: 200px;
+    height: 200px;
 }
 
 .image-flex {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#cropper{
+    margin:auto;
+    width: 300px;
+    height:300px;
+}
+
+.crop-dialog {
+    width: fit-content;
+    padding:8px;
+}
+
+.crop-dialog_actions, .crop-dialog_content{
+    padding:8px;
 }
