@@ -90,9 +90,9 @@
 				url: "registration/{model}",
 				defaults: new { controller = "Account", action = "Register", model = UrlParameter.Optional });
 
-			routes.MapRoute(name: "AccountLogin",
-				url: "login",
-				defaults: new { controller = "Account", action = "Login" });
+			//routes.MapRoute(name: "AccountLogin",
+			//	url: "login/{model}",
+			//	defaults: new { controller = "Account", action = "Login", model = UrlParameter.Optional });
 
 			routes.MapRoute(name: "AccountLoginPost",
 				url: "login/{model}",

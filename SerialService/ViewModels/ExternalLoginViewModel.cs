@@ -6,5 +6,8 @@
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Ошибка провайдера OAuth")]
         public string Provider { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        public string ReturnUrl { get; set; }
     }
 }

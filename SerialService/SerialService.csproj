@@ -349,6 +349,9 @@
     <Compile Include="Services\RoleService.cs" />
     <Compile Include="Sitemap\SitemapGenerator.cs" />
     <Compile Include="Sitemap\SitemapNode.cs" />
+    <Compile Include="ViewModels\Account\LoginViewModel.cs" />
+    <Compile Include="ViewModels\Account\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\Account\ReturnUrlViewModel.cs" />
     <Compile Include="ViewModels\AdminTools\AdministratableUserInfo.cs" />
     <Compile Include="ViewModels\ConfirmNewEmailViewModel.cs" />
     <Compile Include="ViewModels\ConfirmEmailViewModel.cs" />

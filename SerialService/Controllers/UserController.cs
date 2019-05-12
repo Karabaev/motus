@@ -47,6 +47,7 @@
 			this.ViewBag.Title = mainTitle;
 			this.ViewBag.Description = ConfigurationManager.AppSettings["IndexDescription"];
             Session["FilterSettings"] = null;
+            this.ViewBag.CurrentURL = this.GetCurrentURL(page);
             return RenderFilmsList(page);
 		}
 
@@ -97,7 +98,8 @@
             string descriptionPart = videoMaterial.IsSerial ? ConfigurationManager.AppSettings["SerialDescriptionPart"]
                                                             : ConfigurationManager.AppSettings["FilmDescriptionPart"];
             this.ViewBag.Description = string.Format("{0}. {1}", dvm.Title, descriptionPart);
-			var user = this.unitOfWork.Users.Get(this.User.Identity.GetUserId());
+            this.ViewBag.CurrentURL = this.GetCurrentURL(id);
+            var user = this.unitOfWork.Users.Get(this.User.Identity.GetUserId());
             string commentsApiKey = ConfigurationManager.AppSettings["CommentsApiKey"];
 
             if (user != null)
@@ -192,7 +194,8 @@
 				return this.RedirectToAction("Index");
 			}
             ViewBag.SearchResult = $"Результат поиска по \"{searchStr}\"";
-			var result = MotusElasticsearch.Search(searchStr);
+            this.ViewBag.CurrentURL = this.GetCurrentURL(searchStr);
+            var result = MotusElasticsearch.Search(searchStr);
 			return this.View("Index", result.ToPagedList(1, PageSize));
 		}
 
@@ -338,6 +341,7 @@
 
 			PersonalAccountViewModel viewModel = Mapper.Map<ApplicationUser, PersonalAccountViewModel>(user);
 
+            this.ViewBag.CurrentURL = this.GetCurrentURL();
             if (string.IsNullOrWhiteSpace(viewModel.CurrentAvatarURL))
                 viewModel.CurrentAvatarURL = string.Format("{0}/{1}", Resource.MediaFolder, Resource.DefaultUserAvatarFileName);
                 
@@ -585,11 +589,13 @@
 
         public ActionResult AboutProject()
         {
+            this.ViewBag.CurrentURL = this.GetCurrentURL();
             return View();
         }
 
         public ActionResult ForHolders()
         {
+            this.ViewBag.CurrentURL = this.GetCurrentURL();
             return View();
         }
 
@@ -599,6 +605,13 @@
             var sitemapNodes = generator.GetNodes(this.Url);
             string xml = generator.GetSitemapDocument(sitemapNodes);
             return this.Content(xml, "text/xml", Encoding.UTF8);
+        }
+
+        private string GetCurrentURL(object routeValues = null)
+        {
+            var routeDataValues = ControllerContext.RouteData.Values;
+            StringBuilder result = new StringBuilder(Url.Action(routeDataValues["action"].ToString(), routeDataValues["controller"].ToString(), routeValues));
+            return result.ToString();
         }
     }
 }

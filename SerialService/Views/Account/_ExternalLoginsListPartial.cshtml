@@ -7,12 +7,12 @@
         using (Html.BeginForm("ExternalLogin", "Account"))
         {
             @Html.AntiForgeryToken()
-
+            <input hidden name="ReturnUrl" value="@ViewBag.ReturnUrl">
             foreach (AuthenticationDescription item in providers)
             {
                 <button type="submit" class="mdl-button mdl-js-button mdl-button--icon svg-icon-button" id="@item.AuthenticationType"
                         name="Provider" value="@item.AuthenticationType" title="Войти при помощи @item.Caption">
-                    @if(item.Caption == "ВКонтакте")
+                    @if (item.Caption == "ВКонтакте")
                     {
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="32" height="32" viewBox="0 0 24 24">
                             <path class="motus-custom-icons" d="M20.8,7.74C20.93,7.32 20.8,7 20.18,7H18.16C17.64,7 17.41,7.27 17.28,7.57C17.28,7.57 16.25,10.08 14.79,11.72C14.31,12.19 14.1,12.34 13.84,12.34C13.71,
@@ -22,7 +22,7 @@
                                   17.71 21.18,17.14C21,16.57 20.34,15.74 19.47,14.76C19,14.21 18.29,13.61 18.07,13.3C17.77,12.92 17.86,12.75 18.07,12.4C18.07,12.4 20.54,8.93 20.8,7.74Z" />
                         </svg>
                     }
-                    else if(item.Caption == "Google+")
+                    else if (item.Caption == "Google+")
                     {
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="32" height="32" viewBox="0 0 24 24">
                             <path class="motus-custom-icons" d="M23,11H21V9H19V11H17V13H19V15H21V13H23M8,11V13.4H12C11.8,14.4 10.8,16.4 8,16.4C5.6,16.4 3.7,14.4 3.7,12C3.7,9.6 5.6,7.6 8,7.6C9.4,7.6 10.3,

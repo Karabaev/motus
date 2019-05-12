@@ -17,6 +17,7 @@
     using System;
     using System.Linq;
     using Infrastructure.Helpers;
+    using ViewModels.Account;
 
     [Authorize, ExceptionHandler]
     public class AccountController : Controller
@@ -38,10 +39,14 @@
         /// <param name="returnUrl"></param>
         /// <returns></returns>
 		[AllowAnonymous]
-        public ActionResult Login()
+        public ActionResult Login(ReturnUrlViewModel model)
         {
+            if(!ModelState.IsValid)
+                model.ReturnUrl = Url.Action("Index", "User");
+
+            ViewBag.ReturnUrl = model.ReturnUrl;
             return this.View();
-        }
+        } 
 
         /// <summary>
         /// Авторизоваться
@@ -49,7 +54,7 @@
         /// <param name="model"></param>
         /// <returns></returns>
 		[HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model)
+        public ActionResult Login(LoginViewModel model)
         {
             StringBuilder errors = new StringBuilder();
 
@@ -63,14 +68,14 @@
             {
                 if (user.EmailConfirmed == true)
                 {
-                    var result = await signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, shouldLockout: false);
+                    var result = signInManager.PasswordSignIn(user.UserName, model.Password, model.RememberMe, shouldLockout: false);
 
                     switch (result)
                     {
                         case SignInStatus.Success:
                             user.LastAuthorizationDateTime = DateTime.Now;
                             Task.Run(() => this.userService.Update(user));
-                            return this.Json(new { success = Url.Action("Index", "User") });
+                            return this.Json(new { success = model.ReturnUrl });
                         case SignInStatus.LockedOut:
                             errors.Append("Учетная запись заблокирована<br/>");
                             break;
@@ -100,10 +105,13 @@
         /// </summary>
         /// <returns></returns>
 		[HttpPost, ValidateAntiForgeryToken]
-        public ActionResult LogOff()
+        public ActionResult LogOff(ReturnUrlViewModel model)
         {
+            if (!ModelState.IsValid)
+                model.ReturnUrl = Url.Action("Index", "User");
+
             this.AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return this.RedirectToAction("Index", "User");
+            return Redirect(model.ReturnUrl);
         }
 
         /// <summary>
@@ -358,7 +366,8 @@
             {
                 return new ChallengeResult(model.Provider, this.Url.Action("ExternalLoginCallback", "Account", new ExternalLoginCallbackViewModel
                 {
-                    ExternalProviderName = model.Provider
+                    ExternalProviderName = model.Provider,
+                    ReturnUrl = model.ReturnUrl
                 }));
             }
             else
@@ -379,6 +388,9 @@
         [AllowAnonymous]
         public ActionResult ExternalLoginCallback(ExternalLoginCallbackViewModel model)
         {
+            if (string.IsNullOrWhiteSpace(model.ReturnUrl))
+                model.ReturnUrl = Url.Action("Index", "User");
+
             var loginInfo = this.AuthenticationManager.GetExternalLoginInfo();
             ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
 
@@ -397,8 +409,8 @@
             {
                 var result = this.userService.AddLogin(userId, loginInfo.Login);
 
-                if(result.Succeeded)
-                    return RedirectToAction("Index", "User");
+                if (result.Succeeded)
+                    return Redirect(model.ReturnUrl);
                 else
                     return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = string.Join("<br/>", result.Errors) });
             }
@@ -407,7 +419,7 @@
             if(user != null)
             {
                 signInManager.SignIn(user, false, false);
-                return this.UpdateSignedInUserAndRedirect(user, "User", "Index", null);
+                return this.UpdateSignedInUserAndRedirect(user, model.ReturnUrl);
             }
 
             user = this.userService.GetByMainStringProperty(loginInfo.Email); // ищем юзера по email
@@ -419,7 +431,7 @@
                 if(result.Succeeded)
                 {
                     signInManager.SignIn(user, false, false);
-                    return this.UpdateSignedInUserAndRedirect(user, "User", "Index", null);
+                    return this.UpdateSignedInUserAndRedirect(user, model.ReturnUrl);
                 }
                 else
                 {
@@ -437,7 +449,7 @@
                         user = this.userService.GetByExternalLogin(loginInfo.Login);
 
                         if (user != null)
-                            return this.UpdateSignedInUserAndRedirect(user, "User", "Index", null);
+                            return this.UpdateSignedInUserAndRedirect(user, model.ReturnUrl);
                         else
                             return RedirectToAction("ExternalLoginFailure", new ExternalLoginFailureViewModel { Errors = "Пользователь не найден" });
                     case SignInStatus.LockedOut:
@@ -480,7 +492,7 @@
                             if (createResult.Succeeded)
                             {
                                 signInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
-                                return this.UpdateSignedInUserAndRedirect(user, "User", "Index", null);
+                                return this.UpdateSignedInUserAndRedirect(user, model.ReturnUrl);
                             }
                             else
                             {
@@ -535,6 +547,14 @@
             return RedirectToAction(action, controller, routeValues);
         }
 
+        private RedirectResult UpdateSignedInUserAndRedirect(ApplicationUser user,
+                                                        string url)
+        {
+            user.LastAuthorizationDateTime = DateTime.Now;
+            Task.Run(() => this.userService.Update(user));
+            return Redirect(url);
+        }
+
         /// <summary>
         /// Вывести ошибку при неудачной авторизации через внешний сервис.
         /// </summary>
@@ -564,14 +584,6 @@
             {
                 this.ModelState.AddModelError("", error);
             }
-        }
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (this.Url.IsLocalUrl(returnUrl))
-                return this.Redirect(returnUrl);
-
-            return this.RedirectToAction("Index", "Home");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult
