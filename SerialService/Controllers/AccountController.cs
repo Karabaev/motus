@@ -18,6 +18,7 @@
     using System.Linq;
     using Infrastructure.Helpers;
     using ViewModels.Account;
+    using System.IO;
 
     [Authorize, ExceptionHandler]
     public class AccountController : Controller
@@ -135,7 +136,7 @@
             if (this.ModelState.IsValid)
             {
                 ApplicationUser user = Mapper.Map<RegisterViewModel, ApplicationUser>(model);
-
+                user.AvatarURL = GetRandomDefaultAvatar();
                 try
                 {
                     ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
@@ -152,10 +153,12 @@
                                                    "Подтверждение адреса электронной почты",
                                                    string.Format("Для завершения регистрации перейдите по ссылке: <a href=\"{0}\">завершить регистрацию</a>",
                                                                     callbackUrl)));
+
                         return this.Json(new
                         {
                             success = this.Url.Action("DisplayEmailToConfirmation", "Account", new DisplayEmailToConfirmationViewModel { Email = model.Email })
                         });
+                        
                     }
                     else
                     {
@@ -171,9 +174,6 @@
             {
                 return this.Json(new { error = string.Join("<br/>", ModelState.Values.SelectMany(s => s.Errors.Select(e => e.ErrorMessage))) });
             }
-
-            // Появление этого сообщения означает наличие ошибки; повторное отображение формы
-            return this.View(model);
         }
 
         /// <summary>
@@ -567,6 +567,27 @@
         }
 
         #region Вспомогательные приложения
+
+        /// <summary>
+        /// Рандомный стандартный аватар
+        /// </summary>
+        /// <returns></returns>
+        private string GetRandomDefaultAvatar()
+        {
+            string result;
+            try
+            {
+                var virtualPath = @"UserFiles\default_avatars\";
+                var absolutePath = Server.MapPath(virtualPath);
+                result = $"{virtualPath}{new Random().Next(minValue: 1, maxValue: Directory.GetFiles(absolutePath, "*", SearchOption.AllDirectories).Length)}.jpeg";
+            }
+            catch
+            {
+                result = string.Empty;
+            }
+            return result;
+        }
+
         // Используется для защиты от XSRF-атак при добавлении внешних имен входа
         private const string XsrfKey = "XsrfId";
 
