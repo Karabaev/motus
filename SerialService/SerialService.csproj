@@ -344,7 +344,9 @@
     <Compile Include="Models\ElasticVideoMaterial.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Services\Interfaces\IRoleService.cs" />
+    <Compile Include="Services\Interfaces\IVideoMaterialViewsByUsersService.cs" />
     <Compile Include="Services\RoleService.cs" />
+    <Compile Include="Services\VideoMaterialViewsByUsersService.cs" />
     <Compile Include="Sitemap\SitemapGenerator.cs" />
     <Compile Include="Sitemap\SitemapNode.cs" />
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
@@ -389,6 +391,7 @@
     <Compile Include="Services\VideoMarkService.cs" />
     <Compile Include="Services\VideoMaterialService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\User\SaveViewTimeViewModel.cs" />
     <Compile Include="ViewModels\VideoMaterialDetailsViewModel.cs" />
     <Compile Include="ViewModels\VideoMaterialListViewModel.cs" />
     <Compile Include="ViewModels\VideoMaterialPersonalAccountViewModel.cs" />

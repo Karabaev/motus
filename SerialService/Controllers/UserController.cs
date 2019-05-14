@@ -25,6 +25,7 @@
     using System.Drawing;
     using System.IO;
     using System.Drawing.Imaging;
+    using ViewModels.User;
 
     [ExceptionHandler]
 	public class UserController : Controller
@@ -39,7 +40,6 @@
 			this.unitOfWork = unitOfWork;
 			this.logger = LogManager.GetCurrentClassLogger();
             this.mainTitle = ConfigurationManager.AppSettings["MainTitle"];
-
         }
 
 		/// <summary>
@@ -117,6 +117,51 @@
 
 			return this.View("DetailPage/VideoMaterialDetailPage", dvm);
 		}
+
+        [HttpPost]
+        public JsonResult SaveViewTime(SaveViewTimeViewModel model)
+        {
+            model.UserID = User.Identity.GetUserId();
+
+            if (ModelState.IsValid)
+            {
+                VideoMaterialViewsByUsers entity = Mapper.Map<SaveViewTimeViewModel, VideoMaterialViewsByUsers>(model);
+
+                var translation = this.unitOfWork.Translations.GetByMainStringProperty(model.TranslatorName);
+
+                if(translation == null)
+                {
+                    Task.Run(() => this.logger.Error("SaveViewTime(SaveViewTimeViewModel). Перевод {0} не найден", model.TranslatorName));
+                    return this.Json(new { error = "SaveViewTime(): ошибка инициализации." });
+                }
+
+                var season = this.unitOfWork.SerialSeasons.Get(model.SeasonNumber ?? 1, model.VideoMaterialID, translation.ID);
+
+                if(season == null)
+                {
+                    Task.Run(() => this.logger.Error("SaveViewTime(SaveViewTimeViewModel). Сезон Номер: {0} ИД видеоматериала: {1} ИД перевода {2} не найден", model.SeasonNumber ?? 1, model.VideoMaterialID, translation.ID));
+                    return this.Json(new { error = "SaveViewTime(): ошибка инициализации." });
+                }
+
+                entity.SerialSeasonID = season.ID;
+                entity.SerialSeason = season;
+
+                if(this.unitOfWork.VideoMaterialViewsByUsers.Create(entity))
+                {
+                    return this.Json(new { success = "Время просмотра сохранено" });
+                }
+                else
+                {
+                    Task.Run(() => this.logger.Error("SaveViewTime(SaveViewTimeViewModel). Не удалось сохранить объект {0}", entity));
+                    return this.Json(new { error = "SaveViewTime(): Не удалось сохранить время просмотра." });
+                }
+                
+            }
+            else
+            {
+                return this.Json(new { error = "SaveViewTime(): Данные некорректны." });
+            }
+        }
 
 		/// <summary>
 		/// Проверка, подписал ли авторизованный юзер на фильм.
