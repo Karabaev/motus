@@ -18,6 +18,7 @@
         public DbSet<Person> People { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<SerialSeason> SerialSeasons { get; set; }
+        public DbSet<VideoMaterialViewsByUsers> VideoMaterialViewsByUsers { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

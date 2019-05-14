@@ -7,7 +7,6 @@
         public int ID { get; set; }
         public int SeasonNumber { get; set; }
         public int? EpisodesCount { get; set; }
-        //public int SerialID { get; set; }
 		public DateTime? LastEpisodeTime { get; set; }
 		public int VideoMaterialID { get; set; }
 		public virtual VideoMaterial VideoMaterial { get; set; }

@@ -289,11 +289,13 @@
     <Compile Include="DAL\Entities\Translation.cs" />
     <Compile Include="DAL\Entities\VideoMark.cs" />
     <Compile Include="DAL\Entities\VideoMaterial.cs" />
+    <Compile Include="DAL\Entities\VideoMaterialViewsByUsers.cs" />
     <Compile Include="DAL\IAppUnitOfWork.cs" />
     <Compile Include="DAL\Repository\ApplicationUserManager.cs" />
     <Compile Include="DAL\Repository\Interfaces\IApplicationUserManager.cs" />
     <Compile Include="DAL\Repository\Interfaces\ICountryRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\IPersonRepository.cs" />
+    <Compile Include="DAL\Repository\Interfaces\IVideoMaterialViewsByUsersRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\ISerialSeasonRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\IVideoMarkRepository.cs" />
     <Compile Include="DAL\Repository\VideoMarkRepository.cs" />
@@ -310,6 +312,7 @@
     <Compile Include="DAL\Repository\PictureRepository.cs" />
     <Compile Include="DAL\Repository\ThemeRepository.cs" />
     <Compile Include="DAL\Repository\TranslationRepository.cs" />
+    <Compile Include="DAL\Repository\VideoMaterialViewsByUsersRepository.cs" />
     <Compile Include="DAL\Repository\VideoMaterialRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

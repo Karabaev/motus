@@ -22,6 +22,7 @@
         public virtual List<VideoMaterial> AddedVideoMaterials { get; set; }
         public virtual List<VideoMaterial> SubscribedVideoMaterials { get; set; }
         public virtual List<VideoMark> VideoMarks { get; set; }
+        public virtual List<VideoMaterialViewsByUsers> VideoMaterialsViews { get; set; }
 
         public override bool Equals(object obj)
         {
