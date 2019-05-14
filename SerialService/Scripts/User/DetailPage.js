@@ -30,10 +30,9 @@ var time = null;
 var bar = $('#motus-info-bar');
 
 function HideBar() {
-    console.log("Hide");
     time = setTimeout(function () {
         bar.slideUp();
-    }, 5000);
+    }, 3000);
 };
 
 
@@ -51,3 +50,52 @@ document.addEventListener('DOMContentLoaded', function () {
 
     RenderPlayerInfoBar();
 })
+
+var counter = 0;
+
+function onPlayerTimeUpdate(player_time) {
+    //console.log('onPlayerTimeUpdate', player_time);
+
+    counter++;
+
+    if (counter >= 5) {
+        counter = 0;
+        model = {
+            TimeSec: Math.round(player_time),
+            SeasonNumber: null,
+            EpisodeNumber: null,
+            TranslatorName: "Многоголосый закадровый",
+            VideoMaterialID: $("#VideoMaterialIDHdn").val()
+        };
+
+        $.ajax({
+            method: 'post',
+            data: model,
+            url: '/User/SaveViewTime',
+            success: function (data) {
+                if (data.success) {
+                    console.log(data.success);
+                }
+                else {
+                    if (data.error) {
+                        console.error(data.error);
+                    }
+                }
+            }
+        });
+    }
+};
+
+function mwPlayerMessageReceive(event) {
+    if (event.data && event.data.message == 'MW_PLAYER_TIME_UPDATE') {
+        onPlayerTimeUpdate(event.data.value);
+    }
+};
+
+$(function () {
+    if (window.addEventListener) {
+        window.addEventListener('message', mwPlayerMessageReceive);
+    } else {
+        window.attachEvent('onmessage', mwPlayerMessageReceive);
+    }
+});

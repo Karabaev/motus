@@ -99,11 +99,11 @@
             .ForMember(dvm => dvm.Description, opt => opt.MapFrom(vm => vm.Text.Substring(0, Math.Min(vm.Text.Length, 100))))
             .ForMember(dvm => dvm.PosterURL, opt => opt.MapFrom(vm => vm.Pictures.FirstOrDefault(p => p.IsPoster).URL));
 
-            config += cfg => cfg.CreateMap<VideoMaterialViewsByUsers, SaveViewTimeViewModel>()
-            .ForMember(dvm => dvm.UserID, opt => opt.MapFrom(vm => vm.UserID))
-            .ForMember(dvm => dvm.VideoMaterialID, opt => opt.MapFrom(vm => vm.VideoMaterialID))
-            .ForMember(dvm => dvm.TimeSec, opt => opt.MapFrom(vm => vm.EndTimeOfLastView))
-            .ForMember(dvm => dvm.EpisodeNumber, opt => opt.MapFrom(vm => vm.EpisodeNumber));
+            //config += cfg => cfg.CreateMap<VideoMaterialViewsByUsers, SaveViewTimeViewModel>()
+            //.ForMember(dvm => dvm.UserID, opt => opt.MapFrom(vm => vm.UserID))
+            //.ForMember(dvm => dvm.VideoMaterialID, opt => opt.MapFrom(vm => vm.VideoMaterialID))
+            //.ForMember(dvm => dvm.TimeSec, opt => opt.MapFrom(vm => vm.EndTimeOfLastView))
+            //.ForMember(dvm => dvm.EpisodeNumber, opt => opt.MapFrom(vm => vm.EpisodeNumber));
 
             Mapper.Initialize(config);
         }
