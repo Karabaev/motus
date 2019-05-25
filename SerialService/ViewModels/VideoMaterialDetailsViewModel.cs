@@ -30,5 +30,6 @@
         public string LastEpisodeTranslator { get; set; }
         public List<string> ThemeNames { get; set; }
         public List<ElasticVideoMaterial> Similar { get; set; }
+        public string IframeUrl { get; set; }
     }
 }

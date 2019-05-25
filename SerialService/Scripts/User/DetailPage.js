@@ -52,21 +52,44 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 var counter = 0;
+var episodeData;
 
+// ФУНКЦИЯ ДЛЯ СОХРАНЕНИЯ ВРЕМЕНИ ПРОСМОТРА
 function onPlayerTimeUpdate(player_time) {
-    //console.log('onPlayerTimeUpdate', player_time);
-
     counter++;
 
-    if (counter >= 5) {
+    if (counter >= 59) { // получается пример каждые 15 сек если counter >= 59
         counter = 0;
-        model = {
-            TimeSec: Math.round(player_time),
-            SeasonNumber: null,
-            EpisodeNumber: null,
-            TranslatorName: "Многоголосый закадровый",
-            VideoMaterialID: $("#VideoMaterialIDHdn").val()
-        };
+
+        if (episodeData !== undefined) {
+            model = {
+                TimeSec: Math.round(player_time),
+                SeasonNumber: episodeData.season,
+                EpisodeNumber: episodeData.episode,
+                TranslatorName: episodeData.translator,
+                VideoMaterialID: $("#VideoMaterialIDHdn").val()
+            };
+        }
+        else {
+            model = {
+                TimeSec: Math.round(player_time),
+                VideoMaterialID: $("#VideoMaterialIDHdn").val()
+            };
+        }
+
+       
+
+        //if ("season" in episodeData) {
+        //    model.SeasonNumber = episodeData.season;
+        //}
+
+        //if ("episode" in episodeData) {
+        //    model.EpisodeNumber = episodeData.episode;
+        //}
+
+        //if ("translator" in episodeData) {
+        //    model.TranslatorName = episodeData.translator;
+        //}
 
         $.ajax({
             method: 'post',
@@ -84,13 +107,33 @@ function onPlayerTimeUpdate(player_time) {
             }
         });
     }
-};
+}; 
 
+// ФУНКЦИЯ ДЛЯ СОХРАНЕНИЯ ВРЕМЕНИ ПРОСМОТРА
 function mwPlayerMessageReceive(event) {
     if (event.data && event.data.message == 'MW_PLAYER_TIME_UPDATE') {
         onPlayerTimeUpdate(event.data.value);
+    } else {
+        if (event.data && event.data.message == 'MW_PLAYER_SELECT_EPISODE') {
+            onPlayerEpisodeSelected(event.data.value);
+        }
     }
 };
+
+// ФУНКЦИЯ ДЛЯ СОХРАНЕНИЯ ВРЕМЕНИ ПРОСМОТРА
+$(function () {
+    if (window.addEventListener) {
+        window.addEventListener('message', mwPlayerMessageReceive);
+    } else {
+        window.attachEvent('onmessage', mwPlayerMessageReceive);
+    }
+});
+
+
+function onPlayerEpisodeSelected(episode_data) {
+    console.log('onPlayerEpisodeSelected', episode_data);
+    episodeData = episode_data;
+}
 
 $(function () {
     if (window.addEventListener) {

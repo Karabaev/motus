@@ -46,6 +46,8 @@
 
         public virtual List<VideoMaterialViewsByUsers> ViewsByUsers { get; set; }
 
+        public string IframeUrl { get; set; }
+
         public override bool Equals(object obj) // todo: надо протестировать этот метод
         {
             VideoMaterial vm = obj as VideoMaterial;

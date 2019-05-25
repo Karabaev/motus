@@ -64,12 +64,17 @@
 
         public VideoMaterialViewsByUsers GetScalarWithCondition(Func<VideoMaterialViewsByUsers, bool> predicate)
         {
-            throw new NotImplementedException();
+            return this.Repository.GetAllEntities().FirstOrDefault(predicate);
         }
 
         public VideoMaterialViewsByUsers GetByMainStringProperty(string value)
         {
             throw new NotImplementedException();
+        }
+
+        public bool UpdateEntity(VideoMaterialViewsByUsers entity)
+        {
+            return this.Repository.UpdateEntity(entity);
         }
     }
 }

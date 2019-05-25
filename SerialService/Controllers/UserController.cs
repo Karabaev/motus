@@ -109,13 +109,22 @@
 			{
                 this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey, user.Id, user.UserName, user.Email, user.AvatarURL);
 				dvm.IsUserSubscribed = this.unitOfWork.VideoMaterials.IsUserSubscribed(id, user.Id);
-			}
-			else
+                VideoMaterialViewsByUsers viewInfo = videoMaterial.ViewsByUsers.FirstOrDefault(vu => vu.UserID == user.Id);
+
+                if(viewInfo != null)
+                {
+                    ViewBag.StartTime = viewInfo.EndTimeOfLastView;
+                    ViewBag.EpisodeNumber = viewInfo.EpisodeNumber;
+                    ViewBag.SeasonNumber = viewInfo.SerialSeason.SeasonNumber;
+                    ViewBag.Translator = viewInfo.SerialSeason.Translation.Name;
+                }
+            }
+            else
 			{
 				this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey);
 			}
 
-			return this.View("DetailPage/VideoMaterialDetailPage", dvm);
+            return this.View("DetailPage/VideoMaterialDetailPage", dvm);
 		}
 
         [HttpPost]
@@ -128,35 +137,50 @@
 
             if (ModelState.IsValid)
             {
+                VideoMaterial video = this.unitOfWork.VideoMaterials.Get(model.VideoMaterialID);
+                SerialSeason season = null;
+
+                if (string.IsNullOrWhiteSpace(model.TranslatorName))
+                    season = video.SerialSeasons.FirstOrDefault(ss => ss.SeasonNumber == (model.SeasonNumber ?? 1));
+                else
+                    season = video.SerialSeasons.FirstOrDefault(ss => ss.SeasonNumber == (model.SeasonNumber ?? 1) && ss.Translation.Name == model.TranslatorName);
 
 
-                var translation = this.unitOfWork.Translations.GetByMainStringProperty(model.TranslatorName);
-
-                if(translation == null)
+                if (season == null)
                 {
-                    Task.Run(() => this.logger.Error("SaveViewTime(SaveViewTimeViewModel). Перевод {0} не найден", model.TranslatorName));
+                    Task.Run(() => this.logger.Error("SaveViewTime(SaveViewTimeViewModel). Сезон Номер: {0} ИД видеоматериала: {1} не найден", model.SeasonNumber ?? 1, model.VideoMaterialID));
                     return this.Json(new { error = "SaveViewTime(): ошибка инициализации." });
                 }
 
-                var season = this.unitOfWork.SerialSeasons.Get(model.SeasonNumber ?? 1, model.VideoMaterialID, translation.ID);
+                VideoMaterialViewsByUsers entity = this.unitOfWork.VideoMaterialViewsByUsers.GetScalarWithCondition(vu 
+                                    => vu.VideoMaterialID == model.VideoMaterialID && vu.UserID == model.UserID);
 
-                if(season == null)
+                bool result = false;
+
+                if (entity == null)
                 {
-                    Task.Run(() => this.logger.Error("SaveViewTime(SaveViewTimeViewModel). Сезон Номер: {0} ИД видеоматериала: {1} ИД перевода {2} не найден", model.SeasonNumber ?? 1, model.VideoMaterialID, translation.ID));
-                    return this.Json(new { error = "SaveViewTime(): ошибка инициализации." });
+                    entity = new VideoMaterialViewsByUsers
+                    {
+                        UserID = model.UserID,
+                        VideoMaterialID = model.VideoMaterialID,
+                        EndTimeOfLastView = model.TimeSec,
+                        EpisodeNumber = model.EpisodeNumber,
+                        SerialSeason = season,
+                        SerialSeasonID = season.ID
+                    };
+
+                    result = this.unitOfWork.VideoMaterialViewsByUsers.Create(entity);
+                }
+                else
+                {
+                    entity.EndTimeOfLastView = model.TimeSec;
+                    entity.EpisodeNumber = model.EpisodeNumber;
+                    entity.SerialSeason = season;
+                    entity.SerialSeasonID = season.ID;
+                    result = this.unitOfWork.VideoMaterialViewsByUsers.UpdateEntity(entity);
                 }
 
-                VideoMaterialViewsByUsers entity = new VideoMaterialViewsByUsers
-                {
-                    UserID = model.UserID,
-                    VideoMaterialID = model.VideoMaterialID,
-                    EndTimeOfLastView = model.TimeSec,
-                    EpisodeNumber = model.EpisodeNumber,
-                    SerialSeason = season,
-                    SerialSeasonID = season.ID
-                };
-
-                if(this.unitOfWork.VideoMaterialViewsByUsers.Create(entity))
+                if(result)
                 {
                     return this.Json(new { success = "Время просмотра сохранено" });
                 }
