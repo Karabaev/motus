@@ -109,20 +109,24 @@
 			{
                 this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey, user.Id, user.UserName, user.Email, user.AvatarURL);
 				dvm.IsUserSubscribed = this.unitOfWork.VideoMaterials.IsUserSubscribed(id, user.Id);
-                VideoMaterialViewsByUsers viewInfo = videoMaterial.ViewsByUsers.FirstOrDefault(vu => vu.UserID == user.Id);
-
-                if(viewInfo != null)
-                {
-                    ViewBag.StartTime = viewInfo.EndTimeOfLastView;
-                    ViewBag.EpisodeNumber = viewInfo.EpisodeNumber;
-                    ViewBag.SeasonNumber = viewInfo.SerialSeason.SeasonNumber;
-                    ViewBag.Translator = viewInfo.SerialSeason.Translation.Name;
-                }
             }
             else
 			{
 				this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey);
 			}
+
+            VideoMaterialViewsByUsers viewInfo = videoMaterial.ViewsByUsers.FirstOrDefault(vu => vu.UserID == this.User.Identity.GetUserId());
+
+            if(viewInfo == null)
+                viewInfo = videoMaterial.ViewsByUsers.FirstOrDefault(vu => vu.UserIP == this.HttpContext.Request.UserHostAddress);
+
+            if (viewInfo != null)
+            {
+                ViewBag.StartTime = viewInfo.EndTimeOfLastView;
+                ViewBag.EpisodeNumber = viewInfo.EpisodeNumber;
+                ViewBag.SeasonNumber = viewInfo.SerialSeason.SeasonNumber;
+                ViewBag.Translator = viewInfo.SerialSeason.Translation.Name;
+            }
 
             return this.View("DetailPage/VideoMaterialDetailPage", dvm);
 		}
@@ -130,13 +134,10 @@
         [HttpPost]
         public JsonResult SaveViewTime(SaveViewTimeViewModel model)
         {
-            if(!User.Identity.IsAuthenticated)
-                return this.Json(new { error = "SaveViewTime(): необходимо авторизоваться." });
-
-            model.UserID = User.Identity.GetUserId();
-
             if (ModelState.IsValid)
             {
+                model.UserID = User.Identity.GetUserId();
+                model.UserIP = this.HttpContext.Request.UserHostAddress;
                 VideoMaterial video = this.unitOfWork.VideoMaterials.Get(model.VideoMaterialID);
                 SerialSeason season = null;
 
@@ -152,8 +153,19 @@
                     return this.Json(new { error = "SaveViewTime(): ошибка инициализации." });
                 }
 
-                VideoMaterialViewsByUsers entity = this.unitOfWork.VideoMaterialViewsByUsers.GetScalarWithCondition(vu 
-                                    => vu.VideoMaterialID == model.VideoMaterialID && vu.UserID == model.UserID);
+                VideoMaterialViewsByUsers entity = null;
+
+                if(User.Identity.IsAuthenticated)
+                {
+                    entity = this.unitOfWork.VideoMaterialViewsByUsers.GetScalarWithCondition(vu
+                                 => vu.VideoMaterialID == model.VideoMaterialID && vu.UserID == model.UserID);
+                }
+
+                if (entity == null)
+                {
+                    entity = this.unitOfWork.VideoMaterialViewsByUsers.GetScalarWithCondition(vu
+                                => vu.VideoMaterialID == model.VideoMaterialID && vu.UserIP == model.UserIP);
+                }
 
                 bool result = false;
 
@@ -162,21 +174,28 @@
                     entity = new VideoMaterialViewsByUsers
                     {
                         UserID = model.UserID,
+                        UserIP = model.UserIP,
                         VideoMaterialID = model.VideoMaterialID,
                         EndTimeOfLastView = model.TimeSec,
                         EpisodeNumber = model.EpisodeNumber,
                         SerialSeason = season,
-                        SerialSeasonID = season.ID
+                        SerialSeasonID = season.ID,
+                        UpdateDateTime = DateTime.Now
                     };
 
                     result = this.unitOfWork.VideoMaterialViewsByUsers.Create(entity);
                 }
                 else
                 {
+                    if(!string.IsNullOrWhiteSpace(model.UserID))
+                        entity.UserID = model.UserID;
+
+                    entity.UserIP = model.UserIP;
                     entity.EndTimeOfLastView = model.TimeSec;
                     entity.EpisodeNumber = model.EpisodeNumber;
                     entity.SerialSeason = season;
                     entity.SerialSeasonID = season.ID;
+                    entity.UpdateDateTime = DateTime.Now;
                     result = this.unitOfWork.VideoMaterialViewsByUsers.UpdateEntity(entity);
                 }
 

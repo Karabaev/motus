@@ -8,5 +8,6 @@
         public string TranslatorName { get; set; }
         public int VideoMaterialID { get; set; }
         public string UserID { get; set; }
+        public string UserIP { get; set; }
     }
 }

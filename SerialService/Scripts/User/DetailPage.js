@@ -51,61 +51,52 @@ document.addEventListener('DOMContentLoaded', function () {
     RenderPlayerInfoBar();
 })
 
-var counter = 0;
+var sended = false;
 var episodeData;
 
 // ФУНКЦИЯ ДЛЯ СОХРАНЕНИЯ ВРЕМЕНИ ПРОСМОТРА
 function onPlayerTimeUpdate(player_time) {
-    counter++;
 
-    if (counter >= 59) { // получается пример каждые 15 сек если counter >= 59
-        counter = 0;
+    timeToSend = Math.round(player_time);
 
-        if (episodeData !== undefined) {
-            model = {
-                TimeSec: Math.round(player_time),
-                SeasonNumber: episodeData.season,
-                EpisodeNumber: episodeData.episode,
-                TranslatorName: episodeData.translator,
-                VideoMaterialID: $("#VideoMaterialIDHdn").val()
-            };
-        }
-        else {
-            model = {
-                TimeSec: Math.round(player_time),
-                VideoMaterialID: $("#VideoMaterialIDHdn").val()
-            };
-        }
+    if (timeToSend % 10 == 0) { // каждые 10 секунд
+        if (sended == false) {
+            if (episodeData !== undefined) {
+                model = {
+                    TimeSec: timeToSend,
+                    SeasonNumber: episodeData.season,
+                    EpisodeNumber: episodeData.episode,
+                    TranslatorName: episodeData.translator,
+                    VideoMaterialID: $("#VideoMaterialIDHdn").val()
+                };
+            }
+            else {
+                model = {
+                    TimeSec: Math.round(player_time),
+                    VideoMaterialID: $("#VideoMaterialIDHdn").val()
+                };
+            }
 
-       
-
-        //if ("season" in episodeData) {
-        //    model.SeasonNumber = episodeData.season;
-        //}
-
-        //if ("episode" in episodeData) {
-        //    model.EpisodeNumber = episodeData.episode;
-        //}
-
-        //if ("translator" in episodeData) {
-        //    model.TranslatorName = episodeData.translator;
-        //}
-
-        $.ajax({
-            method: 'post',
-            data: model,
-            url: '/User/SaveViewTime',
-            success: function (data) {
-                if (data.success) {
-                    console.log(data.success);
-                }
-                else {
-                    if (data.error) {
-                        console.error(data.error);
+            $.ajax({
+                method: 'post',
+                data: model,
+                url: '/User/SaveViewTime',
+                success: function (data) {
+                    sended = true;
+                    if (data.success) {
+                        console.log(data.success);
+                    }
+                    else {
+                        if (data.error) {
+                            console.error(data.error);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+    }
+    else {
+        sended = false;
     }
 }; 
 
