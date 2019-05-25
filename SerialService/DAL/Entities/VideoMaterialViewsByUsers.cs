@@ -23,7 +23,7 @@
             if (other == null)
                 return false;
 
-            return this.UserID == other.UserID &&
+            return (this.UserID == other.UserID || this.UserIP == other.UserIP) &&
                 this.VideoMaterialID == other.VideoMaterialID &&
                 this.SerialSeasonID == other.SerialSeasonID;
         }
@@ -31,7 +31,7 @@
         public override string ToString()
         {
             return string.Format("ID: {0} UserID: {1} VideoMaterialID {2}: EndTimeOfLastView: {3} SerialSeasonID {4} EpisodeNumber: {5}",
-                this.ID, this.VideoMaterialID, this.EndTimeOfLastView, this.SerialSeasonID, this.EpisodeNumber);
+                this.ID, this.UserID, this.VideoMaterialID, this.EndTimeOfLastView, this.SerialSeasonID, this.EpisodeNumber);
         }
     }
 }

@@ -24,7 +24,17 @@
             if (entity == null)
                 return false;
 
-            if (this.GetScalarWithCondition((m => m.VideoMaterialID == entity.VideoMaterialID && m.UserIP == entity.UserIP)) != null)
+            VideoMark mark = null; 
+
+            if(!string.IsNullOrEmpty(entity.AuthorID))
+                mark = this.GetScalarWithCondition((m => m.VideoMaterialID == entity.VideoMaterialID && m.AuthorID == entity.AuthorID));
+
+            if(mark == null)
+                mark = this.GetScalarWithCondition((m => m.VideoMaterialID == entity.VideoMaterialID && m.UserIP == entity.UserIP));
+            else
+                throw new EntryAlreadyExistsException("Метка пользователя для этого видеоматериала уже стоит");
+
+            if (mark != null)
                 throw new EntryAlreadyExistsException("Метка с этого ip адреса для этого видеоматериала уже стоит");
 
             return this.Repository.AddEntity(entity);
