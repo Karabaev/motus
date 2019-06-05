@@ -22,7 +22,15 @@
 				url: "films/{id}",
 				defaults: new { controller = "User", action = "VideoMaterialDetailPage", id = UrlParameter.Optional });
 
-			routes.MapRoute(name: "UserPersonalAccount",
+            //routes.MapRoute(name: "UserSaveViewTime",
+            //    url: "films/save_view_time/{model}",
+            //    defaults: new { controller = "User", action = "SaveViewTime", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "UserSaveViewTime",
+    url: "User/SaveViewTime/{model}",
+    defaults: new { controller = "User", action = "SaveViewTime", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "UserPersonalAccount",
 				url: "personal_account",
 				defaults: new { controller = "User", action = "PersonalAccount" });
 

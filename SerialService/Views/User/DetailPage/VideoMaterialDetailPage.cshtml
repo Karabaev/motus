@@ -1,5 +1,5 @@
 ﻿@model SerialService.ViewModels.VideoMaterialDetailsViewModel
-@using SerialService.Infrastructure.Helpers;
+@using System.Text;
 @using System.Web.Mvc;
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -40,7 +40,62 @@
                     </div>
                 </div>
             </div>
-            <div id="visearch"></div>
+            <div id="visearch">
+                @{ 
+                    StringBuilder iframeSrc = new StringBuilder(Model.IframeUrl);
+
+                    if (ViewBag.StartTime != null)
+                    {
+                        if(iframeSrc.ToString() == Model.IframeUrl)
+                        {
+                            iframeSrc.AppendFormat("?start_time={0}", ViewBag.StartTime);
+                        }
+                        else
+                        {
+                            iframeSrc.AppendFormat("&start_time={0}", ViewBag.StartTime);
+                        }
+
+                    }
+
+                    if (ViewBag.EpisodeNumber != null)
+                    {
+                        if (iframeSrc.ToString() == Model.IframeUrl)
+                        {
+                            iframeSrc.AppendFormat("?episode={0}", ViewBag.EpisodeNumber);
+                        }
+                        else
+                        {
+                            iframeSrc.AppendFormat("&episode={0}", ViewBag.EpisodeNumber);
+                        }
+                    }
+
+                    if (ViewBag.SeasonNumber != null)
+                    {
+                        if (iframeSrc.ToString() == Model.IframeUrl)
+                        {
+                            iframeSrc.AppendFormat("?season={0}", ViewBag.SeasonNumber);
+                        }
+                        else
+                        {
+                            iframeSrc.AppendFormat("&season={0}", ViewBag.SeasonNumber);
+                        }
+                    }
+
+                    if (ViewBag.Translator != null)
+                    {
+                        if (iframeSrc.ToString() == Model.IframeUrl)
+                        {
+                            iframeSrc.AppendFormat("?translation={0}", ViewBag.Translator);
+                        }
+                        else
+                        {
+                            iframeSrc.AppendFormat("&translation={0}", ViewBag.Translator);
+                        }
+                    }
+                }
+                <iframe src="@iframeSrc.ToString()" width="610" height="370" frameborder="0" allowfullscreen></iframe>
+            </div>
+
         </div>
     </div>
     <div class="mdl-grid mdl-shadow--2dp info-container mdl-card mdl-cell--12-col" style="overflow:visible">
@@ -187,7 +242,7 @@
 <script src="~/Scripts/User/Mark.js"></script>
 <script src="~/Scripts/User/Subscribe.js"></script>
 <script src="~/Scripts/User/DetailPage.js"></script>
-<script type="text/javascript">
+@*<script type="text/javascript">
     var card = $('.player-container');
     var width = card.width();
     card.css('height', width * (9 / 17))
@@ -197,9 +252,13 @@
         on_dom_ready: true,
         kp_id: @int.Parse(Model.KinopoiskID),
         year: @Model.ReleaseDate,
+        start_time = @ViewBag.StartTime,
+        episode = @ViewBag.EpisodeNumber,
+        season = @ViewBag.SeasonNumber,
+        translation = '@ViewBag.Translator'
     };
     !function (e, n, t, r, a) {
     r = e.createElement(n), a = e.getElementsByTagName(n)
     [0], r.async = !0, r.src = t, a.parentNode.insertBefore(r, a)
     }(document, "script", "//visearch.info/v2/find-player.min.js");
-</script>
+</script>*@

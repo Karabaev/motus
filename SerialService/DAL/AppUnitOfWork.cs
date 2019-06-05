@@ -18,6 +18,8 @@
         private IUserService userService;
         private IVideoMarkService videoMarkService;
         private IRoleService roleService;
+        private IVideoMaterialViewsByUsersService videoMaterialViewsByUsersService;
+
         private static IAppUnitOfWork instance;
 
         private ApplicationDbContext DB = new ApplicationDbContext();
@@ -142,6 +144,17 @@
 				return this.serialSeasonService;
 			}
 		}
+
+        public IVideoMaterialViewsByUsersService VideoMaterialViewsByUsers
+        {
+            get
+            {
+                if (this.videoMaterialViewsByUsersService == null)
+                    this.videoMaterialViewsByUsersService = new VideoMaterialViewsByUsersService(this.DB);
+
+                return this.videoMaterialViewsByUsersService;
+            }
+        }
 
         public static IAppUnitOfWork GetInstance()
         {

@@ -37,13 +37,16 @@
 		/// Флаг, отслеживать обновления?
 		/// </summary>
 		public bool WatchForUpdates { get; set; }
-
         /// <summary>
         /// Флаг "мягкого удаления" (с возможностью восстановления)
         /// </summary>
         public bool IsArchived { get; set; }
 
         public bool IsSerial { get; set; }
+
+        public virtual List<VideoMaterialViewsByUsers> ViewsByUsers { get; set; }
+
+        public string IframeUrl { get; set; }
 
         public override bool Equals(object obj) // todo: надо протестировать этот метод
         {

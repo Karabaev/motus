@@ -26,5 +26,7 @@
         IRoleService Roles { get; }
 
 		ISerialSeasonService SerialSeasons { get; }
+
+        IVideoMaterialViewsByUsersService VideoMaterialViewsByUsers { get; }
     }
 }

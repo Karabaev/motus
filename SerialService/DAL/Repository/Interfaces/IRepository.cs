@@ -1,6 +1,5 @@
 ﻿namespace SerialService.DAL.Repository
 {
-    using System.Collections.Generic;
     using Entities;
     using Infrastructure.Core;
 

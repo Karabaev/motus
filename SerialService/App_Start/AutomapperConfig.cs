@@ -8,6 +8,7 @@
     using Models;
     using ViewModels.RedactorTools;
     using ViewModels.Account;
+    using ViewModels.User;
 
     public class AutoMapperConfig
     {
@@ -30,29 +31,30 @@
             .ForMember(lvm => lvm.Imdb, opt => opt.MapFrom(vm => vm.IDMB))
             .ForMember(lvm => lvm.Duration, opt => opt.MapFrom(vm => vm.Duration));
 
-			config += cfg => cfg.CreateMap<VideoMaterial, VideoMaterialDetailsViewModel>()
-			.ForMember(dvm => dvm.ID, opt => opt.MapFrom(vm => vm.ID))
-			.ForMember(dvm => dvm.Title, opt => opt.MapFrom(vm => vm.Title))
-			.ForMember(dvm => dvm.OriginalTitle, opt => opt.MapFrom(vm => vm.OriginalTitle))
-			.ForMember(dvm => dvm.Text, opt => opt.MapFrom(vm => vm.Text))
-			.ForMember(dvm => dvm.Duration, opt => opt.MapFrom(vm => vm.Duration))
-			.ForMember(dvm => dvm.GenreTitles, opt => opt.MapFrom(vm => vm.Genres.Select(g => g.Name)))
-			.ForMember(dvm => dvm.CountryNames, opt => opt.MapFrom(vm => vm.Countries.Select(c => c.Name)))
-			.ForMember(dvm => dvm.AuthorName, opt => opt.MapFrom(vm => vm.Author.UserName))
-			.ForMember(dvm => dvm.UpdateDateTime, opt => opt.MapFrom(vm => vm.UpdateDateTime))
-			.ForMember(dvm => dvm.ReleaseDate, opt => opt.MapFrom(vm => vm.ReleaseDate))
-			.ForMember(dvm => dvm.KinopoiskID, opt => opt.MapFrom(vm => vm.KinopoiskID))
-			.ForMember(dvm => dvm.TranslationTitles, opt => opt.MapFrom(vm => vm.SerialSeasons.GroupBy(ss => ss.Translation.Name).Select(ss => ss.Key).Where(tn => !string.IsNullOrEmpty(tn))))
-			.ForMember(dvm => dvm.PictureURLs, opt => opt.MapFrom(vm => vm.Pictures.Where(p => !p.IsPoster).Select(c => c.URL)))
-			.ForMember(dvm => dvm.FilmMakerNames, opt => opt.MapFrom(vm => vm.FilmMakers.Select(c => c.FullName)))
-			.ForMember(dvm => dvm.ActorNames, opt => opt.MapFrom(vm => vm.Actors.Select(c => c.FullName)))
-			.ForMember(dvm => dvm.ThemeNames, opt => opt.MapFrom(vm => vm.Themes.Select(c => c.Name)))
-			.ForMember(dvm => dvm.PosterURL, opt => opt.MapFrom(vm => vm.Pictures.FirstOrDefault(p => p.IsPoster).URL))
-			.ForMember(dvm => dvm.KinopoiskRating, opt => opt.MapFrom(vm => vm.KinopoiskRating))
-			.ForMember(dvm => dvm.Imdb, opt => opt.MapFrom(vm => vm.IDMB))
-			.ForMember(dvm => dvm.SerialSeasonsCount, opt => opt.MapFrom(vm => vm.SerialSeasons.Count()))
-			.ForMember(dvm => dvm.LastEpisodeTime, opt => opt.MapFrom(vm => vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)))
-			.ForMember(dvm => dvm.LastEpisodeTranslator, opt => opt.MapFrom(vm => vm.SerialSeasons.FirstOrDefault(_vm => _vm.LastEpisodeTime == vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)).Translation.Name));
+            config += cfg => cfg.CreateMap<VideoMaterial, VideoMaterialDetailsViewModel>()
+            .ForMember(dvm => dvm.ID, opt => opt.MapFrom(vm => vm.ID))
+            .ForMember(dvm => dvm.Title, opt => opt.MapFrom(vm => vm.Title))
+            .ForMember(dvm => dvm.OriginalTitle, opt => opt.MapFrom(vm => vm.OriginalTitle))
+            .ForMember(dvm => dvm.Text, opt => opt.MapFrom(vm => vm.Text))
+            .ForMember(dvm => dvm.Duration, opt => opt.MapFrom(vm => vm.Duration))
+            .ForMember(dvm => dvm.GenreTitles, opt => opt.MapFrom(vm => vm.Genres.Select(g => g.Name)))
+            .ForMember(dvm => dvm.CountryNames, opt => opt.MapFrom(vm => vm.Countries.Select(c => c.Name)))
+            .ForMember(dvm => dvm.AuthorName, opt => opt.MapFrom(vm => vm.Author.UserName))
+            .ForMember(dvm => dvm.UpdateDateTime, opt => opt.MapFrom(vm => vm.UpdateDateTime))
+            .ForMember(dvm => dvm.ReleaseDate, opt => opt.MapFrom(vm => vm.ReleaseDate))
+            .ForMember(dvm => dvm.KinopoiskID, opt => opt.MapFrom(vm => vm.KinopoiskID))
+            .ForMember(dvm => dvm.TranslationTitles, opt => opt.MapFrom(vm => vm.SerialSeasons.GroupBy(ss => ss.Translation.Name).Select(ss => ss.Key).Where(tn => !string.IsNullOrEmpty(tn))))
+            .ForMember(dvm => dvm.PictureURLs, opt => opt.MapFrom(vm => vm.Pictures.Where(p => !p.IsPoster).Select(c => c.URL)))
+            .ForMember(dvm => dvm.FilmMakerNames, opt => opt.MapFrom(vm => vm.FilmMakers.Select(c => c.FullName)))
+            .ForMember(dvm => dvm.ActorNames, opt => opt.MapFrom(vm => vm.Actors.Select(c => c.FullName)))
+            .ForMember(dvm => dvm.ThemeNames, opt => opt.MapFrom(vm => vm.Themes.Select(c => c.Name)))
+            .ForMember(dvm => dvm.PosterURL, opt => opt.MapFrom(vm => vm.Pictures.FirstOrDefault(p => p.IsPoster).URL))
+            .ForMember(dvm => dvm.KinopoiskRating, opt => opt.MapFrom(vm => vm.KinopoiskRating))
+            .ForMember(dvm => dvm.Imdb, opt => opt.MapFrom(vm => vm.IDMB))
+            .ForMember(dvm => dvm.SerialSeasonsCount, opt => opt.MapFrom(vm => vm.SerialSeasons.Count()))
+            .ForMember(dvm => dvm.LastEpisodeTime, opt => opt.MapFrom(vm => vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)))
+            .ForMember(dvm => dvm.LastEpisodeTranslator, opt => opt.MapFrom(vm => vm.SerialSeasons.FirstOrDefault(_vm => _vm.LastEpisodeTime == vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)).Translation.Name))
+            .ForMember(dvm => dvm.IframeUrl, opt => opt.MapFrom(vm => vm.IframeUrl));
 
             config += cfg => cfg.CreateMap<RegisterViewModel, ApplicationUser>()
             .ForMember(rvm => rvm.UserName, opt => opt.MapFrom(vm => vm.UserName))

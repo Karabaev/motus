@@ -25,6 +25,7 @@
     using System.Drawing;
     using System.IO;
     using System.Drawing.Imaging;
+    using ViewModels.User;
 
     [ExceptionHandler]
 	public class UserController : Controller
@@ -39,7 +40,6 @@
 			this.unitOfWork = unitOfWork;
 			this.logger = LogManager.GetCurrentClassLogger();
             this.mainTitle = ConfigurationManager.AppSettings["MainTitle"];
-
         }
 
 		/// <summary>
@@ -109,14 +109,111 @@
 			{
                 this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey, user.Id, user.UserName, user.Email, user.AvatarURL);
 				dvm.IsUserSubscribed = this.unitOfWork.VideoMaterials.IsUserSubscribed(id, user.Id);
-			}
-			else
+            }
+            else
 			{
 				this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey);
 			}
 
-			return this.View("DetailPage/VideoMaterialDetailPage", dvm);
+            VideoMaterialViewsByUsers viewInfo = videoMaterial.ViewsByUsers.FirstOrDefault(vu => vu.UserID == this.User.Identity.GetUserId());
+
+            if(viewInfo == null)
+                viewInfo = videoMaterial.ViewsByUsers.FirstOrDefault(vu => vu.UserIP == this.HttpContext.Request.UserHostAddress);
+
+            if (viewInfo != null)
+            {
+                ViewBag.StartTime = viewInfo.EndTimeOfLastView;
+                ViewBag.EpisodeNumber = viewInfo.EpisodeNumber;
+                ViewBag.SeasonNumber = viewInfo.SerialSeason.SeasonNumber;
+                ViewBag.Translator = viewInfo.SerialSeason.Translation.Name;
+            }
+
+            return this.View("DetailPage/VideoMaterialDetailPage", dvm);
 		}
+
+        [HttpPost]
+        public JsonResult SaveViewTime(SaveViewTimeViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                model.UserID = User.Identity.GetUserId();
+                model.UserIP = this.HttpContext.Request.UserHostAddress;
+                VideoMaterial video = this.unitOfWork.VideoMaterials.Get(model.VideoMaterialID);
+                SerialSeason season = null;
+
+                if (string.IsNullOrWhiteSpace(model.TranslatorName))
+                    season = video.SerialSeasons.FirstOrDefault(ss => ss.SeasonNumber == (model.SeasonNumber ?? 1));
+                else
+                    season = video.SerialSeasons.FirstOrDefault(ss => ss.SeasonNumber == (model.SeasonNumber ?? 1) && ss.Translation.Name == model.TranslatorName);
+
+
+                if (season == null)
+                {
+                    Task.Run(() => this.logger.Error("SaveViewTime(SaveViewTimeViewModel). Сезон Номер: {0} ИД видеоматериала: {1} не найден", model.SeasonNumber ?? 1, model.VideoMaterialID));
+                    return this.Json(new { error = "SaveViewTime(): ошибка инициализации." });
+                }
+
+                VideoMaterialViewsByUsers entity = null;
+
+                if(User.Identity.IsAuthenticated)
+                {
+                    entity = this.unitOfWork.VideoMaterialViewsByUsers.GetScalarWithCondition(vu
+                                 => vu.VideoMaterialID == model.VideoMaterialID && vu.UserID == model.UserID);
+                }
+
+                if (entity == null)
+                {
+                    entity = this.unitOfWork.VideoMaterialViewsByUsers.GetScalarWithCondition(vu
+                                => vu.VideoMaterialID == model.VideoMaterialID && vu.UserIP == model.UserIP);
+                }
+
+                bool result = false;
+
+                if (entity == null)
+                {
+                    entity = new VideoMaterialViewsByUsers
+                    {
+                        UserID = model.UserID,
+                        UserIP = model.UserIP,
+                        VideoMaterialID = model.VideoMaterialID,
+                        EndTimeOfLastView = model.TimeSec,
+                        EpisodeNumber = model.EpisodeNumber,
+                        SerialSeason = season,
+                        SerialSeasonID = season.ID,
+                        UpdateDateTime = DateTime.Now
+                    };
+
+                    result = this.unitOfWork.VideoMaterialViewsByUsers.Create(entity);
+                }
+                else
+                {
+                    if(!string.IsNullOrWhiteSpace(model.UserID))
+                        entity.UserID = model.UserID;
+
+                    entity.UserIP = model.UserIP;
+                    entity.EndTimeOfLastView = model.TimeSec;
+                    entity.EpisodeNumber = model.EpisodeNumber;
+                    entity.SerialSeason = season;
+                    entity.SerialSeasonID = season.ID;
+                    entity.UpdateDateTime = DateTime.Now;
+                    result = this.unitOfWork.VideoMaterialViewsByUsers.UpdateEntity(entity);
+                }
+
+                if(result)
+                {
+                    return this.Json(new { success = "Время просмотра сохранено" });
+                }
+                else
+                {
+                    Task.Run(() => this.logger.Error("SaveViewTime(SaveViewTimeViewModel). Не удалось сохранить объект {0}", entity));
+                    return this.Json(new { error = "SaveViewTime(): Не удалось сохранить время просмотра." });
+                }
+            }
+            else
+            {
+                return this.Json(new { error = "SaveViewTime(): Данные некорректны." });
+            }
+        }
 
 		/// <summary>
 		/// Проверка, подписал ли авторизованный юзер на фильм.

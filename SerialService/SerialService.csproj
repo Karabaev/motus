@@ -289,11 +289,13 @@
     <Compile Include="DAL\Entities\Translation.cs" />
     <Compile Include="DAL\Entities\VideoMark.cs" />
     <Compile Include="DAL\Entities\VideoMaterial.cs" />
+    <Compile Include="DAL\Entities\VideoMaterialViewsByUsers.cs" />
     <Compile Include="DAL\IAppUnitOfWork.cs" />
     <Compile Include="DAL\Repository\ApplicationUserManager.cs" />
     <Compile Include="DAL\Repository\Interfaces\IApplicationUserManager.cs" />
     <Compile Include="DAL\Repository\Interfaces\ICountryRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\IPersonRepository.cs" />
+    <Compile Include="DAL\Repository\Interfaces\IVideoMaterialViewsByUsersRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\ISerialSeasonRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\IVideoMarkRepository.cs" />
     <Compile Include="DAL\Repository\VideoMarkRepository.cs" />
@@ -310,6 +312,7 @@
     <Compile Include="DAL\Repository\PictureRepository.cs" />
     <Compile Include="DAL\Repository\ThemeRepository.cs" />
     <Compile Include="DAL\Repository\TranslationRepository.cs" />
+    <Compile Include="DAL\Repository\VideoMaterialViewsByUsersRepository.cs" />
     <Compile Include="DAL\Repository\VideoMaterialRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -341,7 +344,9 @@
     <Compile Include="Models\ElasticVideoMaterial.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Services\Interfaces\IRoleService.cs" />
+    <Compile Include="Services\Interfaces\IVideoMaterialViewsByUsersService.cs" />
     <Compile Include="Services\RoleService.cs" />
+    <Compile Include="Services\VideoMaterialViewsByUsersService.cs" />
     <Compile Include="Sitemap\SitemapGenerator.cs" />
     <Compile Include="Sitemap\SitemapNode.cs" />
     <Compile Include="ViewModels\Account\LoginViewModel.cs" />
@@ -386,6 +391,7 @@
     <Compile Include="Services\VideoMarkService.cs" />
     <Compile Include="Services\VideoMaterialService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\User\SaveViewTimeViewModel.cs" />
     <Compile Include="ViewModels\VideoMaterialDetailsViewModel.cs" />
     <Compile Include="ViewModels\VideoMaterialListViewModel.cs" />
     <Compile Include="ViewModels\VideoMaterialPersonalAccountViewModel.cs" />
