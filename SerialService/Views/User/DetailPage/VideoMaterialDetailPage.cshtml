@@ -17,29 +17,6 @@
 <div class="content">
     <div class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card player-container">
         <div class="player">
-            <div id="motus-info-bar" class="mdl-cell--hide-phone mdl-cell--hide-tablet">
-                <div id="title">
-                    <h1 class="title-text">@Model.Title</h1>
-                    @if (originalTitleHasValue)
-                    {
-                        <p>@Model.OriginalTitle</p>
-                    }
-                </div>
-                <div class="like-bar">
-                    <div class="thumb">
-                        <button id="ThumbUpBtn" class="mdl-button motus-tools mdl-js-button mdl-button--icon">
-                            <i class="like-icon material-icons">thumb_up</i>
-                        </button>
-                        <span id="ThumbUpTxt" class="thump-count"></span>
-                    </div>
-                    <div class="thumb">
-                        <button id="ThumbDownBtn" class="mdl-button motus-tools mdl-js-button mdl-button--icon">
-                            <i class="like-icon material-icons">thumb_down</i>
-                        </button>
-                        <span id="ThumbDownTxt" class="thump-count"></span>
-                    </div>
-                </div>
-            </div>
             <div id="visearch">
                 @{ 
                     StringBuilder iframeSrc = new StringBuilder(Model.IframeUrl);
@@ -105,8 +82,30 @@
                     <img style="width:100%;min-width:0!important;min-height:0!important" src="@Model.PosterURL" alt="Постер @Model.Title" />
                 </div>
             </div>
-            @Html.Partial("DetailPage/DeviceShortInfo", Model, new ViewDataDictionary { { "poster", posterUrlHasValue }, { "originalTitle", originalTitleHasValue } })
             <div class="info-table mdl-cell--8-col-desktop mdl-cell--6">
+                <div id="motus-info-bar">
+                    <div id="title">
+                        <h1 class="title-text">@Model.Title</h1>
+                        @if (originalTitleHasValue)
+                        {
+                            <p>@Model.OriginalTitle</p>
+                        }
+                    </div>
+                    <div class="like-bar">
+                        <div class="thumb">
+                            <button id="ThumbUpBtn" class="mdl-button motus-tools mdl-js-button mdl-button--icon">
+                                <i class="like-icon material-icons">thumb_up</i>
+                            </button>
+                            <span id="ThumbUpTxt" class="thump-count"></span>
+                        </div>
+                        <div class="thumb">
+                            <button id="ThumbDownBtn" class="mdl-button motus-tools mdl-js-button mdl-button--icon">
+                                <i class="like-icon material-icons">thumb_down</i>
+                            </button>
+                            <span id="ThumbDownTxt" class="thump-count"></span>
+                        </div>
+                    </div>
+                </div>
                 <div class="info-item shot-info">
                     <span class="mdl-chip motus-year-chip" value="@Model.ReleaseDate.Value">
                         <span class="mdl-chip__text">@Model.ReleaseDate.Value</span>

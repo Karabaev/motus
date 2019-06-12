@@ -36,21 +36,11 @@ function HideBar() {
 };
 
 
-$('.player').on('mouseover', function (e) {
-    bar.slideDown("fast");
-    !time || clearTimeout(time);
-    HideBar();
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-    function RenderPlayerInfoBar() {
-        HideBar();
-        Slide();
-    }
-
-    RenderPlayerInfoBar();
-})
-
+//$('.player').on('mouseover', function (e) {
+//    bar.slideDown("fast");
+//    !time || clearTimeout(time);
+//    HideBar();
+//});
 var sended = false;
 var episodeData;
 
