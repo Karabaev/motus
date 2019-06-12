@@ -15,15 +15,13 @@
 }
 
 #motus-info-bar {
-    position: absolute;
     top: 0;
     left: 0;
     z-index: 10;
-    margin: 30px;
+    margin-bottom: 24px;
 }
 
 #title {
-    color: white;
     font-family: 'Montserrat' !important, sans-serif;
 }
 
@@ -31,12 +29,7 @@
     display: inline-flex;
 }
 
-.like-icon {
-    color: white;
-}
-
 .thump-count {
-    color: white;
     font-size: small;
     margin: auto;
 }
@@ -96,6 +89,10 @@ h1, h2 {
     font-size: x-large;
 }
 
+.title-text{
+    margin-top:0;
+}
+
 .title-text-phone {
     font-size: larger;
 }
@@ -145,18 +142,18 @@ h1, h2 {
     width: 100%;
 }
 
-    #recommendations::-webkit-scrollbar {
-        height: 6px;
-    }
+#recommendations::-webkit-scrollbar {
+    height: 6px;
+}
 
-    #recommendations::-webkit-scrollbar-track {
-        -webkit-box-shadow: none;
-    }
+#recommendations::-webkit-scrollbar-track {
+    -webkit-box-shadow: none;
+}
 
-    #recommendations::-webkit-scrollbar-thumb {
-        background-color: #707070;
-        border-radius: 6px !important;
-    }
+#recommendations::-webkit-scrollbar-thumb {
+    background-color: #707070;
+    border-radius: 6px !important;
+}
 
 .active {
     cursor: grabbing;
