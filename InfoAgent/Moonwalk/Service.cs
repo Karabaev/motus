@@ -194,6 +194,7 @@
             result.Tagline = modelEntity.material_data?.tagline == "-" ? string.Empty : modelEntity.material_data?.tagline;
             result.Title = modelEntity.title_ru;
             result.Translations = new List<Translation>();
+            result.IframeUrl = videoMaterial.Translations[0].iframe_url;
 
             foreach (var item in videoMaterial.Translations)
             {

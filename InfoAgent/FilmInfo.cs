@@ -11,6 +11,7 @@
         public string PosterHref { get; set; }
         public string KinopoiskID { get; set; }
         public string Description { get; set; }
+        public string IframeUrl { get; set; }
         public float? IDMB { get; set; }
         public float? KinopoiskRating { get; set; }
         public int? Duration { get; set; }
@@ -24,7 +25,7 @@
         public bool? IsSerial { get; set; }
         public bool? IsBlocked { get; set; }
 
-		public override bool Equals(object obj)
+        public override bool Equals(object obj)
 		{
 			FilmInfo other = obj as FilmInfo;
 
