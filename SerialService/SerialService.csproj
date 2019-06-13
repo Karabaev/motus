@@ -275,6 +275,8 @@
     <Compile Include="DAL\Context\ApplicationDbContext.cs" />
     <Compile Include="Controllers\RedactorToolsController.cs" />
     <Compile Include="DAL\Entities\ApplicationUser.cs" />
+    <Compile Include="DAL\Entities\Comment.cs" />
+    <Compile Include="DAL\Entities\CommentMark.cs" />
     <Compile Include="DAL\Entities\Country.cs" />
     <Compile Include="DAL\Entities\Genre.cs" />
     <Compile Include="DAL\Entities\Interfaces\IBaseEntity.cs" />
@@ -292,7 +294,11 @@
     <Compile Include="DAL\Entities\VideoMaterialViewsByUsers.cs" />
     <Compile Include="DAL\IAppUnitOfWork.cs" />
     <Compile Include="DAL\Repository\ApplicationUserManager.cs" />
+    <Compile Include="DAL\Repository\CommentMarkRepository.cs" />
+    <Compile Include="DAL\Repository\CommentRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\IApplicationUserManager.cs" />
+    <Compile Include="DAL\Repository\Interfaces\ICommentRepository.cs" />
+    <Compile Include="DAL\Repository\Interfaces\ICommentMarkRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\ICountryRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\IPersonRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\IVideoMaterialViewsByUsersRepository.cs" />

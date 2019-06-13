@@ -1,14 +1,14 @@
 ﻿namespace SerialService.DAL.Entities
 {
-    public class VideoMark : IMark
+    public class CommentMark : IBaseEntity
     {
         public int ID { get; set; }
         public string UserIP { get; set; }
         public bool Value { get; set; }
-        public int VideoMaterialID { get; set; }
-        public virtual VideoMaterial VideoMaterial { get; set; }
+        public int CommentID { get; set; }
+        public virtual Comment Comment { get; set; }
         public string AuthorID { get; set; }
-        public ApplicationUser Author { get; set; }
+        public virtual ApplicationUser Author { get; set; }
 
         /// <summary>
         /// Проверяет на равенство объекты по главным свойствам. (VideoMaterialID и UserIP)
@@ -17,12 +17,12 @@
         /// <returns></returns>
         public bool Alike(IBaseEntity entity)
         {
-            VideoMark videoMark = entity as VideoMark;
+            CommentMark mark = entity as CommentMark;
 
-            if (videoMark == null)
+            if (mark == null)
                 return false;
 
-            return this.VideoMaterialID == videoMark.VideoMaterialID && (this.AuthorID == videoMark.AuthorID || this.UserIP == videoMark.UserIP);
+            return this.CommentID == mark.CommentID && (this.AuthorID == mark.AuthorID || this.UserIP == mark.UserIP);
         }
     }
 }
