@@ -86,17 +86,17 @@
         public List<FilmInfo> GetAllFilmInfoList()
         {
             List<VideoMaterialWithTranslations> videoMaterials = new List<VideoMaterialWithTranslations>();
-            Response response = this.GetResponseObject(RequestTypes.ForeignFilms);
-            videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
-            response = this.GetResponseObject(RequestTypes.RussianFilms);
-            videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
-            response = this.GetResponseObject(RequestTypes.AnimeFilms);
-            videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
-            response = this.GetResponseObject(RequestTypes.ForeignSerials);
-            videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
-            response = this.GetResponseObject(RequestTypes.RussianSerials);
-            videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
-            response = this.GetResponseObject(RequestTypes.AnimeSerials);
+            //Response response = this.GetResponseObject(RequestTypes.ForeignFilms);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
+            //response = this.GetResponseObject(RequestTypes.RussianFilms);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
+            //response = this.GetResponseObject(RequestTypes.AnimeFilms);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.movies));
+            //response = this.GetResponseObject(RequestTypes.ForeignSerials);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
+            //response = this.GetResponseObject(RequestTypes.RussianSerials);
+            //videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
+            Response response = this.GetResponseObject(RequestTypes.AnimeSerials);
             videoMaterials.AddRange(this.GetVideoMaterial(response.report.serials));
             List<FilmInfo> result = this.GetFilmInfoList(videoMaterials);
             return result;
@@ -194,6 +194,7 @@
             result.Tagline = modelEntity.material_data?.tagline == "-" ? string.Empty : modelEntity.material_data?.tagline;
             result.Title = modelEntity.title_ru;
             result.Translations = new List<Translation>();
+            result.IframeUrl = videoMaterial.Translations[0].iframe_url;
 
             foreach (var item in videoMaterial.Translations)
             {

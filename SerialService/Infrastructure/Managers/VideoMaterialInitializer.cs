@@ -2,9 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
-    using SerialService.DAL.Entities;
 
     public struct VideoMaterialInitializer
     {
@@ -30,7 +27,8 @@
             CheckStatus checkStatus,
             bool watchForUpdates,
             bool isArchived,
-            bool isSerial)
+            bool isSerial,
+            string iframeUrl)
         {
             this.Title = title;
             this.OriginalTitle = originalTitle;
@@ -54,6 +52,7 @@
             this.SerialSeasonInitializers = new List<SerialSeasonInitializer>(serialSeasons);
             this.Themes = new List<string>(themes);
             this.IsSerial = isSerial;
+            this.IframeUrl = iframeUrl;
         }
 
         public string Title { get; set; }
@@ -61,6 +60,7 @@
         public string Text { get; set; }
         public string Tagline { get; set; }
         public string KinopoiskID { get; set; }
+        public string IframeUrl { get; set; }
         public float IDMB { get; set; }
         public float? KinopoiskRating { get; set; }
         public int? Duration { get; set; }

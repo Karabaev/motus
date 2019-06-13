@@ -61,7 +61,8 @@
                 CheckStatus.Checking,
                 watchForUpdates,
                 false,
-                info.IsSerial ?? false);
+                info.IsSerial ?? false,
+                info.IframeUrl);
 
             VideoMaterial result = manager.CreateVideoMaterialInstance(initializer);
             return result;
