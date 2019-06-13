@@ -9,9 +9,9 @@
         public string AuthorID { get; set; }
         public virtual ApplicationUser Author { get; set; }
         public int ParentID { get; set; }
-        public Comment Parent { get; set; }
-        public List<Comment> DependentComments { get; set; }
-        public List<CommentMark> Marks { get; set; }
+        public virtual Comment Parent { get; set; }
+        public virtual List<Comment> DependentComments { get; set; }
+        public virtual List<CommentMark> Marks { get; set; }
 
         public bool Alike(IBaseEntity entity)
         {
