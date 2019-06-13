@@ -1,46 +1,13 @@
-﻿function Slide() {
-    const slider = document.getElementById('recommendations');
-    let leftIsPress = false;
-    let startX;
-    let scrollLeft;
-    slider.addEventListener('mousedown', (e) => {
-        leftIsPress = true;
-        slider.classList.add('active');
-        startX = e.pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-    })
-    slider.addEventListener('mouseleave', () => {
-        leftIsPress = false;
-        slider.classList.remove('active');
-    })
-    slider.addEventListener('mouseup', () => {
-        leftIsPress = false;
-        slider.classList.remove('active');
-    })
-    slider.addEventListener('mousemove', (e) => {
-        if (leftIsPress) {
-            e.preventDefault();
-            const x = e.pageX - slider.offsetLeft;
-            const trac = (x - startX) * 3;
-            slider.scrollLeft = scrollLeft - trac;
-        }
-    })
+﻿function SetPlayerWindowSize() {
+    //хардкорный костылинг
+    var card = $('.player');
+    var proportions = 9 / 17;
+    card.css('height', card.width() * proportions);
+    var iframe = $('#player-frame');
+    iframe.css('width', card.width() - parseInt($('.player-container').css('padding')) * 2);
+    iframe.css('height', card.height());
 }
-var time = null;
-var bar = $('#motus-info-bar');
 
-function HideBar() {
-    time = setTimeout(function () {
-        bar.slideUp();
-    }, 3000);
-};
-
-
-//$('.player').on('mouseover', function (e) {
-//    bar.slideDown("fast");
-//    !time || clearTimeout(time);
-//    HideBar();
-//});
 var sended = false;
 var episodeData;
 
@@ -49,8 +16,8 @@ function onPlayerTimeUpdate(player_time) {
 
     timeToSend = Math.round(player_time);
 
-    if (timeToSend % 10 == 0) { // каждые 10 секунд
-        if (sended == false) {
+    if (timeToSend % 10 === 0) { // каждые 10 секунд
+        if (sended === false) {
             if (episodeData !== undefined) {
                 model = {
                     TimeSec: timeToSend,
@@ -92,10 +59,10 @@ function onPlayerTimeUpdate(player_time) {
 
 // ФУНКЦИЯ ДЛЯ СОХРАНЕНИЯ ВРЕМЕНИ ПРОСМОТРА
 function mwPlayerMessageReceive(event) {
-    if (event.data && event.data.message == 'MW_PLAYER_TIME_UPDATE') {
+    if (event.data && event.data.message === 'MW_PLAYER_TIME_UPDATE') {
         onPlayerTimeUpdate(event.data.value);
     } else {
-        if (event.data && event.data.message == 'MW_PLAYER_SELECT_EPISODE') {
+        if (event.data && event.data.message === 'MW_PLAYER_SELECT_EPISODE') {
             onPlayerEpisodeSelected(event.data.value);
         }
     }
@@ -122,4 +89,8 @@ $(function () {
     } else {
         window.attachEvent('onmessage', mwPlayerMessageReceive);
     }
+});
+
+window.addEventListener('DOMContentLoaded', function (e) {
+    SetPlayerWindowSize();
 });
