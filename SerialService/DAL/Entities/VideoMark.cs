@@ -22,7 +22,7 @@
             if (videoMark == null)
                 return false;
 
-            return this.VideoMaterialID == videoMark.VideoMaterialID && this.UserIP == videoMark.UserIP;
+            return this.VideoMaterialID == videoMark.VideoMaterialID && (this.AuthorID == videoMark.AuthorID || this.UserIP == videoMark.UserIP);
         }
     }
 }

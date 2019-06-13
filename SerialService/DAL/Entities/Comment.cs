@@ -1,6 +1,5 @@
 ﻿namespace SerialService.DAL.Entities
 {
-    using System;
     using System.Collections.Generic;
 
     public class Comment : IBaseEntity
@@ -16,7 +15,12 @@
 
         public bool Alike(IBaseEntity entity)
         {
-            throw new NotImplementedException();
+            Comment comment = entity as Comment;
+
+            if (comment == null)
+                return false;
+
+            return true;
         }
     }
 }

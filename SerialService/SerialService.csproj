@@ -294,7 +294,11 @@
     <Compile Include="DAL\Entities\VideoMaterialViewsByUsers.cs" />
     <Compile Include="DAL\IAppUnitOfWork.cs" />
     <Compile Include="DAL\Repository\ApplicationUserManager.cs" />
+    <Compile Include="DAL\Repository\CommentMarkRepository.cs" />
+    <Compile Include="DAL\Repository\CommentRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\IApplicationUserManager.cs" />
+    <Compile Include="DAL\Repository\Interfaces\ICommentRepository.cs" />
+    <Compile Include="DAL\Repository\Interfaces\ICommentMarkRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\ICountryRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\IPersonRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\IVideoMaterialViewsByUsersRepository.cs" />

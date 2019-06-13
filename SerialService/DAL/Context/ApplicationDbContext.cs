@@ -9,6 +9,9 @@
         public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false)
         {
         }
+
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<CommentMark> CommentMarks { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<VideoMark> VideoMarks { get; set; }
@@ -42,6 +45,10 @@
 			modelBuilder.Entity<ApplicationUser>().Property(a => a.RegisterDateTime).IsRequired();
 			modelBuilder.Entity<ApplicationUser>().Property(a => a.LastAuthorizationDateTime).IsRequired();
 			modelBuilder.Entity<ApplicationUser>().Property(a => a.ChangeDateTime).IsRequired();
+
+            modelBuilder.Entity<Comment>().HasMany(c => c.DependentComments).WithOptional(c => c.Parent);
+            modelBuilder.Entity<Comment>().HasRequired(c => c.Author).WithMany(u => u.Comments);
+            modelBuilder.Entity<Comment>().HasMany(c => c.Marks).WithRequired(m => m.Comment);
 
             base.OnModelCreating(modelBuilder);
         }

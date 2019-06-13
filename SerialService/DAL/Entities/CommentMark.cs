@@ -19,7 +19,12 @@
         /// <returns></returns>
         public bool Alike(IBaseEntity entity)
         {
-            throw new NotImplementedException();
+            CommentMark mark = entity as CommentMark;
+
+            if (mark == null)
+                return false;
+
+            return this.CommentID == mark.CommentID && (this.AuthorID == mark.AuthorID || this.UserIP == mark.UserIP);
         }
     }
 }
