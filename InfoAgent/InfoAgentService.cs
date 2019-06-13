@@ -83,10 +83,27 @@
             filmInfo.FilmMakers = jObj["material_data"]["directors"].ToObject<List<string>>();
             filmInfo.Genres = jObj["material_data"]["genres"].ToObject<List<string>>();
             filmInfo.Countries = jObj["material_data"]["countries"].ToObject<List<string>>();
-            filmInfo.IDMB = (float?)Math.Round(jObj["material_data"]["imdb_rating"].Value<double>(),1);
-            filmInfo.KinopoiskRating = (float?)Math.Round(jObj["material_data"]["kinopoisk_rating"].Value<double>(),1);
+            try
+            {
+                filmInfo.IDMB = (float?)Math.Round(jObj["material_data"]["imdb_rating"].Value<double>(), 1);
+            }
+            catch
+            {
+                filmInfo.IDMB = null;
+            }
+
+            try
+            {
+                filmInfo.KinopoiskRating = (float?)Math.Round(jObj["material_data"]["kinopoisk_rating"].Value<double>(), 1);
+            }
+            catch
+            {
+                filmInfo.KinopoiskRating = null;
+            }
+            
             filmInfo.PosterHref = jObj["material_data"]["poster"].Value<string>();
             filmInfo.Description = jObj["material_data"]["description"].Value<string>();
+            filmInfo.IframeUrl = jObj["iframe_url"].Value<string>();
 
             if (!filmInfo.IsSerial.HasValue)
                 throw new NullReferenceException("Значение флага типа не может быть неопределенным");
