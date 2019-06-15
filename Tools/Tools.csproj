@@ -116,6 +116,7 @@
   <ItemGroup>
     <Compile Include="ConfigManager.cs" />
     <Compile Include="Exceptions\NotFoundInFilmBaseException.cs" />
+    <Compile Include="Modules\IFrameUrlInitializerModule.cs" />
     <Compile Include="Modules\VideoMaterialUrlDownloadModule .cs" />
     <Compile Include="Shared\ModulesParentBase.cs" />
     <Compile Include="Modules\SerialCheckerModule.cs" />

@@ -55,12 +55,18 @@
                 Index = 2,
                 Name = "Чистка от заблокированных видеоматериалов"
             };
+            IModule iFrameUrlInitializer = new IFrameUrlInitializerModule
+            {
+                Index = 3,
+                Name = "Инициализатор iframeUrl"
+            };
             IModule extendedModulesParent = new ModulesParentBase
             {
                 Index = 3,
                 Name = "Дополнительные модули",
-                DependentModules = new IModule[] { serialCheckerModule, videoMaterialBlockedCleanModule }
+                DependentModules = new IModule[] { serialCheckerModule, videoMaterialBlockedCleanModule, iFrameUrlInitializer }
             };
+
 
             modules = new IModule[] { updater, downloadModulesParent, extendedModulesParent };
         }
