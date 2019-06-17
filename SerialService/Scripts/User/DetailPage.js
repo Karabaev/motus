@@ -1,12 +1,12 @@
-﻿function SetPlayerWindowSize() {
-    //хардкорный костылинг
-    var card = $('.player');
-    var proportions = 9 / 17;
-    card.css('height', card.width() * proportions);
-    var iframe = $('#player-frame');
-    iframe.css('width', card.width() - parseInt($('.player-container').css('padding')) * 2);
-    iframe.css('height', card.height());
-}
+﻿//function SetPlayerWindowSize() {
+//    //хардкорный костылинг
+//    var card = $('.player');
+//    var proportions = 9 / 17;
+//    card.css('height', card.width() * proportions);
+//    var iframe = $('#player-frame');
+//    iframe.css('width', card.width() - parseInt($('.player-container').css('padding')) * 2);
+//    iframe.css('height', card.height());
+//}
 
 var sended = false;
 var episodeData;
@@ -41,11 +41,11 @@ function onPlayerTimeUpdate(player_time) {
                 success: function (data) {
                     sended = true;
                     if (data.success) {
-                        console.log(data.success);
+                       // console.log(data.success);
                     }
                     else {
                         if (data.error) {
-                            console.error(data.error);
+                          //  console.error(data.error);
                         }
                     }
                 }
