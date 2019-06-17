@@ -18,12 +18,12 @@
     <div class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card player-container">
         <div class="player">
             <div id="visearch">
-                @{ 
+                @{
                     StringBuilder iframeSrc = new StringBuilder(Model.IframeUrl);
 
                     if (ViewBag.StartTime != null)
                     {
-                        if(iframeSrc.ToString() == Model.IframeUrl)
+                        if (iframeSrc.ToString() == Model.IframeUrl)
                         {
                             iframeSrc.AppendFormat("?start_time={0}", ViewBag.StartTime);
                         }
@@ -240,3 +240,20 @@
 <script src="~/Scripts/User/Mark.js"></script>
 <script src="~/Scripts/User/Subscribe.js"></script>
 <script src="~/Scripts/User/DetailPage.js"></script>
+<script type="text/javascript">
+    var card = $('.player-container');
+    var width = card.width();
+    card.css('height', width * (9 / 17))
+    var moon_params = {
+        width: card.width(),
+        height: card.height(),
+        on_dom_ready: true,
+        kp_id: @int.Parse(Model.KinopoiskID),
+        year: @Model.ReleaseDate,
+    };
+    !function (e, n, t, r, a) {
+    r = e.createElement(n), a = e.getElementsByTagName(n)
+    [0], r.async = !0, r.src = t, a.parentNode.insertBefore(r, a)
+    }(document, "script", "//visearch.info/v2/find-player.min.js");
+</script>
+
