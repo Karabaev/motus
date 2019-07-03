@@ -1,9 +1,9 @@
-﻿//namespace SerialService.Services.Interfaces
-//{
-//    using DAL.Entities;
+﻿namespace SerialService.Services.Interfaces
+{
+    using DAL.Entities;
 
-//    public interface IVideoMaterialViewsByUsersService : IBaseService<VideoMaterialViewsByUsers>
-//    {
-//        bool UpdateEntity(VideoMaterialViewsByUsers entity);
-//    }
-//}
+    public interface IVideoMaterialViewsByUsersService : IBaseService<VideoMaterialViewsByUsers>
+    {
+        bool UpdateEntity(VideoMaterialViewsByUsers entity);
+    }
+}

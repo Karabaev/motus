@@ -1,8 +1,8 @@
-﻿//namespace SerialService.DAL.Repository
-//{
-//    using Entities;
+﻿namespace SerialService.DAL.Repository
+{
+    using Entities;
 
-//    public interface ICommentMarkRepository : IRepository<CommentMark> { }
-//}
+    public interface ICommentMarkRepository : IRepository<CommentMark> { }
+}
 
 

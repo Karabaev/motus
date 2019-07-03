@@ -27,6 +27,6 @@
 
 		ISerialSeasonService SerialSeasons { get; }
 
-      //  IVideoMaterialViewsByUsersService VideoMaterialViewsByUsers { get; }
+        IVideoMaterialViewsByUsersService VideoMaterialViewsByUsers { get; }
     }
 }

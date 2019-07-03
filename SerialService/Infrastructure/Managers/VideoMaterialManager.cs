@@ -46,7 +46,7 @@
             result.WatchForUpdates = initializer.WatchForUpdates;
             result.IsArchived = initializer.IsArchived;
             result.IsSerial = initializer.IsSerial;
-         //   result.IframeUrl = initializer.IframeUrl;
+            result.IframeUrl = initializer.IframeUrl;
 
             if (author != null)
             {
