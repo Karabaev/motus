@@ -346,6 +346,11 @@
     <Compile Include="Infrastructure\Managers\VideoMaterialInitializer.cs" />
     <Compile Include="Infrastructure\Managers\VideoMaterialManager.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
+    <Compile Include="Migrations\201907031818145_Init.cs" />
+    <Compile Include="Migrations\201907031818145_Init.Designer.cs">
+      <DependentUpon>201907031818145_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ElasticVideoMaterial.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -542,6 +547,9 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201907031818145_Init.resx">
+      <DependentUpon>201907031818145_Init.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
