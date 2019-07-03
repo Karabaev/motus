@@ -10,8 +10,8 @@
         {
         }
 
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<CommentMark> CommentMarks { get; set; }
+        //public DbSet<Comment> Comments { get; set; }
+        //public DbSet<CommentMark> CommentMarks { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<VideoMark> VideoMarks { get; set; }
@@ -21,7 +21,7 @@
         public DbSet<Person> People { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<SerialSeason> SerialSeasons { get; set; }
-        public DbSet<VideoMaterialViewsByUsers> VideoMaterialViewsByUsers { get; set; }
+        //public DbSet<VideoMaterialViewsByUsers> VideoMaterialViewsByUsers { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -46,12 +46,12 @@
 			modelBuilder.Entity<ApplicationUser>().Property(a => a.LastAuthorizationDateTime).IsRequired();
 			modelBuilder.Entity<ApplicationUser>().Property(a => a.ChangeDateTime).IsRequired();
 
-            modelBuilder.Entity<Comment>().Property(c => c.ParentID).IsOptional();
-            modelBuilder.Entity<Comment>().HasMany(c => c.DependentComments).WithOptional(c => c.Parent);
-            modelBuilder.Entity<Comment>().HasRequired(c => c.Author).WithMany(u => u.Comments);
-            modelBuilder.Entity<Comment>().HasMany(c => c.Marks).WithRequired(m => m.Comment);
+            //modelBuilder.Entity<Comment>().Property(c => c.ParentID).IsOptional();
+            //modelBuilder.Entity<Comment>().HasMany(c => c.DependentComments).WithOptional(c => c.Parent);
+            //modelBuilder.Entity<Comment>().HasRequired(c => c.Author).WithMany(u => u.Comments);
+            //modelBuilder.Entity<Comment>().HasMany(c => c.Marks).WithRequired(m => m.Comment);
 
-            modelBuilder.Entity<CommentMark>().Property(cm => cm.CommentID).IsRequired();
+            //modelBuilder.Entity<CommentMark>().Property(cm => cm.CommentID).IsRequired();
 
 
             base.OnModelCreating(modelBuilder);

@@ -1,7 +1,7 @@
-﻿namespace SerialService.DAL.Repository
-{
-    using Entities;
+﻿//namespace SerialService.DAL.Repository
+//{
+//    using Entities;
 
-    public interface IVideoMaterialViewsByUsersRepository : IRepository<VideoMaterialViewsByUsers> { }
-}
+//    public interface IVideoMaterialViewsByUsersRepository : IRepository<VideoMaterialViewsByUsers> { }
+//}
 
