@@ -117,7 +117,7 @@
 
             VideoMaterialViewsByUsers viewInfo = videoMaterial.ViewsByUsers.FirstOrDefault(vu => vu.UserID == this.User.Identity.GetUserId());
 
-            if(viewInfo == null)
+            if (viewInfo == null)
                 viewInfo = videoMaterial.ViewsByUsers.FirstOrDefault(vu => vu.UserIP == this.HttpContext.Request.UserHostAddress);
 
             if (viewInfo != null)
@@ -155,7 +155,7 @@
 
                 VideoMaterialViewsByUsers entity = null;
 
-                if(User.Identity.IsAuthenticated)
+                if (User.Identity.IsAuthenticated)
                 {
                     entity = this.unitOfWork.VideoMaterialViewsByUsers.GetScalarWithCondition(vu
                                  => vu.VideoMaterialID == model.VideoMaterialID && vu.UserID == model.UserID);
@@ -187,7 +187,7 @@
                 }
                 else
                 {
-                    if(!string.IsNullOrWhiteSpace(model.UserID))
+                    if (!string.IsNullOrWhiteSpace(model.UserID))
                         entity.UserID = model.UserID;
 
                     entity.UserIP = model.UserIP;
@@ -199,7 +199,7 @@
                     result = this.unitOfWork.VideoMaterialViewsByUsers.UpdateEntity(entity);
                 }
 
-                if(result)
+                if (result)
                 {
                     return this.Json(new { success = "Время просмотра сохранено" });
                 }
@@ -215,12 +215,12 @@
             }
         }
 
-		/// <summary>
-		/// Проверка, подписал ли авторизованный юзер на фильм.
-		/// </summary>
-		/// <param name="id">Идентификатор материала.</param>
-		/// <returns></returns>
-		[HttpGet]
+        /// <summary>
+        /// Проверка, подписал ли авторизованный юзер на фильм.
+        /// </summary>
+        /// <param name="id">Идентификатор материала.</param>
+        /// <returns></returns>
+        [HttpGet]
 		public JsonResult IsSubscribed(int? id)
 		{
 			if (!id.HasValue)

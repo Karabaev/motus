@@ -16,7 +16,7 @@
 
         public EntityList<VideoMaterialViewsByUsers> GetAllEntities()
         {
-            return this.DB.VideoMaterialViewsByUsers.ToEntityList();
+             return this.DB.VideoMaterialViewsByUsers.ToEntityList();
         }
 
         public VideoMaterialViewsByUsers GetEntity(int id)

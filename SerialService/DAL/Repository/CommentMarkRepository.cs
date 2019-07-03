@@ -15,7 +15,7 @@
 
         public EntityList<CommentMark> GetAllEntities()
         {
-            return this.DB.CommentMarks.ToEntityList();
+             return this.DB.CommentMarks.ToEntityList();
         }
 
         public CommentMark GetEntity(int id)
@@ -65,7 +65,7 @@
 
         public bool SaveChanges()
         {
-            return this.DB.SaveChanges() > 0;
+             return this.DB.SaveChanges() > 0;
         }
 
         private readonly ApplicationDbContext DB;
