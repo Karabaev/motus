@@ -19,6 +19,7 @@
     using Infrastructure.Helpers;
     using ViewModels.Account;
     using System.IO;
+    using System.Configuration;
 
     [Authorize, ExceptionHandler]
     public class AccountController : Controller
@@ -133,6 +134,9 @@
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel model)
         {
+            if (!model.PrivacyPolicyConfirmed)
+                return this.Json(new { error = "Вы должны подтвердить политику конфиденциальности" });
+
             if (this.ModelState.IsValid)
             {
                 ApplicationUser user = Mapper.Map<RegisterViewModel, ApplicationUser>(model);
@@ -511,6 +515,15 @@
             }
         }
 
+        [AllowAnonymous]
+        public ActionResult PrivacyPolicy()
+        {
+            ViewBag.Url = string.Format("{0}{1}", ConfigurationManager.AppSettings["MainDomainName"], this.GetCurrentURL());
+            ViewBag.UpdateDate = "04 Июля 2019 года";
+            ViewBag.SupportEmail = ConfigurationManager.AppSettings["MainDomainName"];
+            return View();
+        }
+
         /// <summary>
         /// Метод регистрации юзера.
         /// </summary>
@@ -634,6 +647,13 @@
                 }
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, this.LoginProvider);
             }
+        }
+
+        private string GetCurrentURL(object routeValues = null)
+        {
+            var routeDataValues = ControllerContext.RouteData.Values;
+            StringBuilder result = new StringBuilder(Url.Action(routeDataValues["action"].ToString(), routeDataValues["controller"].ToString(), routeValues));
+            return result.ToString();
         }
         #endregion
     }

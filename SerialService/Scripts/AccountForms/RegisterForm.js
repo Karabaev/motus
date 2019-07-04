@@ -22,9 +22,13 @@ $(document).ready(function () {
         ValidatePassword()
         SubmitButtonManage()
         HideErrorMessage()
-    })
+    });
     $('#submit-btn').click(function (e) {
         e.preventDefault();
         SubmitRegisterForm();
-    })
+    });
+
+    $('#confirmCheck').change(function () {
+        $('#confirmHidden').val(this.checked);
+    });
 })
