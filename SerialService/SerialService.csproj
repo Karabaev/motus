@@ -538,6 +538,7 @@
     <Content Include="Views\User\ConfirmNewEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Error\Error.cshtml" />
+    <Content Include="Views\Account\PrivacyPolicy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

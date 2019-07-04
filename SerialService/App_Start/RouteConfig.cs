@@ -161,6 +161,11 @@
             routes.MapRoute(name: "AccountExternalLoginCallback",
                 url: "external_callback/{model}",
                 defaults: new { controller = "Account", action = "ExternalLoginCallback", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "PrivacyPolicy",
+                url: "privacy_policy",
+                defaults: new { controller = "Account", action = "PrivacyPolicy", model = UrlParameter.Optional });
+
             #endregion
 
             #region Роуты Redactor и Admin

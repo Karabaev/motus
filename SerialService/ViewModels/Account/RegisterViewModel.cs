@@ -30,5 +30,9 @@
         [RegularExpression("^[а-яА-ЯёЁa-zA-Z0-9]+$")]
         [Display(Name = "Секретное слово")]
         public string Parole { get; set; }
+
+        [Required(ErrorMessage = "Вы волжны согласиться с политикой конвиденциальности")]
+        [Display(Name = "Согласен")]
+        public bool PrivacyPolicyConfirmed { get; set; }
     }
 }

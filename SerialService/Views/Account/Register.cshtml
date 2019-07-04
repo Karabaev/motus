@@ -37,6 +37,11 @@
                 <label class="mdl-textfield__label" for="secret-word">Секретное слово...</label>
                 <span class="mdl-textfield__error">Слово должно состоять из букв</span>
             </div>
+            <div class="mdl-checkbox mdl-cell--12-col">
+                <input class="mdl-checkbox__input" required type="checkbox" id="confirmCheck" />
+                <input type="hidden" name="PrivacyPolicyConfirmed" id="confirmHidden"/>
+                <label class="mdl-checkbox__label" for="confirm">С <a href="/privacy_policy">политикой конфиденциальности</a> согласен</label>
+            </div>
             <div class="mdl-cell--12-col"><span style="display:none" class="error"></span></div>
         </form>
     </div>
