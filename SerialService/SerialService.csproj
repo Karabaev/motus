@@ -433,6 +433,7 @@
     <Content Include="Content\Other\UserContent.css" />
     <Content Include="Content\RedactorTools\EditingManger.css" />
     <Content Include="Content\RedactorTools\RedactorMenu.css" />
+    <Content Include="Views\StaticPages\Error.html" />
     <Content Include="Content\Tables.css" />
     <Content Include="Content\User\CardAndPopovers.css" />
     <Content Include="Content\User\DetailPage.css" />
@@ -465,6 +466,7 @@
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
