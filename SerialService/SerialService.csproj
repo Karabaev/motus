@@ -358,6 +358,10 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ElasticVideoMaterial.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Services\CommentMarkService.cs" />
+    <Compile Include="Services\CommentService.cs" />
+    <Compile Include="Services\Interfaces\ICommentMarkService.cs" />
+    <Compile Include="Services\Interfaces\ICommentService.cs" />
     <Compile Include="Services\Interfaces\IRoleService.cs" />
     <Compile Include="Services\Interfaces\IVideoMaterialViewsByUsersService.cs" />
     <Compile Include="Services\RoleService.cs" />
