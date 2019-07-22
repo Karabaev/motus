@@ -410,6 +410,7 @@
     <Compile Include="Services\VideoMarkService.cs" />
     <Compile Include="Services\VideoMaterialService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\User\ShowCommentViewModel.cs" />
     <Compile Include="ViewModels\User\SaveViewTimeViewModel.cs" />
     <Compile Include="ViewModels\VideoMaterialDetailsViewModel.cs" />
     <Compile Include="ViewModels\VideoMaterialListViewModel.cs" />

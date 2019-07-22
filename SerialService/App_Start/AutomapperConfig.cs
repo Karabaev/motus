@@ -12,10 +12,6 @@
 
     public class AutoMapperConfig
     {
-        private AutoMapperConfig()
-        {
-        }
-
         public static void AutoMapperInit()
         {
             Action<IMapperConfigurationExpression> config = cfg => cfg.CreateMap<VideoMaterial, VideoMaterialListViewModel>()
@@ -30,6 +26,14 @@
             .ForMember(lvm => lvm.KinopoiskRating, opt => opt.MapFrom(vm => vm.KinopoiskRating))
             .ForMember(lvm => lvm.Imdb, opt => opt.MapFrom(vm => vm.IDMB))
             .ForMember(lvm => lvm.Duration, opt => opt.MapFrom(vm => vm.Duration));
+
+            config += cfg => cfg.CreateMap<Comment, ShowCommentViewModel>()
+            .ForMember(scvm => scvm.ID, opt => opt.MapFrom(c => c.ID))
+            .ForMember(scvm => scvm.ParentID, opt => opt.MapFrom(c => c.ParentID))
+            .ForMember(scvm => scvm.AuthorName, opt => opt.MapFrom(c => c.Author.UserName))
+            .ForMember(scvm => scvm.Text, opt => opt.MapFrom(c => c.Text))
+            .ForMember(scvm => scvm.PositiveVoteCount, opt => opt.MapFrom(c => c.PositiveVoteCount))
+            .ForMember(scvm => scvm.NegativeVoteCount, opt => opt.MapFrom(c => c.NegativeVoteCount));
 
             config += cfg => cfg.CreateMap<VideoMaterial, VideoMaterialDetailsViewModel>()
             .ForMember(dvm => dvm.ID, opt => opt.MapFrom(vm => vm.ID))
@@ -54,7 +58,8 @@
             .ForMember(dvm => dvm.SerialSeasonsCount, opt => opt.MapFrom(vm => vm.SerialSeasons.Count()))
             .ForMember(dvm => dvm.LastEpisodeTime, opt => opt.MapFrom(vm => vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)))
             .ForMember(dvm => dvm.LastEpisodeTranslator, opt => opt.MapFrom(vm => vm.SerialSeasons.FirstOrDefault(_vm => _vm.LastEpisodeTime == vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)).Translation.Name))
-            .ForMember(dvm => dvm.IframeUrl, opt => opt.MapFrom(vm => vm.IframeUrl));
+            .ForMember(dvm => dvm.IframeUrl, opt => opt.MapFrom(vm => vm.IframeUrl))
+            .ForMember(dvm => dvm.Comments, opt => opt.MapFrom(vm => vm.Comments))
 
             config += cfg => cfg.CreateMap<RegisterViewModel, ApplicationUser>()
             .ForMember(rvm => rvm.UserName, opt => opt.MapFrom(vm => vm.UserName))

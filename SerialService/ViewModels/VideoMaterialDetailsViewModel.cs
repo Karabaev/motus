@@ -3,6 +3,7 @@
     using SerialService.Models;
     using System;
     using System.Collections.Generic;
+    using User;
 
     public class VideoMaterialDetailsViewModel
     {
@@ -31,5 +32,6 @@
         public List<string> ThemeNames { get; set; }
         public List<ElasticVideoMaterial> Similar { get; set; }
         public string IframeUrl { get; set; }
+        public ICollection<ShowCommentViewModel> Comments { get; set; }
     }
 }

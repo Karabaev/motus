@@ -46,6 +46,7 @@
 			modelBuilder.Entity<ApplicationUser>().Property(a => a.LastAuthorizationDateTime).IsRequired();
 			modelBuilder.Entity<ApplicationUser>().Property(a => a.ChangeDateTime).IsRequired();
 
+            modelBuilder.Entity<Comment>().HasRequired(c => c.VideoMaterial).WithMany(vm => vm.Comments);
             modelBuilder.Entity<Comment>().Property(c => c.ParentID).IsOptional();
             modelBuilder.Entity<Comment>().HasMany(c => c.DependentComments).WithOptional(c => c.Parent);
             modelBuilder.Entity<Comment>().HasRequired(c => c.Author).WithMany(u => u.Comments);

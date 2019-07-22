@@ -714,6 +714,11 @@
             return this.Content(xml, "text/xml", Encoding.UTF8);
         }
 
+        public ActionResult CreateNewComment()
+        {
+
+        }
+
         private Image Base64ToImage(string base64String)
         {
             // Convert Base64 String to byte[]
