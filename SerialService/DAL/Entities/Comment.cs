@@ -1,5 +1,6 @@
 ﻿namespace SerialService.DAL.Entities
 {
+    using System;
     using System.Collections.Generic;
 
     public class Comment : IBaseEntity
@@ -9,6 +10,8 @@
         public bool IsArchived { get; set; }
         public int PositiveVoteCount { get; set; }
         public int NegativeVoteCount { get; set; }
+        public int HierarchyLevel { get; set; }
+        public DateTime AddDateTime { get; set; }
         public string AuthorID { get; set; }
         public virtual ApplicationUser Author { get; set; }
         public int ParentID { get; set; }

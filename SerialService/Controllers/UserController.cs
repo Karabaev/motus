@@ -95,7 +95,7 @@
 				return this.HttpNotFound();
 
 			VideoMaterialDetailsViewModel dvm = Mapper.Map<VideoMaterial, VideoMaterialDetailsViewModel>(videoMaterial);
-			ElasticVideoMaterial thisMaterial = Mapper.Map<VideoMaterial, ElasticVideoMaterial>(videoMaterial);
+            ElasticVideoMaterial thisMaterial = Mapper.Map<VideoMaterial, ElasticVideoMaterial>(videoMaterial);
 			dvm.Similar = MotusElasticsearch.GetSimilar(thisMaterial);
             this.ViewBag.Title = string.Format("{0} - {1}", dvm.Title, ConfigurationManager.AppSettings["VideoMaterialTitlePart"]);
             string descriptionPart = videoMaterial.IsSerial ? ConfigurationManager.AppSettings["SerialDescriptionPart"]
@@ -712,11 +712,6 @@
             var sitemapNodes = generator.GetNodes(this.Url);
             string xml = generator.GetSitemapDocument(sitemapNodes);
             return this.Content(xml, "text/xml", Encoding.UTF8);
-        }
-
-        public ActionResult CreateNewComment()
-        {
-
         }
 
         private Image Base64ToImage(string base64String)

@@ -33,7 +33,9 @@
             .ForMember(scvm => scvm.AuthorName, opt => opt.MapFrom(c => c.Author.UserName))
             .ForMember(scvm => scvm.Text, opt => opt.MapFrom(c => c.Text))
             .ForMember(scvm => scvm.PositiveVoteCount, opt => opt.MapFrom(c => c.PositiveVoteCount))
-            .ForMember(scvm => scvm.NegativeVoteCount, opt => opt.MapFrom(c => c.NegativeVoteCount));
+            .ForMember(scvm => scvm.NegativeVoteCount, opt => opt.MapFrom(c => c.NegativeVoteCount))
+            .ForMember(scvm => scvm.HierarchyLevel, opt => opt.MapFrom(c => c.HierarchyLevel))
+            .ForMember(scvm => scvm.AddDateTime, opt => opt.MapFrom(c => c.AddDateTime));
 
             config += cfg => cfg.CreateMap<VideoMaterial, VideoMaterialDetailsViewModel>()
             .ForMember(dvm => dvm.ID, opt => opt.MapFrom(vm => vm.ID))
@@ -59,7 +61,7 @@
             .ForMember(dvm => dvm.LastEpisodeTime, opt => opt.MapFrom(vm => vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)))
             .ForMember(dvm => dvm.LastEpisodeTranslator, opt => opt.MapFrom(vm => vm.SerialSeasons.FirstOrDefault(_vm => _vm.LastEpisodeTime == vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)).Translation.Name))
             .ForMember(dvm => dvm.IframeUrl, opt => opt.MapFrom(vm => vm.IframeUrl))
-            .ForMember(dvm => dvm.Comments, opt => opt.MapFrom(vm => vm.Comments))
+            .ForMember(dvm => dvm.Comments, opt => opt.MapFrom(vm => vm.Comments));
 
             config += cfg => cfg.CreateMap<RegisterViewModel, ApplicationUser>()
             .ForMember(rvm => rvm.UserName, opt => opt.MapFrom(vm => vm.UserName))
