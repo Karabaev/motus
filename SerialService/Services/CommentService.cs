@@ -52,7 +52,7 @@
             if (!id.HasValue)
                 throw new ArgumentNullException(nameof(id));
 
-            return this.Repository.GetEntity(id);
+            return this.Repository.GetEntity(id.Value);
         }
 
         public EntityList<Comment> GetAll()

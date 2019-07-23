@@ -1,14 +1,4 @@
-﻿//function SetPlayerWindowSize() {
-//    //хардкорный костылинг
-//    var card = $('.player');
-//    var proportions = 9 / 17;
-//    card.css('height', card.width() * proportions);
-//    var iframe = $('#player-frame');
-//    iframe.css('width', card.width() - parseInt($('.player-container').css('padding')) * 2);
-//    iframe.css('height', card.height());
-//}
-
-var sended = false;
+﻿var sended = false;
 var episodeData;
 
 // ФУНКЦИЯ ДЛЯ СОХРАНЕНИЯ ВРЕМЕНИ ПРОСМОТРА
@@ -94,3 +84,32 @@ $(function () {
 window.addEventListener('DOMContentLoaded', function (e) {
     SetPlayerWindowSize();
 });
+
+var isCommentLike = false;
+
+$(document).ready(){
+    $('#like-btn').click(function () {
+        isCommentLike = true;
+    });
+    $('#dislike-btn').click(function () {
+        isCommentLike = false;
+    });
+}
+
+function() {
+    var formObj = $('#comment-vote-form').serialize()
+    $.ajax({
+        method: 'post',
+        data: formObj,
+        url: 'vote_for_comment',
+        success: function (result) {
+            if (result.error) {
+                $('.error').html(result.error)
+                ShowErrorMessage()
+            }
+            else if (result.success) {
+                window.location.href = result.success
+            }
+        }
+    })
+}

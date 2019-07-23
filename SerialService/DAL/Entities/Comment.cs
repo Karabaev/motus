@@ -10,11 +10,10 @@
         public bool IsArchived { get; set; }
         public int PositiveVoteCount { get; set; }
         public int NegativeVoteCount { get; set; }
-        public int HierarchyLevel { get; set; }
         public DateTime AddDateTime { get; set; }
         public string AuthorID { get; set; }
         public virtual ApplicationUser Author { get; set; }
-        public int ParentID { get; set; }
+        public int? ParentID { get; set; }
         public virtual Comment Parent { get; set; }
         public int VideoMaterialID { get; set; }
         public virtual VideoMaterial VideoMaterial { get; set; }

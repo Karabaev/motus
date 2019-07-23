@@ -423,10 +423,65 @@
 			return null;
 		}
 
-		/// <summary>
-		/// Страница личного кабинета.
-		/// </summary>
-		[HttpGet]
+        [HttpPost]
+        public JsonResult VoteForComment(VoteForCommentViewModel model)
+        {
+            CommentMark mark = new CommentMark
+            {
+                CommentID = model.CommentID,
+                Value = model.Value,
+                UserIP = HttpContext.Request.UserHostAddress,
+                AuthorID = User.Identity.GetUserId()
+            };
+
+            try
+            {
+                this.unitOfWork.CommentMarks.Create(mark);
+            }
+            catch(EntryAlreadyExistsException ex)
+            {
+                CommentMark cache = this.unitOfWork.CommentMarks.GetScalarWithCondition(
+                    cm => (cm.CommentID == mark.CommentID && cm.AuthorID == mark.AuthorID && cm.Value == mark.Value)
+                    || (cm.CommentID == mark.CommentID && cm.UserIP == mark.UserIP && cm.Value == mark.Value));
+
+                if(cache != null)
+                {
+                    if(this.unitOfWork.CommentMarks.Remove(cache))
+                    {
+                        //todo: уменьшить количестволайков/дизлайков
+                        return Json(new { positiveCount = 0, negativeCount = 0, success = "" });
+                    }
+                    else
+                    {
+                        return Json(new { error = "" });
+                    }
+                }
+
+                cache = this.unitOfWork.CommentMarks.GetScalarWithCondition(
+                    cm => (cm.CommentID == mark.CommentID && cm.AuthorID == mark.AuthorID)
+                    || (cm.CommentID == mark.CommentID && cm.UserIP == mark.UserIP));
+
+                if (cache != null)
+                {
+                    if () // изменить лайк на дизлайк и наоборот
+                    {
+                        //todo: уменьшить количестволайков/дизлайков
+                        return Json(new { positiveCount = 0, negativeCount = 0, success = "" });
+                    }
+                    else
+                    {
+                        return Json(new { error = "" });
+                    }
+                }
+            }
+
+            return Json(new { success = "" });
+        }
+
+        /// <summary>
+        /// Страница личного кабинета.
+        /// </summary>
+        [HttpGet]
 		public ActionResult PersonalAccount()
 		{
 			string id = this.User.Identity.GetUserId();

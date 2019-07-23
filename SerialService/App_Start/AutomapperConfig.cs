@@ -27,9 +27,14 @@
             .ForMember(lvm => lvm.Imdb, opt => opt.MapFrom(vm => vm.IDMB))
             .ForMember(lvm => lvm.Duration, opt => opt.MapFrom(vm => vm.Duration));
 
+            config += cfg => cfg.CreateMap<Comment, ShowCommentParentViewModel>()
+            .ForMember(scvm => scvm.ID, opt => opt.MapFrom(c => c.ID))
+            .ForMember(scvm => scvm.AuthorName, opt => opt.MapFrom(c => c.Author.UserName))
+            .ForMember(scvm => scvm.Text, opt => opt.MapFrom(c => c.Text));
+
             config += cfg => cfg.CreateMap<Comment, ShowCommentViewModel>()
             .ForMember(scvm => scvm.ID, opt => opt.MapFrom(c => c.ID))
-            .ForMember(scvm => scvm.ParentID, opt => opt.MapFrom(c => c.ParentID))
+            .ForMember(scvm => scvm.Parent, opt => opt.MapFrom(c => c.Parent))
             .ForMember(scvm => scvm.AuthorName, opt => opt.MapFrom(c => c.Author.UserName))
             .ForMember(scvm => scvm.Text, opt => opt.MapFrom(c => c.Text))
             .ForMember(scvm => scvm.PositiveVoteCount, opt => opt.MapFrom(c => c.PositiveVoteCount))

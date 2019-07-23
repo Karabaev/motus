@@ -5,7 +5,7 @@
     public class ShowCommentViewModel
     {
         public int ID { get; set; }
-        public int ParentID { get; set; }
+        public ShowCommentParentViewModel Parent { get; set; }
         public int HierarchyLevel { get; set; }
         public string AuthorName { get; set; }
         public string Text { get; set; }

@@ -208,16 +208,43 @@
             }
             else
             {
-                foreach (var item in Model.Comments)
-                {
-                    <div>
-                        <div>@item.AuthorName</div>>
-                        <div>@item.Text</div>>
-                        <div>@item.AddDateTime</div>>
-                    </div>
-                    <br />
-                }
+                <ul id="">
+                    @{
+                        foreach (var item in Model.Comments.OrderBy(c => c.AddDateTime))
+                        {
+                            <li>
+                                @string.Format("{0} {1}", item.AddDateTime.ToString("dd.MM.yyyy hh:mm"), item.AuthorName)
+                                <div>
+                                    @if (item.Parent != null)
+                                    {
+                                        <q>
+                                            <bold>@item.Parent.AuthorName</bold><br />
+                                            @item.Parent.Text
+                                        </q>
+                                    }
+
+                                    @string.Format("{0}", item.Text) <br />
+                                    @string.Format("+{0} ={1}", item.PositiveVoteCount, item.NegativeVoteCount)
+
+                                    <form method="post" id="comment-vote-form" data-ajax="true">
+                                        <input type="hidden" name="CommentID" value="@item.ID" />
+                                    </form>
+                                    <button type="button" disabled id="like-btn">
+                                        +
+                                    </button>
+                                    <button type="button" disabled id="dislike-btn">
+                                        -
+                                    </button>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
             }
+            <form>
+                <p><textarea name="text"></textarea></p>
+                <input type="submit" value="Оставить комментарий" />
+            </form>
         </div>
         @if (Model.Similar != null && Model.Similar.Any())
         {

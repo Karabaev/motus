@@ -25,8 +25,18 @@
             if (entity == null)
                 return false;
 
-            if (this.GetAll().Contains(entity))
-                return false;
+            CommentMark mark = null;
+
+            if (!string.IsNullOrEmpty(entity.AuthorID))
+                mark = this.GetScalarWithCondition((m => m.CommentID == entity.CommentID && m.AuthorID == entity.AuthorID));
+
+            if (mark == null)
+                mark = this.GetScalarWithCondition((m => m.CommentID == entity.CommentID && m.UserIP == entity.UserIP));
+            else
+                throw new EntryAlreadyExistsException("Метка пользователя для этого видеоматериала уже стоит");
+
+            if (mark != null)
+                throw new EntryAlreadyExistsException("Метка с этого ip адреса для этого видеоматериала уже стоит");
 
             return this.Repository.AddEntity(entity);
         }
@@ -52,7 +62,7 @@
             if (!id.HasValue)
                 throw new ArgumentNullException(nameof(id));
 
-            return this.Repository.GetEntity(id);
+            return this.Repository.GetEntity(id.Value);
         }
 
         public EntityList<CommentMark> GetAll()
@@ -83,3 +93,4 @@
             throw new NotImplementedException();
         }
     }
+}
