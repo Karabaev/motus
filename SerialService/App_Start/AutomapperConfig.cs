@@ -39,7 +39,6 @@
             .ForMember(scvm => scvm.Text, opt => opt.MapFrom(c => c.Text))
             .ForMember(scvm => scvm.PositiveVoteCount, opt => opt.MapFrom(c => c.PositiveVoteCount))
             .ForMember(scvm => scvm.NegativeVoteCount, opt => opt.MapFrom(c => c.NegativeVoteCount))
-            .ForMember(scvm => scvm.HierarchyLevel, opt => opt.MapFrom(c => c.HierarchyLevel))
             .ForMember(scvm => scvm.AddDateTime, opt => opt.MapFrom(c => c.AddDateTime));
 
             config += cfg => cfg.CreateMap<VideoMaterial, VideoMaterialDetailsViewModel>()
@@ -111,6 +110,17 @@
             .ForMember(dvm => dvm.Imdb, opt => opt.MapFrom(vm => vm.IDMB))
             .ForMember(dvm => dvm.Description, opt => opt.MapFrom(vm => vm.Text.Substring(0, Math.Min(vm.Text.Length, 100))))
             .ForMember(dvm => dvm.PosterURL, opt => opt.MapFrom(vm => vm.Pictures.FirstOrDefault(p => p.IsPoster).URL));
+
+            //config += cfg => cfg.CreateMap<Comment, AddCommentViewModel>()
+            //.ForMember(acvm => acvm.Text, opt => opt.MapFrom(c => c.Text))
+            //.ForMember(acvm => acvm.AuthorID, opt => opt.MapFrom(c => c.AuthorID))
+            //.ForMember(acvm => acvm.ParentID, opt => opt.MapFrom(c => c.ParentID))
+            //.ForMember(acvm => acvm.VideoMaterialID, opt => opt.MapFrom(c => c.VideoMaterialID));
+
+            config += cfg => cfg.CreateMap<AddCommentViewModel, Comment>()
+            .ForMember(c => c.Text, opt => opt.MapFrom(acvm => acvm.Text))
+            .ForMember(c => c.ParentID, opt => opt.MapFrom(acvm => acvm.ParentID))
+            .ForMember(c => c.VideoMaterialID, opt => opt.MapFrom(acvm => acvm.VideoMaterialID));
 
             Mapper.Initialize(config);
         }

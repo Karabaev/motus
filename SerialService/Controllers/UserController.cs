@@ -103,17 +103,11 @@
             this.ViewBag.Description = string.Format("{0}. {1}", dvm.Title, descriptionPart);
             this.ViewBag.CurrentURL = this.GetCurrentURL(id);
             var user = this.unitOfWork.Users.Get(this.User.Identity.GetUserId());
-            string commentsApiKey = ConfigurationManager.AppSettings["CommentsApiKey"];
 
             if (user != null)
 			{
-                this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey, user.Id, user.UserName, user.Email, user.AvatarURL);
 				dvm.IsUserSubscribed = this.unitOfWork.VideoMaterials.IsUserSubscribed(id, user.Id);
             }
-            else
-			{
-				this.ViewBag.UserToken = UserTokenGenerator.GetUserSsoToken(commentsApiKey);
-			}
 
             VideoMaterialViewsByUsers viewInfo = videoMaterial.ViewsByUsers.FirstOrDefault(vu => vu.UserID == this.User.Identity.GetUserId());
 
@@ -423,6 +417,54 @@
 			return null;
 		}
 
+        [HttpPost, Authorize]
+        public JsonResult AddComment(AddCommentViewModel model)
+        {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+                return Json(new { error = "Чтобы оставить комментарий, необходимо авторизоваться."});
+
+            if(!ModelState.IsValid)
+                return Json(new { error = "Заполнены не все поля." });
+
+            Comment comment = Mapper.Map<AddCommentViewModel, Comment> (model);
+            comment.AuthorID = HttpContext.User.Identity.GetUserId();
+            comment.AddDateTime = DateTime.Now;
+
+            try
+            {
+                if (this.unitOfWork.Comments.Create(comment))
+                {
+                    var author = this.unitOfWork.Users.Get(comment.AuthorID);
+                    Comment parent = null;
+
+                    if (comment.ParentID.HasValue)
+                        parent = this.unitOfWork.Comments.Get(comment.ParentID);
+
+                    return Json(new
+                    {
+                        success = new
+                        {
+                            UserName = author.UserName,
+                            CreateDateTime = comment.AddDateTime.ToString("dd.MM.yyyy hh:mm"),
+                            Text = comment.Text,
+                            CommentID = comment.ID,
+                            ParentAuthor = parent?.Author.UserName,
+                            ParentText = parent?.Text
+                        }
+                    });
+                }
+                else
+                {
+                    return Json(new { error = "Не удалось сохранить комментарий. Обратитесь в поддержку сайта." });
+                }
+            }
+            catch(Exception ex)
+            {
+                Task.Run(() => this.logger.Error(ex));
+                return Json(new { error = "Не удалось сохранить комментарий. Обратитесь в поддержку сайта." });
+            }
+        }
+
         [HttpPost]
         public JsonResult VoteForComment(VoteForCommentViewModel model)
         {
@@ -433,10 +475,25 @@
                 UserIP = HttpContext.Request.UserHostAddress,
                 AuthorID = User.Identity.GetUserId()
             };
+            CountMarksViewModel countMarks = null;
 
             try
             {
-                this.unitOfWork.CommentMarks.Create(mark);
+                if(this.unitOfWork.CommentMarks.Create(mark))
+                {
+                    this.unitOfWork.Comments.AddVote(mark.CommentID, mark.Value);
+                    Comment comment = this.unitOfWork.Comments.Get(mark.CommentID);
+                    countMarks = new CountMarksViewModel
+                    {
+                        NegativeMarkCount = comment.NegativeVoteCount,
+                        PositiveMarkCount = comment.PositiveVoteCount
+                    };
+                    return Json(countMarks);
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch(EntryAlreadyExistsException ex)
             {
@@ -448,12 +505,18 @@
                 {
                     if(this.unitOfWork.CommentMarks.Remove(cache))
                     {
-                        //todo: уменьшить количестволайков/дизлайков
-                        return Json(new { positiveCount = 0, negativeCount = 0, success = "" });
+                        this.unitOfWork.Comments.RemoveVote(mark.CommentID, mark.Value);
+                        Comment comment = this.unitOfWork.Comments.Get(mark.CommentID);
+                        countMarks = new CountMarksViewModel
+                        {
+                            NegativeMarkCount = comment.NegativeVoteCount,
+                            PositiveMarkCount = comment.PositiveVoteCount
+                        };
+                        return Json(countMarks);
                     }
                     else
                     {
-                        return Json(new { error = "" });
+                        return null;
                     }
                 }
 
@@ -463,19 +526,25 @@
 
                 if (cache != null)
                 {
-                    if () // изменить лайк на дизлайк и наоборот
+                    if (this.unitOfWork.CommentMarks.InvertValue(cache))
                     {
-                        //todo: уменьшить количестволайков/дизлайков
-                        return Json(new { positiveCount = 0, negativeCount = 0, success = "" });
+                        this.unitOfWork.Comments.InvertVote(cache.CommentID, !mark.Value);
+                        Comment comment = this.unitOfWork.Comments.Get(mark.CommentID);
+                        countMarks = new CountMarksViewModel
+                        {
+                            NegativeMarkCount = comment.NegativeVoteCount,
+                            PositiveMarkCount = comment.PositiveVoteCount
+                        };
+                        return Json(countMarks);
                     }
                     else
                     {
-                        return Json(new { error = "" });
+                        return null;
                     }
                 }
             }
 
-            return Json(new { success = "" });
+            return null;
         }
 
         /// <summary>

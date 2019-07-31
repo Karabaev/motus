@@ -90,7 +90,24 @@
 
         public bool Remove(CommentMark entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            return this.Repository.RemoveEntity(entity);
+        }
+
+        /// <summary>
+        /// Инвертировать значение.
+        /// </summary>
+        /// <param name="entity">Сущность для изменения.</param>
+        /// <returns>true, если успешно, иначе false.</returns>
+        public bool InvertValue(CommentMark entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            entity.Value = !entity.Value;
+            return this.Repository.SaveChanges();
         }
     }
 }

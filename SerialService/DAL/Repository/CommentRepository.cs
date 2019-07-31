@@ -29,7 +29,8 @@
                 return false;
 
             this.DB.Comments.Add(entity);
-            return this.SaveChanges();
+            bool result = this.SaveChanges();
+            return result;
         }
 
         public bool UpdateEntity(Comment entity)

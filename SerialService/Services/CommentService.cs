@@ -23,12 +23,13 @@
         public bool Create(Comment entity)
         {
             if (entity == null)
-                return false;
+                throw new ArgumentNullException(nameof(entity));
 
             if (this.GetAll().Contains(entity))
-                return false;
+                throw new EntryAlreadyExistsException();
 
-            return this.Repository.AddEntity(entity);
+            bool result = this.Repository.AddEntity(entity);
+            return result;
         }
 
         public bool Create(IEnumerable<Comment> entities)
@@ -131,6 +132,72 @@
         public Comment GetByMainStringProperty(string value)
         {
             throw new NotImplementedException();
+        }
+
+        public bool AddVote(int? id, bool isPositiveMark)
+        {
+            if (!id.HasValue)
+                throw new ArgumentNullException(nameof(id));
+
+            Comment comment = this.Get(id);
+
+            if (comment == null)
+                throw new EntryNotFoundException();
+
+            if (isPositiveMark)
+                comment.PositiveVoteCount++;
+            else
+                comment.NegativeVoteCount++;
+
+            return this.Repository.SaveChanges();
+        }
+
+        public bool RemoveVote(int? id, bool isPositiveMark)
+        {
+            if (!id.HasValue)
+                throw new ArgumentNullException(nameof(id));
+
+            Comment comment = this.Get(id);
+
+            if (comment == null)
+                throw new EntryNotFoundException();
+
+            if (isPositiveMark)
+                comment.PositiveVoteCount--;
+            else
+                comment.NegativeVoteCount--;
+
+            return this.Repository.SaveChanges();
+        }
+
+        /// <summary>
+        /// Переместить 1 отметку из в противоположную.
+        /// </summary>
+        /// <param name="id">Идентификатор видеоматериала.</param>
+        /// <param name="fromPositive">Если true, то будет перемещение из положительных отметок в отрицательную, иначе наоборот.</param>
+        /// <returns>true, если успешно, иначе false.</returns>
+        public bool InvertVote(int? id, bool fromPositive)
+        {
+            if (!id.HasValue)
+                throw new ArgumentNullException(nameof(id));
+
+            Comment comment = this.Get(id);
+
+            if (comment == null)
+                return false;
+
+            if (fromPositive)
+            {
+                comment.PositiveVoteCount--;
+                comment.NegativeVoteCount++;
+            }
+            else
+            {
+                comment.PositiveVoteCount++;
+                comment.NegativeVoteCount--;
+            }
+
+            return this.Repository.SaveChanges();
         }
     }
 }

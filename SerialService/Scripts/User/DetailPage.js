@@ -14,21 +14,21 @@ function onPlayerTimeUpdate(player_time) {
                     SeasonNumber: episodeData.season,
                     EpisodeNumber: episodeData.episode,
                     TranslatorName: episodeData.translator,
-                    VideoMaterialID: $("#VideoMaterialIDHdn").val()
+                    VideoMaterialID: $("#material-id").val()
                 };
             }
             else {
                 model = {
                     TimeSec: Math.round(player_time),
-                    VideoMaterialID: $("#VideoMaterialIDHdn").val()
+                    VideoMaterialID: $("#material-id").val()
                 };
             }
 
             $.ajax({
                 method: 'post',
                 data: model,
-                url: '/User/SaveViewTime',
                 success: function (data) {
+                url: '/User/SaveViewTime',
                     sended = true;
                     if (data.success) {
                        // console.log(data.success);
@@ -67,7 +67,6 @@ $(function () {
     }
 });
 
-
 function onPlayerEpisodeSelected(episode_data) {
     console.log('onPlayerEpisodeSelected', episode_data);
     episodeData = episode_data;
@@ -87,29 +86,92 @@ window.addEventListener('DOMContentLoaded', function (e) {
 
 var isCommentLike = false;
 
-$(document).ready(){
+$(document).ready(function (){
     $('#like-btn').click(function () {
         isCommentLike = true;
     });
     $('#dislike-btn').click(function () {
         isCommentLike = false;
     });
-}
+})
 
-function() {
+function Vote() {
     var formObj = $('#comment-vote-form').serialize()
     $.ajax({
         method: 'post',
         data: formObj,
         url: 'vote_for_comment',
-        success: function (result) {
-            if (result.error) {
-                $('.error').html(result.error)
-                ShowErrorMessage()
-            }
-            else if (result.success) {
-                window.location.href = result.success
+        statusCode: {
+            200: function () {
+                alert("Коммент добавлен");
+            },
+            500: function () {
+                alert("Коммент не добавлен");
             }
         }
     })
+}
+
+$('#add-comment-btn').on('click', function (e) {
+    e.preventDefault();
+    createComment();
+});
+
+function createComment() {
+    text = $('#comment-form').find('#new-comment-text').val();
+    $('#comment-form').find('#new-comment-text').val('');
+    parentId = $('#comment-form').find('#parent-comment-id').val();
+
+    if (text == '') {
+        showError('Текст коментария пустой');
+    }
+
+    addComment(parentId, text);
+}
+
+function addComment(parentId, text) {
+    model = {
+        VideoMaterialID: $('#material-id').val(),
+        Text: text,
+        ParentID: parentId
+    };
+    $.ajax({
+        url: '/add_comment',
+        method: 'post',
+        data: model,
+        success: function (result) {
+            if (result.success) {
+                object = result.success;
+                addCommentToDOM(object.UserName, object.CreateDateTime, object.Text, object.CommentID,
+                                object.ParentAuthor, object.ParentText);
+            }
+            else if (result.error) {
+                console.error(result.error);
+                showError(result.error);
+            }
+        },
+        error: function (jqxhr, status, errorMsg) {
+            console.error(status + " | " + errorMsg + " | " + jqxhr);
+        }
+    });
+}
+
+function addCommentToDOM(userName, dateTime, text, commentId, parentUserName, parentText) {
+    $('#comment-container').append(getCommentHTML(userName, dateTime, text, commentId, parentUserName, parentText));
+}
+
+function getCommentHTML(userName, dateTime, text, commentId, parentUserName, parentText) {
+  //  dateTime = new Date(dateTimeStr);
+
+   return   '<li>' 
+        +   '<div>' + dateTime + ' ' + userName + '</div>'
+        +   '<div>' + text + '</div>'
+        +   '<div>+0 -0</div>'
+        +   '<div><button id="comment-like-btn">+</button><button id="comment-dislike-btn">-</button></div>'
+        +   '<a href="#" value="' + commentId +'">Ответить</a>'
+        +   '</li>';
+}
+
+function showError(text) {
+    $('#error-text').text(text);
 }

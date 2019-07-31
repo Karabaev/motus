@@ -1,7 +1,7 @@
 ﻿
 $(document).ready(function () {
 
-    $.getJSON("is_subscribed/" + $("#VideoMaterialIDHdn").val(),
+    $.getJSON("is_subscribed/" + $("#material-id").val(),
         null,
         function (data) {
             if (data.Success) {
@@ -21,7 +21,7 @@ $(document).ready(function () {
 });
 
 $('#SubscribeBtn').on('click', function (e) {
-    var json = { id: $("#VideoMaterialIDHdn").val() };
+    var json = { id: $("#material-id").val() };
     $.post("/User/Subscribe",
         json,
         function (data) {
@@ -37,7 +37,7 @@ $('#SubscribeBtn').on('click', function (e) {
 });
 
 $('#UnSubscribeBtn').on('click', function (e) {
-    var json = { id: $("#VideoMaterialIDHdn").val() };
+    var json = { id: $("#material-id").val() };
     $.post("/User/Unsubscribe",
         json,
         function (data) {

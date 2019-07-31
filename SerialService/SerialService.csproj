@@ -368,6 +368,14 @@
     <Compile Include="Migrations\201907231941371_Added CommentDateTime.Designer.cs">
       <DependentUpon>201907231941371_Added CommentDateTime.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907250638579_Comments.cs" />
+    <Compile Include="Migrations\201907250638579_Comments.Designer.cs">
+      <DependentUpon>201907250638579_Comments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907251728547_Change Comment relations.cs" />
+    <Compile Include="Migrations\201907251728547_Change Comment relations.Designer.cs">
+      <DependentUpon>201907251728547_Change Comment relations.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ElasticVideoMaterial.cs" />
@@ -425,6 +433,8 @@
     <Compile Include="Services\VideoMaterialService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\User\ShowCommentParentViewModel.cs" />
+    <Compile Include="ViewModels\User\AddCommentViewModel.cs" />
+    <Compile Include="ViewModels\User\VoteForCommentViewModel.cs" />
     <Compile Include="ViewModels\User\ShowCommentViewModel.cs" />
     <Compile Include="ViewModels\User\SaveViewTimeViewModel.cs" />
     <Compile Include="ViewModels\VideoMaterialDetailsViewModel.cs" />
@@ -582,6 +592,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907231941371_Added CommentDateTime.resx">
       <DependentUpon>201907231941371_Added CommentDateTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907250638579_Comments.resx">
+      <DependentUpon>201907250638579_Comments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907251728547_Change Comment relations.resx">
+      <DependentUpon>201907251728547_Change Comment relations.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>

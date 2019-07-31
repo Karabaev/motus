@@ -7,10 +7,11 @@
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
+            routes.MapMvcAttributeRoutes();
 
-			#region Роуты User
+            #region Роуты User
 
-			routes.MapRoute(name: "UserIndex",
+            routes.MapRoute(name: "UserIndex",
 				url: "",
 				defaults: new { controller = "User", action = "Index" });
 
@@ -86,11 +87,19 @@
 				url: "personal_account/confirm_new_email",
 				defaults: new { controller = "User", action = "ConfirmNewEmail" });
 
-			#endregion
+            routes.MapRoute(name: "UserAddComment",
+                url: "add_comment/{model}",
+                defaults: new { controller = "User", action = "AddComment", model = UrlParameter.Optional });
 
-			#region Роуты Account
+            //routes.MapRoute(name: "UserAddComment",
+            // url: "User/AddComment/{model}",
+            // defaults: new { controller = "User", action = "AddComment", model = UrlParameter.Optional });
 
-			routes.MapRoute(name: "AccountRegister",
+            #endregion
+
+            #region Роуты Account
+
+            routes.MapRoute(name: "AccountRegister",
 				url: "registration",
 				defaults: new { controller = "Account", action = "Register" });
 

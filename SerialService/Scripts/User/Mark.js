@@ -4,7 +4,7 @@
 
 // Страница загрузилась.
 $(document).ready(function () {
-    $.getJSON("get_marks/" + $("#VideoMaterialIDHdn").val(), null, function (data) {
+    $.getJSON("get_marks/" + $("#material-id").val(), null, function (data) {
         DisplayMarkCount(data.PositiveMarkCount, data.NegativeMarkCount);
     }).fail(function () { alert("Error"); });
 });
@@ -13,7 +13,7 @@ $(document).ready(function () {
 function SendRequest(value) {
     mark = {
         Value: value,
-        VideoMaterialID: $("#VideoMaterialIDHdn").val()
+        VideoMaterialID: $("#material-id").val()
     };
 
     $.ajax({

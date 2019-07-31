@@ -4,5 +4,6 @@
 
     public interface ICommentMarkService : IBaseService<CommentMark>
     {
+        bool InvertValue(CommentMark entity);
     }
 }
