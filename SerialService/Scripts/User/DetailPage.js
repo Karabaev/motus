@@ -151,7 +151,7 @@ function addComment(parentId, text) {
             }
         },
         error: function (jqxhr, status, errorMsg) {
-            console.error(status + " | " + errorMsg + " | " + jqxhr);
+            console.error(status + " | " + errorMsg + " | " + jqxhr); 
         }
     });
 }
@@ -161,15 +161,44 @@ function addCommentToDOM(userName, dateTime, text, commentId, parentUserName, pa
 }
 
 function getCommentHTML(userName, dateTime, text, commentId, parentUserName, parentText) {
-  //  dateTime = new Date(dateTimeStr);
-
-   return   '<li>' 
+    return  '<li>' 
+        +   '<input type="hidden" value="' + commentId + '"/>'
         +   '<div>' + dateTime + ' ' + userName + '</div>'
         +   '<div>' + text + '</div>'
         +   '<div>+0 -0</div>'
         +   '<div><button id="comment-like-btn">+</button><button id="comment-dislike-btn">-</button></div>'
+        +   '<a href="#">Редактировать</a> <a href="#" onclick="removeComment(' + commentId + ')">Удалить</a>'
+        +   '<br/>'
         +   '<a href="#" value="' + commentId +'">Ответить</a>'
         +   '</li>';
+}
+
+function removeComment(commentId) {
+    model = {
+        CommentID: commentId
+    };
+
+    $.ajax({
+        url: "/remove_comment",
+        method: "post",
+        data: model,
+        success: function (result) {
+            if (result.success) {
+                removeCommentFromDOM(commentId);
+            }
+            else if (result.error) {
+                console.error(result.error);
+                showError(result.error);
+            }
+        },
+        error: function (jqxhr, status, errorMsg) {
+            console.error(status + " | " + errorMsg + " | " + jqxhr);
+        }
+    });
+}
+
+function removeCommentFromDOM(commentId) {
+    $('#comment-container').find('input[type="hidden"][value="' + commentId + '"]').closest('li').remove();
 }
 
 function showError(text) {

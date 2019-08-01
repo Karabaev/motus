@@ -1,6 +1,7 @@
 ﻿@model SerialService.ViewModels.VideoMaterialDetailsViewModel
 @using System.Text;
 @using System.Web.Mvc;
+@using Microsoft.AspNet.Identity;
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -205,6 +206,7 @@
             @if (!Model.Comments.Any())
             {
                 <div>Еще никто не поделися своим мнением</div>
+                <ul id="comment-container"></ul>
             }
             else
             {
@@ -213,6 +215,7 @@
                         foreach (var item in Model.Comments.OrderBy(c => c.AddDateTime))
                         {
                             <li>
+                                <input type="hidden" value="@item.ID" />
                                 @string.Format("{0} {1}", item.AddDateTime.ToString("dd.MM.yyyy hh:mm"), item.AuthorName)
                                 <div>
                                     @if (item.Parent != null)
@@ -225,22 +228,20 @@
                                         </p>
                                     }
 
-                                    @string.Format("{0}", item.Text) <br />
-                                    @string.Format("+{0} -{1}", item.PositiveVoteCount, item.NegativeVoteCount)
-
-                                    <form method="post" id="comment-vote-form" data-ajax="true">
-                                        <input type="hidden" name="CommentID" value="@item.ID" />
-                                    </form>
-                                    <button type="button" id="like-btn">
-                                        +
-                                    </button>
-                                    <button type="button" id="dislike-btn">
-                                        -
-                                    </button>
+                                    <div>@string.Format("{0}", item.Text)</div>
+                                    <div>@string.Format("+{0} -{1}", item.PositiveVoteCount, item.NegativeVoteCount)</div>
+                                    <div>
+                                        <button type="button" id="like-btn">+</button>
+                                        <button type="button" id="dislike-btn">-</button>
+                                    </div>
                                     @if (User.Identity.IsAuthenticated)
                                     {
-                                        <br />
-                                        <a href="#" value = "@item.ID">Ответить</a>
+                                        if (User.Identity.GetUserId() == item.AuthorID)
+                                        {
+                                            <a href="#">Редактировать</a> <a href="#" onclick="removeComment(@item.ID)">Удалить</a>
+                                            <br />
+                                        }
+                                        <a href="#" value="@item.ID">Ответить</a>
                                     }
 
                                 </div>
@@ -255,7 +256,7 @@
 
                 </p>
                 <form id="comment-form">
-                    <input type="hidden" id="parent-comment-id"/><br/>
+                    <input type="hidden" id="parent-comment-id" /><br />
                     <textarea name="Text" id="new-comment-text"></textarea>
                 </form>
                 <button type="button" id="add-comment-btn">

@@ -432,6 +432,7 @@
     <Compile Include="Services\VideoMarkService.cs" />
     <Compile Include="Services\VideoMaterialService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\User\RemoveCommentViewModel.cs" />
     <Compile Include="ViewModels\User\ShowCommentParentViewModel.cs" />
     <Compile Include="ViewModels\User\AddCommentViewModel.cs" />
     <Compile Include="ViewModels\User\VoteForCommentViewModel.cs" />

@@ -35,6 +35,7 @@
             config += cfg => cfg.CreateMap<Comment, ShowCommentViewModel>()
             .ForMember(scvm => scvm.ID, opt => opt.MapFrom(c => c.ID))
             .ForMember(scvm => scvm.Parent, opt => opt.MapFrom(c => c.Parent))
+            .ForMember(scvm => scvm.AuthorID, opt => opt.MapFrom(c => c.Author.Id))
             .ForMember(scvm => scvm.AuthorName, opt => opt.MapFrom(c => c.Author.UserName))
             .ForMember(scvm => scvm.Text, opt => opt.MapFrom(c => c.Text))
             .ForMember(scvm => scvm.PositiveVoteCount, opt => opt.MapFrom(c => c.PositiveVoteCount))

@@ -465,6 +465,26 @@
             }
         }
 
+        [HttpPost, Authorize]
+        public JsonResult RemoveComment(RemoveCommentViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { error = "Не указан идентификатор." });
+
+            Comment comment = this.unitOfWork.Comments.Get(model.CommentID);
+
+            if(comment == null)
+                return Json(new { error = "Комментарий не найден." });
+
+            if(comment.AuthorID != User.Identity.GetUserId())
+                return Json(new { error = "Нельзя удалить не свой комментарий." });
+
+            if(this.unitOfWork.Comments.Remove(comment))
+                return Json(new { success = "Комментарий удален." });
+            else
+                return Json(new { error = "Не удалось удалить комментарий." });
+        }
+
         [HttpPost]
         public JsonResult VoteForComment(VoteForCommentViewModel model)
         {
