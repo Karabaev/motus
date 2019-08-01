@@ -94,6 +94,11 @@
             routes.MapRoute(name: "UserRemoveComment",
                 url: "remove_comment/{model}",
                 defaults: new { controller = "User", action = "RemoveComment", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "UserEditComment",
+                url: "edit_comment/{model}",
+                defaults: new { controller = "User", action = "EditComment", model = UrlParameter.Optional });
+
             #endregion
 
             #region Роуты Account

@@ -485,6 +485,29 @@
                 return Json(new { error = "Не удалось удалить комментарий." });
         }
 
+        [HttpPost, Authorize]
+        public JsonResult EditComment(EditCommentViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { error = "Идентификатор или текст не указаны." });
+
+            try
+            {
+                if(this.unitOfWork.Comments.EditText(model.CommentID, model.NewText, User.Identity.GetUserId()))
+                    return Json(new { success = model });
+                else
+                    return Json(new { error = "Не удалось изменить комментарий." });
+            }
+            catch(EntryNotFoundException ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+            catch(AccessDeniedException ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+        }
+
         [HttpPost]
         public JsonResult VoteForComment(VoteForCommentViewModel model)
         {

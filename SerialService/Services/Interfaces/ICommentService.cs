@@ -14,5 +14,6 @@
         bool AddVote(int? id, bool isPositiveMark);
         bool RemoveVote(int? id, bool isPositiveMark);
         bool InvertVote(int? id, bool fromPositive);
+        bool EditText(int id, string newText, string userId);
     }
 }

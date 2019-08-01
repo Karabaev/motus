@@ -199,5 +199,22 @@
 
             return this.Repository.SaveChanges();
         }
+
+        public bool EditText(int id, string newText, string userId)
+        {
+            if (string.IsNullOrWhiteSpace(newText))
+                throw new ArgumentNullException(nameof(newText));
+
+            Comment comment = this.Get(id);
+
+            if (comment == null)
+                throw new EntryNotFoundException("Комментарий не найден.");
+
+            if (comment.AuthorID != userId)
+                throw new AccessDeniedException("Ошибка доступа.");
+
+            comment.Text = newText;
+            return this.Repository.UpdateEntity(comment);
+        }
     }
 }

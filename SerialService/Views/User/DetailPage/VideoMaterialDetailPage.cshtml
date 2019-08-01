@@ -217,34 +217,31 @@
                             <li>
                                 <input type="hidden" value="@item.ID" />
                                 @string.Format("{0} {1}", item.AddDateTime.ToString("dd.MM.yyyy hh:mm"), item.AuthorName)
+                                @if (item.Parent != null)
+                                {
+                                    <p>
+                                        <q>
+                                            <bold>@item.Parent.AuthorName</bold><br />
+                                            @item.Parent.Text
+                                        </q>
+                                    </p>
+                                }
+
+                                <div class="comment-text">@string.Format("{0}", item.Text)</div>
+                                <div>@string.Format("+{0} -{1}", item.PositiveVoteCount, item.NegativeVoteCount)</div>
                                 <div>
-                                    @if (item.Parent != null)
-                                    {
-                                        <p>
-                                            <q>
-                                                <bold>@item.Parent.AuthorName</bold><br />
-                                                @item.Parent.Text
-                                            </q>
-                                        </p>
-                                    }
-
-                                    <div>@string.Format("{0}", item.Text)</div>
-                                    <div>@string.Format("+{0} -{1}", item.PositiveVoteCount, item.NegativeVoteCount)</div>
-                                    <div>
-                                        <button type="button" id="like-btn">+</button>
-                                        <button type="button" id="dislike-btn">-</button>
-                                    </div>
-                                    @if (User.Identity.IsAuthenticated)
-                                    {
-                                        if (User.Identity.GetUserId() == item.AuthorID)
-                                        {
-                                            <a href="#">Редактировать</a> <a href="#" onclick="removeComment(@item.ID)">Удалить</a>
-                                            <br />
-                                        }
-                                        <a href="#" value="@item.ID">Ответить</a>
-                                    }
-
+                                    <button type="button" id="like-btn">+</button>
+                                    <button type="button" id="dislike-btn">-</button>
                                 </div>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    if (User.Identity.GetUserId() == item.AuthorID)
+                                    {
+                                        <a href="#" onclick="prepareToEditCommentText(@item.ID)">Редактировать</a> <a href="#" onclick="removeComment(@item.ID)">Удалить</a>
+                                        <br />
+                                    }
+                                    <a href="#" value="@item.ID">Ответить</a>
+                                }
                             </li>
                         }
                     }
@@ -252,16 +249,13 @@
             }
             @if (User.Identity.IsAuthenticated)
             {
-                <p>
-
-                </p>
                 <form id="comment-form">
                     <input type="hidden" id="parent-comment-id" /><br />
                     <textarea name="Text" id="new-comment-text"></textarea>
+                    <button type="button" id="add-comment-btn">
+                        Оставить комментарий
+                    </button>
                 </form>
-                <button type="button" id="add-comment-btn">
-                    Оставить комментарий
-                </button>
                 <div id="error-text" class="error"></div>
             }
             else
