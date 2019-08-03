@@ -259,8 +259,11 @@ function cleanNewCommentForm() {
     });
 }
 
-function showError(text) { // todo: касяк, сообщение появляется, птом исчезает, потом снова появляется и исчезает
-    $('#error-text').fadeIn();
+function showError(text) {
     $('#error-text').text(text);
-    $('#error-text').delay(1000).fadeOut();
+    $('#error-text').show(1000, function () {
+        setTimeout(function () {
+            $('#error-text').hide(500);
+        }, 5000);
+    });
 }
