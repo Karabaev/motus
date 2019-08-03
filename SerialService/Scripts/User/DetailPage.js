@@ -95,7 +95,8 @@ window.addEventListener('DOMContentLoaded', function (e) {
     SetPlayerWindowSize();
 });
 
-var isCommentLike = false;
+
+/// БЛОК ФУНКЦИЙ ДЛЯ КОММЕНТОВ
 
 function createComment() {
     text = $('#comment-form').find('#new-comment-text').val();
@@ -246,6 +247,17 @@ function addRowStatusEditingCommentToDOM(oldText) {
 
 function removeRowStatusEditingCommentFromDOM() {
     $('#comment-editing-status-row').remove();
+}
+
+function voteForComment(commentId, isPos) {
+    model = {
+        CommentID = commentId,
+        Value = isPos
+    };
+
+    $.ajax({
+        ;
+    })
 }
 
 function cleanNewCommentForm() {
