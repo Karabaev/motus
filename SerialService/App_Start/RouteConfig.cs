@@ -99,6 +99,10 @@
                 url: "edit_comment/{model}",
                 defaults: new { controller = "User", action = "EditComment", model = UrlParameter.Optional });
 
+            routes.MapRoute(name: "UserVoteForComment",
+               url: "vote_comment/{model}",
+               defaults: new { controller = "User", action = "VoteForComment", model = UrlParameter.Optional });
+
             #endregion
 
             #region Роуты Account

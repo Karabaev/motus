@@ -228,10 +228,10 @@
                                 }
 
                                 <div class="comment-text">@string.Format("{0}", item.Text)</div>
-                                <div>@string.Format("+{0} -{1}", item.PositiveVoteCount, item.NegativeVoteCount)</div>
+                                <div class="votes-count">@string.Format("+{0} -{1}", item.PositiveVoteCount, item.NegativeVoteCount)</div>
                                 <div>
-                                    <button type="button" id="like-btn">+</button>
-                                    <button type="button" id="dislike-btn">-</button>
+                                    <button type="button" id="like-btn" onclick="voteForComment(@item.ID, true)">+</button>
+                                    <button type="button" id="dislike-btn" onclick="voteForComment(@item.ID, false)">-</button>
                                 </div>
                                 @if (User.Identity.IsAuthenticated)
                                 {

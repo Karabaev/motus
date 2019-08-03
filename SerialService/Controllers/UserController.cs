@@ -511,6 +511,9 @@
         [HttpPost]
         public JsonResult VoteForComment(VoteForCommentViewModel model)
         {
+            if (!ModelState.IsValid)
+                return Json(new { error = "Неверные данные." });
+
             CommentMark mark = new CommentMark
             {
                 CommentID = model.CommentID,
@@ -531,11 +534,11 @@
                         NegativeMarkCount = comment.NegativeVoteCount,
                         PositiveMarkCount = comment.PositiveVoteCount
                     };
-                    return Json(countMarks);
+                    return Json(new { success = countMarks });
                 }
                 else
                 {
-                    return null;
+                    return Json(new { error = "Ошибка записи." });
                 }
             }
             catch(EntryAlreadyExistsException ex)
@@ -555,11 +558,11 @@
                             NegativeMarkCount = comment.NegativeVoteCount,
                             PositiveMarkCount = comment.PositiveVoteCount
                         };
-                        return Json(countMarks);
+                        return Json(new { success = countMarks });
                     }
                     else
                     {
-                        return null;
+                        return Json(new { error = "Ошибка записи." });
                     }
                 }
 
@@ -578,16 +581,16 @@
                             NegativeMarkCount = comment.NegativeVoteCount,
                             PositiveMarkCount = comment.PositiveVoteCount
                         };
-                        return Json(countMarks);
+                        return Json(new { success = countMarks });
                     }
                     else
                     {
-                        return null;
+                        return Json(new { error = "Ошибка записи." });
                     }
                 }
             }
 
-            return null;
+            return Json(new { error = "Ошибка записи." });
         }
 
         /// <summary>
