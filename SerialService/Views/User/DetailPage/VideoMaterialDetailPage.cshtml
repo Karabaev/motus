@@ -201,11 +201,11 @@
                 </div>
             </div>
         </div>
-        <div class="info-item">
-            <h2 class="mdl-cell">Комментарии</h2>
+        <div id="comments" class="info-item">
+            <h2 id="comments-header" class="mdl-cell">Комментарии</h2>
             @if (!Model.Comments.Any())
             {
-                <div>Еще никто не поделися своим мнением</div>
+                <div id="no-comments-message">Еще никто не поделися своим мнением</div>
                 <ul id="comment-container"></ul>
             }
             else
@@ -214,35 +214,36 @@
                     @{
                         foreach (var item in Model.Comments.OrderBy(c => c.AddDateTime))
                         {
-                            <li>
-                                <input type="hidden" value="@item.ID" />
-                                @string.Format("{0} {1}", item.AddDateTime.ToString("dd.MM.yyyy hh:mm"), item.AuthorName)
-                                @if (item.Parent != null)
-                                {
-                                    <p>
-                                        <q>
-                                            <bold>@item.Parent.AuthorName</bold><br />
-                                            @item.Parent.Text
-                                        </q>
-                                    </p>
-                                }
+                    <li>
+                        <input type="hidden" value="@item.ID" />
+                        <div class="comment-header">
+                            <span>@item.AddDateTime.ToString("dd.MM.yyyy hh:mm")</span>
+                            <span class="comment-author-name">@item.AuthorName</span>
+                        </div>
+                        @if (item.Parent != null)
+                        {
+                            <div>Ответ на:</div>
+                            <div><bold>@item.Parent.AuthorName: </bold>"@item.Parent.Text"</div>
+                        }
 
-                                <div class="comment-text">@string.Format("{0}", item.Text)</div>
-                                <div class="votes-count">@string.Format("+{0} -{1}", item.PositiveVoteCount, item.NegativeVoteCount)</div>
-                                <div>
-                                    <button type="button" id="like-btn" onclick="voteForComment(@item.ID, true)">+</button>
-                                    <button type="button" id="dislike-btn" onclick="voteForComment(@item.ID, false)">-</button>
-                                </div>
-                                @if (User.Identity.IsAuthenticated)
-                                {
-                                    if (User.Identity.GetUserId() == item.AuthorID)
-                                    {
-                                        <a href="#" onclick="prepareToEditCommentText(@item.ID)">Редактировать</a> <a href="#" onclick="removeComment(@item.ID)">Удалить</a>
-                                        <br />
-                                    }
-                                    <a href="#" value="@item.ID">Ответить</a>
-                                }
-                            </li>
+                        <div class="comment-text">
+                            @item.Text
+                        </div>
+                        <div class="votes-count">@string.Format("+{0} -{1}", item.PositiveVoteCount, item.NegativeVoteCount)</div>
+                        <div>
+                            <button type="button" id="like-btn" onclick="voteForComment(@item.ID, true)">+</button>
+                            <button type="button" id="dislike-btn" onclick="voteForComment(@item.ID, false)">-</button>
+                        </div>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            if (User.Identity.GetUserId() == item.AuthorID)
+                            {
+                                <a href="#" onclick="prepareToEditCommentText(@item.ID)">Редактировать</a> <a href="#" onclick="removeComment(@item.ID)">Удалить</a>
+                                <br />
+                            }
+                            <a href="#" value="@item.ID" onclick="prepareResponceCommentText(@item.ID)">Ответить</a>
+                        }
+                    </li>
                         }
                     }
                 </ul>

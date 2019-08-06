@@ -214,6 +214,10 @@
                 throw new AccessDeniedException("Ошибка доступа.");
 
             comment.Text = newText;
+
+            if (this.GetAll().Contains(comment))
+                throw new EntryAlreadyExistsException();
+
             return this.Repository.UpdateEntity(comment);
         }
     }

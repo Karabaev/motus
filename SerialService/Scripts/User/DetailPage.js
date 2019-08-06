@@ -124,7 +124,8 @@ function addComment(parentId, text) {
             if (result.success) {
                 object = result.success;
                 addCommentToDOM(object.UserName, object.CreateDateTime, object.Text, object.CommentID,
-                                object.ParentAuthor, object.ParentText);
+                    object.ParentAuthor, object.ParentText);
+                cleanNewCommentForm();
             }
             else if (result.error) {
                 console.error(result.error);
@@ -138,20 +139,37 @@ function addComment(parentId, text) {
 }
 
 function addCommentToDOM(userName, dateTime, text, commentId, parentUserName, parentText) {
+    removeNoCommentsMessage();
     $('#comment-container').append(getCommentHTML(userName, dateTime, text, commentId, parentUserName, parentText));
 }
 
+function removeNoCommentsMessage() {
+    $('#no-comments-message').remove();
+}
+
 function getCommentHTML(userName, dateTime, text, commentId, parentUserName, parentText) {
-    return  '<li>' 
-        +   '<input type="hidden" value="' + commentId + '"/>'
-        +   '<div>' + dateTime + ' ' + userName + '</div>'
-        +   '<div class="comment-text">' + text + '</div>'
-        +   '<div>+0 -0</div>'
-        +   '<div><button id="comment-like-btn">+</button><button id="comment-dislike-btn">-</button></div>'
-        +   '<a href="#" onclick="prepareToEditCommentText(' + commentId +')">Редактировать</a> <a href="#" onclick="removeComment(' + commentId + ')">Удалить</a>'
-        +   '<br/>'
-        +   '<a href="#" value="' + commentId +'">Ответить</a>'
-        +   '</li>';
+
+    result = '<li>'
+    result += '<input type="hidden" value="' + commentId + '"/>'
+    result += '<div class="comment-header">'
+    result += '<span>' + dateTime + '</span> '
+    result += '<span class="comment-author-name">' + userName + '</span>'
+    result += '</div>';
+
+    if (parentUserName !== '' && parentText !== '' && parentUserName !== null && parentText !== null) {
+        result += '<div>Ответ на:</div>';
+        result += '<div><bold>' + parentUserName + ': </bold>"' + parentText + '"</div>';
+    }
+
+    result += '<div class="comment-text">' + text + '</div>'
+    result += '<div class="votes-count">+0 -0</div>'
+    result += '<div><button id="comment-like-btn" onclick="voteForComment(' + commentId + ', true)">+</button><button id="comment-dislike-btn" onclick="voteForComment(' + commentId + ', false)">-</button></div>'
+    result += '<a href="#" onclick="prepareToEditCommentText(' + commentId +')">Редактировать</a> <a href="#" onclick="removeComment(' + commentId + ')">Удалить</a>'
+    result += '<br/>'
+    result += '<a href="#" value="' + commentId + '" onclick="prepareResponceCommentText(' + commentId + ')">Ответить</a>'
+    result += '</li>';
+
+    return result;
 }
 
 function removeComment(commentId) {
@@ -180,10 +198,23 @@ function removeComment(commentId) {
 
 function removeCommentFromDOM(commentId) {
     $('#comment-container').find('input[type="hidden"][value="' + commentId + '"]').closest('li').remove();
+
+    if ($('#comment-container li').length == 0) {
+        addNoCommentsMessage();
+    }
+}
+
+function addNoCommentsMessage() {
+    if (!$('div').is('#no-comments-message')) {
+        html = '<div id="no-comments-message">Еще никто не поделися своим мнением</div>';
+        $('#comments-header').after(html);
+    }
+
+
 }
 
 function prepareToEditCommentText(commentId) {
-    text = $('#comment-container').find('input[type="hidden"][value="' + commentId + '"]').siblings('.comment-text').text();
+    text = $('#comment-container').find('input[type="hidden"][value="' + commentId + '"]').siblings('.comment-text').text().trim();
     $('#comment-form').find('#new-comment-text').val(text);
     $('#add-comment-btn').text("Изменить комментарий");
     $('#add-comment-btn').off();
@@ -286,6 +317,36 @@ function cleanNewCommentForm() {
         e.preventDefault();
         createComment();
     });
+    $('#parent-comment-id').val('');
+    removeRowStatusResponceCommentFromDOM();
+
+}
+
+function prepareResponceCommentText(parentCommentId) {
+    parentText = $('#comment-container').find('input[type="hidden"][value="' + parentCommentId + '"]').siblings('.comment-text').text();
+
+   // $('#comment-form').find('#new-comment-text').val(authorName + ', ');
+    addRowStatusResponceCommentToDOM(parentText);
+    $('#comment-form').find('#parent-comment-id').val(parentCommentId);
+}
+
+function getRowStatusResponceCommentHTML(parentText) {
+    return '<div id="comment-responce-status-row"><div >Ответ на:</div><button id="close-status-row-btn">X</button>'
+        + '<div>' + parentText + '</div></div>';
+}
+
+function addRowStatusResponceCommentToDOM(oldText) {
+    if (!$('div').is('#comment-responce-status-row')) {
+        $('#comment-form').prepend(getRowStatusResponceCommentHTML(oldText));
+        $('#close-status-row-btn').on("click", function (e) {
+            e.preventDefault();
+            cleanNewCommentForm();
+        });
+    }
+}
+
+function removeRowStatusResponceCommentFromDOM() {
+    $('#comment-responce-status-row').remove();
 }
 
 function showError(text) {

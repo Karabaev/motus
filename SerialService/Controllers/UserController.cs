@@ -455,8 +455,14 @@
                 }
                 else
                 {
+                    Task.Run(() => this.logger.Error("Не удалось сохранить комментарий"));
                     return Json(new { error = "Не удалось сохранить комментарий. Обратитесь в поддержку сайта." });
                 }
+            }
+            catch(EntryAlreadyExistsException ex)
+            {
+                Task.Run(() => this.logger.Error(ex));
+                return Json(new { error = "Вы уже оставляли коментарий с таким текстом в данном видеоматериале." });
             }
             catch(Exception ex)
             {
@@ -497,6 +503,10 @@
                     return Json(new { success = model });
                 else
                     return Json(new { error = "Не удалось изменить комментарий." });
+            }
+            catch(EntryAlreadyExistsException ex)
+            {
+                return Json(new { error = "Вы уже оставляли коментарий с таким текстом в данном видеоматериале." });
             }
             catch(EntryNotFoundException ex)
             {

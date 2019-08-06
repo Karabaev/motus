@@ -47,8 +47,11 @@
 			modelBuilder.Entity<ApplicationUser>().Property(a => a.ChangeDateTime).IsRequired();
 
             modelBuilder.Entity<Comment>().HasRequired(c => c.VideoMaterial).WithMany(vm => vm.Comments).HasForeignKey(c => c.VideoMaterialID);
-            //modelBuilder.Entity<Comment>().Property(c => c.ParentID).IsOptional();
-            modelBuilder.Entity<Comment>().HasMany(c => c.DependentComments).WithOptional(c => c.Parent).HasForeignKey(c => c.ParentID);
+            modelBuilder.Entity<Comment>().Property(c => c.ParentID).IsOptional();
+
+            //modelBuilder.Entity<Comment>().HasMany(c => c.DependentComments).WithOptional(c => c.Parent).HasForeignKey(c => c.ParentID).WillCascadeOnDelete(false);
+            modelBuilder.Entity<Comment>().HasOptional(c => c.Parent).WithMany().HasForeignKey(c => c.ParentID);
+
             modelBuilder.Entity<Comment>().HasRequired(c => c.Author).WithMany(u => u.Comments).HasForeignKey(c => c.AuthorID);
             modelBuilder.Entity<Comment>().HasMany(c => c.Marks).WithRequired(m => m.Comment).HasForeignKey(m => m.CommentID);
 
