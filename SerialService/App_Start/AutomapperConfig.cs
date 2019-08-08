@@ -12,10 +12,6 @@
 
     public class AutoMapperConfig
     {
-        private AutoMapperConfig()
-        {
-        }
-
         public static void AutoMapperInit()
         {
             Action<IMapperConfigurationExpression> config = cfg => cfg.CreateMap<VideoMaterial, VideoMaterialListViewModel>()
@@ -30,6 +26,21 @@
             .ForMember(lvm => lvm.KinopoiskRating, opt => opt.MapFrom(vm => vm.KinopoiskRating))
             .ForMember(lvm => lvm.Imdb, opt => opt.MapFrom(vm => vm.IDMB))
             .ForMember(lvm => lvm.Duration, opt => opt.MapFrom(vm => vm.Duration));
+
+            config += cfg => cfg.CreateMap<Comment, ShowCommentParentViewModel>()
+            .ForMember(scvm => scvm.ID, opt => opt.MapFrom(c => c.ID))
+            .ForMember(scvm => scvm.AuthorName, opt => opt.MapFrom(c => c.Author.UserName))
+            .ForMember(scvm => scvm.Text, opt => opt.MapFrom(c => c.Text));
+
+            config += cfg => cfg.CreateMap<Comment, ShowCommentViewModel>()
+            .ForMember(scvm => scvm.ID, opt => opt.MapFrom(c => c.ID))
+            .ForMember(scvm => scvm.Parent, opt => opt.MapFrom(c => c.Parent))
+            .ForMember(scvm => scvm.AuthorID, opt => opt.MapFrom(c => c.Author.Id))
+            .ForMember(scvm => scvm.AuthorName, opt => opt.MapFrom(c => c.Author.UserName))
+            .ForMember(scvm => scvm.Text, opt => opt.MapFrom(c => c.Text))
+            .ForMember(scvm => scvm.PositiveVoteCount, opt => opt.MapFrom(c => c.PositiveVoteCount))
+            .ForMember(scvm => scvm.NegativeVoteCount, opt => opt.MapFrom(c => c.NegativeVoteCount))
+            .ForMember(scvm => scvm.AddDateTime, opt => opt.MapFrom(c => c.AddDateTime));
 
             config += cfg => cfg.CreateMap<VideoMaterial, VideoMaterialDetailsViewModel>()
             .ForMember(dvm => dvm.ID, opt => opt.MapFrom(vm => vm.ID))
@@ -54,7 +65,8 @@
             .ForMember(dvm => dvm.SerialSeasonsCount, opt => opt.MapFrom(vm => vm.SerialSeasons.Count()))
             .ForMember(dvm => dvm.LastEpisodeTime, opt => opt.MapFrom(vm => vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)))
             .ForMember(dvm => dvm.LastEpisodeTranslator, opt => opt.MapFrom(vm => vm.SerialSeasons.FirstOrDefault(_vm => _vm.LastEpisodeTime == vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)).Translation.Name))
-            .ForMember(dvm => dvm.IframeUrl, opt => opt.MapFrom(vm => vm.IframeUrl));
+            .ForMember(dvm => dvm.IframeUrl, opt => opt.MapFrom(vm => vm.IframeUrl))
+            .ForMember(dvm => dvm.Comments, opt => opt.MapFrom(vm => vm.Comments));
 
             config += cfg => cfg.CreateMap<RegisterViewModel, ApplicationUser>()
             .ForMember(rvm => rvm.UserName, opt => opt.MapFrom(vm => vm.UserName))
@@ -99,6 +111,17 @@
             .ForMember(dvm => dvm.Imdb, opt => opt.MapFrom(vm => vm.IDMB))
             .ForMember(dvm => dvm.Description, opt => opt.MapFrom(vm => vm.Text.Substring(0, Math.Min(vm.Text.Length, 100))))
             .ForMember(dvm => dvm.PosterURL, opt => opt.MapFrom(vm => vm.Pictures.FirstOrDefault(p => p.IsPoster).URL));
+
+            //config += cfg => cfg.CreateMap<Comment, AddCommentViewModel>()
+            //.ForMember(acvm => acvm.Text, opt => opt.MapFrom(c => c.Text))
+            //.ForMember(acvm => acvm.AuthorID, opt => opt.MapFrom(c => c.AuthorID))
+            //.ForMember(acvm => acvm.ParentID, opt => opt.MapFrom(c => c.ParentID))
+            //.ForMember(acvm => acvm.VideoMaterialID, opt => opt.MapFrom(c => c.VideoMaterialID));
+
+            config += cfg => cfg.CreateMap<AddCommentViewModel, Comment>()
+            .ForMember(c => c.Text, opt => opt.MapFrom(acvm => acvm.Text))
+            .ForMember(c => c.ParentID, opt => opt.MapFrom(acvm => acvm.ParentID))
+            .ForMember(c => c.VideoMaterialID, opt => opt.MapFrom(acvm => acvm.VideoMaterialID));
 
             Mapper.Initialize(config);
         }

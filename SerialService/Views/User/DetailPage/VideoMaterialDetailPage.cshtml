@@ -1,6 +1,7 @@
 ﻿@model SerialService.ViewModels.VideoMaterialDetailsViewModel
 @using System.Text;
 @using System.Web.Mvc;
+@using Microsoft.AspNet.Identity;
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -13,7 +14,7 @@
     bool posterUrlHasValue = !string.IsNullOrEmpty(Model.PosterURL);
 }
 
-@Html.HiddenFor(m => m.ID, new { id = "VideoMaterialIDHdn" })
+@Html.HiddenFor(m => m.ID, new { id = "material-id" })
 <div class="content">
     <div class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card player-container">
         <div class="player">
@@ -200,6 +201,71 @@
                 </div>
             </div>
         </div>
+        <div id="comments" class="info-item">
+            <h2 id="comments-header" class="mdl-cell">Комментарии</h2>
+            @if (!Model.Comments.Any())
+            {
+                <div id="no-comments-message">Еще никто не поделися своим мнением</div>
+                <ul id="comment-container"></ul>
+            }
+            else
+            {
+                <ul id="comment-container">
+                    @{
+                        foreach (var item in Model.Comments.OrderBy(c => c.AddDateTime))
+                        {
+                    <li>
+                        <input type="hidden" value="@item.ID" />
+                        <div class="comment-header">
+                            <span>@item.AddDateTime.ToString("dd.MM.yyyy hh:mm")</span>
+                            <span class="comment-author-name">@item.AuthorName</span>
+                        </div>
+                        @if (item.Parent != null)
+                        {
+                            <div>Ответ на:</div>
+                            <div><bold>@item.Parent.AuthorName: </bold>"@item.Parent.Text"</div>
+                        }
+
+                        <div class="comment-text">
+                            @item.Text
+                        </div>
+                        <div class="votes-count">@string.Format("+{0} -{1}", item.PositiveVoteCount, item.NegativeVoteCount)</div>
+                        <div>
+                            <button type="button" id="like-btn" onclick="voteForComment(@item.ID, true)">+</button>
+                            <button type="button" id="dislike-btn" onclick="voteForComment(@item.ID, false)">-</button>
+                        </div>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            if (User.Identity.GetUserId() == item.AuthorID)
+                            {
+                                <a href="#" onclick="prepareToEditCommentText(@item.ID)">Редактировать</a> <a href="#" onclick="removeComment(@item.ID)">Удалить</a>
+                                <br />
+                            }
+                            <a href="#" value="@item.ID" onclick="prepareResponceCommentText(@item.ID)">Ответить</a>
+                        }
+                    </li>
+                        }
+                    }
+                </ul>
+            }
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form id="comment-form">
+                    <input type="hidden" id="parent-comment-id" /><br />
+                    <textarea name="Text" id="new-comment-text"></textarea>
+                    <button type="button" id="add-comment-btn">
+                        Оставить комментарий
+                    </button>
+                </form>
+                <div id="error-text" class="error"></div>
+            }
+            else
+            {
+                <div>
+                    Только авторизованные пользователи могут оставлять комментарии
+                </div>
+            }
+        </div>
         @if (Model.Similar != null && Model.Similar.Any())
         {
             <div class="mdl-cell--12-col" style="width:100%">
@@ -222,20 +288,6 @@
             </div>
         }
     </div>
-    <div class="tolstoycomments-feed"></div>
-    <script type="text/javascript">
-        !(function (w, d, s, l, x) {
-            w[l] = w[l] || [];
-            var f = d.getElementsByTagName(s)[0], j = d.createElement(s); j.async = !0;
-            j.src = '//web.tolstoycomments.com/sitejs/app.js?i=' + l + '&x=' + x + '&t=' + (new Date().getTime());
-            f.parentNode.insertBefore(j, f)
-        })(window, document, 'script', 'tolstoycomments', '2160');
-    </script>
-    <script type="text/javascript">
-        window.tolstoycomments.config = {
-            sso: '@ViewBag.UserToken'
-        };
-    </script>
 </div>
 <script src="~/Scripts/User/Mark.js"></script>
 <script src="~/Scripts/User/Subscribe.js"></script>

@@ -7,6 +7,8 @@
 
     public class AppUnitOfWork : IAppUnitOfWork
     {
+        private ICommentService commentService;
+        private ICommentMarkService commentMarkService;
         private IVideoMaterialService videoMaterialService;
         private IPersonService personService;
         private ICountryService countryService;
@@ -23,6 +25,28 @@
         private static IAppUnitOfWork instance;
 
         private ApplicationDbContext DB = new ApplicationDbContext();
+
+        public ICommentService Comments
+        {
+            get
+            {
+                if (this.commentService == null)
+                    this.commentService = new CommentService(DB);
+
+                return this.commentService;
+            }
+        }
+
+        public ICommentMarkService CommentMarks
+        {
+            get
+            {
+                if (this.commentMarkService == null)
+                    this.commentMarkService = new CommentMarkService(DB);
+
+                return this.commentMarkService;
+            }
+        }
 
         public IVideoMaterialService VideoMaterials
         {
@@ -164,7 +188,6 @@
             return AppUnitOfWork.instance;
         }
 
-		//далее копипаста, не выебываемся
 		private bool disposed = false;
 
         public virtual void Dispose(bool disposing)

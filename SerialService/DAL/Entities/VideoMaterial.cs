@@ -32,6 +32,7 @@
         public virtual List<SerialSeason> SerialSeasons { get; set; }
         public virtual List<Theme> Themes { get; set; }
         public virtual List<ApplicationUser> SubscribedUsers { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
         public CheckStatus CheckStatus { get; set; }
 		/// <summary>
 		/// Флаг, отслеживать обновления?

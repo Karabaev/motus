@@ -5,6 +5,10 @@
 
     public interface IAppUnitOfWork: IDisposable
     {
+        ICommentService Comments { get; }
+
+        ICommentMarkService CommentMarks { get; }
+
         IVideoMaterialService VideoMaterials { get; }
 
         IPersonService Persons { get; }

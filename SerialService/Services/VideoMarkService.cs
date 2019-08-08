@@ -55,10 +55,6 @@
             return this.Repository.GetAllEntities();
         }
 
-        public EntityList<VideoMark> GetAllUnmarkedArchive() // todo: методы связанные с архивными записями надо вынести из IBaseService в конкретные сервис, т.к. не у всех сущностей есть пометка архивного
-        {
-            throw new NotImplementedException();
-        }
 
         public VideoMark GetByMainStringProperty(string value)
         {
