@@ -51,18 +51,7 @@
                     if (comment.ParentID.HasValue)
                         parent = this.unitOfWork.Comments.Get(comment.ParentID);
 
-                    return Json(new
-                    {
-                        success = new
-                        {
-                            UserName = author.UserName,
-                            CreateDateTime = comment.AddDateTime.ToString("dd.MM.yyyy hh:mm"),
-                            Text = comment.Text,
-                            CommentID = comment.ID,
-                            ParentAuthor = parent?.Author.UserName,
-                            ParentText = parent?.Text
-                        }
-                    });
+                    return Json(new { success = "Комментарий добавлен." });
                 }
                 else
                 {

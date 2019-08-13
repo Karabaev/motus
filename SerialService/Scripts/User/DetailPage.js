@@ -110,34 +110,6 @@ function createComment() {
     addComment(parentId, text);
 }
 
-function addComment(parentId, text) {
-    model = {
-        VideoMaterialID: $('#material-id').val(),
-        Text: text,
-        ParentID: parentId
-    };
-    $.ajax({
-        url: '/add_comment',
-        method: 'post',
-        data: model,
-        success: function (result) {
-            if (result.success) {
-                object = result.success;
-                addCommentToDOM(object.UserName, object.CreateDateTime, object.Text, object.CommentID,
-                    object.ParentAuthor, object.ParentText);
-                cleanNewCommentForm();
-            }
-            else if (result.error) {
-                console.error(result.error);
-                showError(result.error);
-            }
-        },
-        error: function (jqxhr, status, errorMsg) {
-            console.error(status + " | " + errorMsg + " | " + jqxhr); 
-        }
-    });
-}
-
 function addCommentToDOM(userName, dateTime, text, commentId, parentUserName, parentText) {
     removeNoCommentsMessage();
     $('#comment-container').append(getCommentHTML(userName, dateTime, text, commentId, parentUserName, parentText));
@@ -170,38 +142,6 @@ function getCommentHTML(userName, dateTime, text, commentId, parentUserName, par
     result += '</li>';
 
     return result;
-}
-
-function removeComment(commentId) {
-    model = {
-        CommentID: commentId
-    };
-
-    $.ajax({
-        url: "/remove_comment",
-        method: "post",
-        data: model,
-        success: function (result) {
-            if (result.success) {
-                removeCommentFromDOM(commentId);
-            }
-            else if (result.error) {
-                console.error(result.error);
-                showError(result.error);
-            }
-        },
-        error: function (jqxhr, status, errorMsg) {
-            console.error(status + " | " + errorMsg + " | " + jqxhr);
-        }
-    });
-}
-
-function removeCommentFromDOM(commentId) {
-    $('#comment-container').find('input[type="hidden"][value="' + commentId + '"]').closest('li').remove();
-
-    if ($('#comment-container li').length == 0) {
-        addNoCommentsMessage();
-    }
 }
 
 function addNoCommentsMessage() {

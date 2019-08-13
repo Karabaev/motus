@@ -49,5 +49,59 @@ function voteForComment(commentId, isPos) {
 function updateVoteCountOnDOM(commentId, pos, neg) {
     $('#positive-vote-count-' + commentId).text(pos);
     $('#negative-vote-count-' + commentId).text(neg);
- //   $('#comment-container').find('input[type="hidden"][value="' + commentId + '"]').siblings('.votes-count').text('+' + pos + ' -' + neg);
+}
+
+function removeComment(commentId) {
+    model = {
+        CommentID: commentId
+    };
+
+    $.ajax({
+        url: "/remove_comment",
+        method: "post",
+        data: model,
+        success: function (result) {
+            if (result.success) {
+                getCommentsContainer();
+            }
+            else if (result.error) {
+                console.error(result.error);
+                showError(result.error);
+            }
+        },
+        error: function (jqxhr, status, errorMsg) {
+            console.error(status + " | " + errorMsg + " | " + jqxhr);
+        }
+    });
+}
+
+function addComment() {
+    text = $('#comment-text-input').val();
+
+    if (text === '') {
+        showError('Текст коментария не может быть пустым');
+    }
+
+    model = {
+        VideoMaterialID: $('#material-id').val(),
+        Text: text,
+        ParentID: $('#new-comment-parent-id').val()
+    };
+    $.ajax({
+        url: '/add_comment',
+        method: 'post',
+        data: model,
+        success: function (result) {
+            if (result.success) {
+                getCommentsContainer();
+            }
+            else if (result.error) {
+                console.error(result.error);
+                showError(result.error);
+            }
+        },
+        error: function (jqxhr, status, errorMsg) {
+            console.error(status + " | " + errorMsg + " | " + jqxhr);
+        }
+    });
 }

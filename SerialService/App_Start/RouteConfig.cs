@@ -87,13 +87,7 @@
 				url: "personal_account/confirm_new_email",
 				defaults: new { controller = "User", action = "ConfirmNewEmail" });
 
-            routes.MapRoute(name: "UserAddComment",
-                url: "add_comment/{model}",
-                defaults: new { controller = "User", action = "AddComment", model = UrlParameter.Optional });
-
-            routes.MapRoute(name: "UserRemoveComment",
-                url: "remove_comment/{model}",
-                defaults: new { controller = "User", action = "RemoveComment", model = UrlParameter.Optional });
+           
 
             routes.MapRoute(name: "UserEditComment",
                 url: "edit_comment/{model}",
@@ -212,6 +206,15 @@
             routes.MapRoute(name: "CommentsVoteForComment",
                url: "vote_comment/{model}",
                defaults: new { controller = "Comments", action = "VoteForComment", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "CommentsRemoveComment",
+                url: "remove_comment/{model}",
+                defaults: new { controller = "Comments", action = "RemoveComment", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "CommentsAddComment",
+               url: "add_comment/{model}",
+               defaults: new { controller = "Comments", action = "AddComment", model = UrlParameter.Optional });
+
             #endregion
 
             #region sitemap
