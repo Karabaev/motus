@@ -1,0 +1,19 @@
+﻿@model IEnumerable<SerialService.ViewModels.User.ShowCommentViewModel>
+
+@*<div id="comments" class="info-item">*@
+    <h2 id="comments-header" class="mdl-cell">Комментарии</h2>
+    @if (Model != null && !Model.Any())
+    {
+        <div id="no-comments-message">Еще никто не поделися своим мнением</div>
+        <div id="comment-container"></div>
+    }
+    else
+    {
+        <div id="comment-container">
+            @foreach (var item in Model.OrderBy(c => c.AddDateTime))
+            {
+                @Html.Partial("../User/DetailPage/CommentCardPartial", item)
+            }
+        </div>
+    }
+@*</div>*@

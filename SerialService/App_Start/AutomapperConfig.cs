@@ -37,6 +37,7 @@
             .ForMember(scvm => scvm.Parent, opt => opt.MapFrom(c => c.Parent))
             .ForMember(scvm => scvm.AuthorID, opt => opt.MapFrom(c => c.Author.Id))
             .ForMember(scvm => scvm.AuthorName, opt => opt.MapFrom(c => c.Author.UserName))
+            .ForMember(scvm => scvm.AuthorAvatarUrl, opt => opt.MapFrom(c => c.Author.AvatarURL))
             .ForMember(scvm => scvm.Text, opt => opt.MapFrom(c => c.Text))
             .ForMember(scvm => scvm.PositiveVoteCount, opt => opt.MapFrom(c => c.PositiveVoteCount))
             .ForMember(scvm => scvm.NegativeVoteCount, opt => opt.MapFrom(c => c.NegativeVoteCount))

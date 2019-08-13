@@ -201,8 +201,32 @@
                 </div>
             </div>
         </div>
-        <div id="comments" class="info-item">
-            <h2 id="comments-header" class="mdl-cell">Комментарии</h2>
+
+        @if (Model.Similar != null && Model.Similar.Any())
+        {
+            <div class="mdl-cell--12-col" style="width:100%">
+                <h2 class="mdl-cell">Рекомендуем</h2>
+                <div class="mdl-cell--12-col" id="recommendations">
+                    @foreach (var item in Model.Similar)
+                    {
+                        if (item != null && !string.IsNullOrEmpty(item.PosterURL))
+                        {
+                            <div class="mini-poster mdl-card mdl-shadow--2dp mdl-cell--2-col" onclick="location.href='@Url.Action("VideoMaterialDetailPage", new { id = item.ID })'">
+                                <div class="poster-relative">
+                                    <div class="poster-absolute">
+                                        <img class="mini-poster-image" src="@item.PosterURL.Replace("iphone360","iphone180")" alt="Постер @item.Title" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <div id="comments" class="info-item">
+        @*@Html.Partial("DetailPage/CommentContainerPartial", new List<SerialService.ViewModels.User.ShowCommentViewModel> { new SerialService.ViewModels.User.ShowCommentViewModel { Text = "Тест" } });*@
+        @*<h2 id="comments-header" class="mdl-cell">Комментарии</h2>
             @if (!Model.Comments.Any())
             {
                 <div id="no-comments-message">Еще никто не поделися своим мнением</div>
@@ -264,34 +288,13 @@
                 <div>
                     Только авторизованные пользователи могут оставлять комментарии
                 </div>
-            }
-        </div>
-        @if (Model.Similar != null && Model.Similar.Any())
-        {
-            <div class="mdl-cell--12-col" style="width:100%">
-                <h2 class="mdl-cell">Рекомендуем</h2>
-                <div class="mdl-cell--12-col" id="recommendations">
-                    @foreach (var item in Model.Similar)
-                    {
-                        if (item != null && !string.IsNullOrEmpty(item.PosterURL))
-                        {
-                            <div class="mini-poster mdl-card mdl-shadow--2dp mdl-cell--2-col" onclick="location.href='@Url.Action("VideoMaterialDetailPage", new { id = item.ID })'">
-                                <div class="poster-relative">
-                                    <div class="poster-absolute">
-                                        <img class="mini-poster-image" src="@item.PosterURL.Replace("iphone360","iphone180")" alt="Постер @item.Title" />
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
-                </div>
-            </div>
-        }
+            }*@
     </div>
 </div>
 <script src="~/Scripts/User/Mark.js"></script>
 <script src="~/Scripts/User/Subscribe.js"></script>
 <script src="~/Scripts/User/DetailPage.js"></script>
+<script src="~/Scripts/User/Comments.js"></script>
 <script type="text/javascript">
     var card = $('.player-container');
     var width = card.width();

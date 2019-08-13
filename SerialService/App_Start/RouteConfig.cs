@@ -99,9 +99,7 @@
                 url: "edit_comment/{model}",
                 defaults: new { controller = "User", action = "EditComment", model = UrlParameter.Optional });
 
-            routes.MapRoute(name: "UserVoteForComment",
-               url: "vote_comment/{model}",
-               defaults: new { controller = "User", action = "VoteForComment", model = UrlParameter.Optional });
+
 
             #endregion
 
@@ -203,6 +201,17 @@
 				url: "error/{action}",
 				defaults: new { controller = "Error" });
 
+            #endregion
+
+            #region Роуты Comments
+
+            routes.MapRoute(name: "CommentsGetComments",
+                url: "comments/{videoMaterialId}",
+                defaults: new { controller = "Comments", action = "GetComments", videoMaterialId = UrlParameter.Optional });
+
+            routes.MapRoute(name: "CommentsVoteForComment",
+               url: "vote_comment/{model}",
+               defaults: new { controller = "Comments", action = "VoteForComment", model = UrlParameter.Optional });
             #endregion
 
             #region sitemap
