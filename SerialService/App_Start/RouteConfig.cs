@@ -87,14 +87,6 @@
 				url: "personal_account/confirm_new_email",
 				defaults: new { controller = "User", action = "ConfirmNewEmail" });
 
-           
-
-            routes.MapRoute(name: "UserEditComment",
-                url: "edit_comment/{model}",
-                defaults: new { controller = "User", action = "EditComment", model = UrlParameter.Optional });
-
-
-
             #endregion
 
             #region Роуты Account
@@ -214,6 +206,10 @@
             routes.MapRoute(name: "CommentsAddComment",
                url: "add_comment/{model}",
                defaults: new { controller = "Comments", action = "AddComment", model = UrlParameter.Optional });
+
+            routes.MapRoute(name: "CommentsEditComment",
+               url: "edit_comment/{model}",
+               defaults: new { controller = "Comments", action = "EditComment", model = UrlParameter.Optional });
 
             #endregion
 

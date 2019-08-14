@@ -213,11 +213,17 @@
             if (comment.AuthorID != userId)
                 throw new AccessDeniedException("Ошибка доступа.");
 
-            comment.Text = newText;
+            Comment newComment = new Comment
+            {
+                Text = newText,
+                VideoMaterialID = comment.VideoMaterialID,
+                AuthorID = userId
+            };
 
-            if (this.GetAll().Contains(comment))
+            if (this.GetAll().Contains(newComment))
                 throw new EntryAlreadyExistsException();
 
+            comment.Text = newText;
             return this.Repository.UpdateEntity(comment);
         }
     }

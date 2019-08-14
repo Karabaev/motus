@@ -17,14 +17,15 @@ else
 }
 @if (User.Identity.IsAuthenticated)
 {
-    <form id="comment-form">
+    <div id="comment-form-block">
         <input type="hidden" id="new-comment-parent-id" />
-        <textarea name="Text" id="comment-text-input"></textarea>
-        <button type="button" onclick="addComment()">
+        <textarea id="comment-text-input"></textarea>
+        <button type="button" id="comment-text-submit">
             Оставить комментарий
         </button>
-    </form>
-    <div id="error-text" class="error"></div>
+        <div id="error-text" class="error"></div>
+    </div>
+
 }
 else
 {

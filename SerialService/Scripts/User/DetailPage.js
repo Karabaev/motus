@@ -98,23 +98,6 @@ window.addEventListener('DOMContentLoaded', function (e) {
 
 /// БЛОК ФУНКЦИЙ ДЛЯ КОММЕНТОВ
 
-function createComment() {
-    text = $('#comment-form').find('#new-comment-text').val();
-    $('#comment-form').find('#new-comment-text').val('');
-    parentId = $('#comment-form').find('#parent-comment-id').val();
-
-    if (text == '') {
-        showError('Текст коментария не может быть пустым');
-    }
-
-    addComment(parentId, text);
-}
-
-function addCommentToDOM(userName, dateTime, text, commentId, parentUserName, parentText) {
-    removeNoCommentsMessage();
-    $('#comment-container').append(getCommentHTML(userName, dateTime, text, commentId, parentUserName, parentText));
-}
-
 function removeNoCommentsMessage() {
     $('#no-comments-message').remove();
 }
@@ -153,119 +136,21 @@ function addNoCommentsMessage() {
 
 }
 
-function prepareToEditCommentText(commentId) {
-    text = $('#comment-container').find('input[type="hidden"][value="' + commentId + '"]').siblings('.comment-text').text().trim();
-    $('#comment-form').find('#new-comment-text').val(text);
-    $('#add-comment-btn').text("Изменить комментарий");
-    $('#add-comment-btn').off();
-    $('#add-comment-btn').on('click', function (e) {
-        e.preventDefault();
-        editComment(commentId);
-    });
-    addRowStatusEditingCommentToDOM(text);
-}
 
-function editComment(commentId) {
 
-    text = $('#comment-form').find('#new-comment-text').val();
+//function editCommentOnDOM(commentId, newText) {
+//    $('#comment-container').find('input[type="hidden"][value="' + commentId + '"]').siblings('.comment-text').text(newText);
+//}
 
-    if (text == '') {
-        showError('Текст коментария не может быть пустым');
-    }
 
-    model = {
-        CommentID: commentId,
-        NewText: text
-    };
-    $.ajax({
-        url: '/edit_comment',
-        method: 'post',
-        data: model,
-        success: function (result) {
-            if (result.success) {
-                editCommentOnDOM(result.success.CommentID, result.success.NewText);
-                cleanNewCommentForm();
-            }
-            else if (result.error) {
-                console.error(result.error);
-                showError(result.error);
-            }
-        },
-        error: function (jqxhr, status, errorMsg) {
-            console.error(status + " | " + errorMsg + " | " + jqxhr);
-        }
-    });
-}
 
-function editCommentOnDOM(commentId, newText) {
-    $('#comment-container').find('input[type="hidden"][value="' + commentId + '"]').siblings('.comment-text').text(newText);
-}
 
-function getRowStatusEditingCommentHTML(oldText) {
-    return '<div id="comment-editing-status-row"><div >Редактирование комментария:</div><button id="close-status-row-btn">X</button>'
-    + '<div>' + oldText + '</div></div>';
-}
 
-function addRowStatusEditingCommentToDOM(oldText) {
-    if (!$('div').is('#comment-editing-status-row')) {
-        $('#comment-form').prepend(getRowStatusEditingCommentHTML(oldText));
-        $('#close-status-row-btn').on("click", function (e) {
-            e.preventDefault();
-            cleanNewCommentForm();
-        });
-    } 
-}
 
-function removeRowStatusEditingCommentFromDOM() {
-    $('#comment-editing-status-row').remove();
-}
 
-function cleanNewCommentForm() {
-    removeRowStatusEditingCommentFromDOM();
-    $('#new-comment-text').val('');
-    $('#add-comment-btn').text("Оставить комментарий");
-    $('#add-comment-btn').off();
-    $('#add-comment-btn').on('click', function (e) {
-        e.preventDefault();
-        createComment();
-    });
-    $('#parent-comment-id').val('');
-    removeRowStatusResponceCommentFromDOM();
 
-}
 
-function prepareResponceCommentText(parentCommentId) {
-    parentText = $('#comment-container').find('input[type="hidden"][value="' + parentCommentId + '"]').siblings('.comment-text').text();
 
-   // $('#comment-form').find('#new-comment-text').val(authorName + ', ');
-    addRowStatusResponceCommentToDOM(parentText);
-    $('#comment-form').find('#parent-comment-id').val(parentCommentId);
-}
 
-function getRowStatusResponceCommentHTML(parentText) {
-    return '<div id="comment-responce-status-row"><div >Ответ на:</div><button id="close-status-row-btn">X</button>'
-        + '<div>' + parentText + '</div></div>';
-}
 
-function addRowStatusResponceCommentToDOM(oldText) {
-    if (!$('div').is('#comment-responce-status-row')) {
-        $('#comment-form').prepend(getRowStatusResponceCommentHTML(oldText));
-        $('#close-status-row-btn').on("click", function (e) {
-            e.preventDefault();
-            cleanNewCommentForm();
-        });
-    }
-}
 
-function removeRowStatusResponceCommentFromDOM() {
-    $('#comment-responce-status-row').remove();
-}
-
-function showError(text) {
-    $('#error-text').text(text);
-    $('#error-text').show(1000, function () {
-        setTimeout(function () {
-            $('#error-text').hide(500);
-        }, 5000);
-    });
-}

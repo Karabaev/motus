@@ -14,6 +14,11 @@ function getCommentsContainer() {
         success: function (result) {
             if (result) {
                 $('#comments').html(result);
+                $('#comment-text-submit').off();
+                $('#comment-text-submit').on('click', function (e) {
+                    e.preventDefault();
+                    addComment(null);
+                });
             }
         },
         error: function (jqxhr, status, errorMsg) {
@@ -75,7 +80,7 @@ function removeComment(commentId) {
     });
 }
 
-function addComment() {
+function addComment(parentId) {
     text = $('#comment-text-input').val();
 
     if (text === '') {
@@ -85,7 +90,7 @@ function addComment() {
     model = {
         VideoMaterialID: $('#material-id').val(),
         Text: text,
-        ParentID: $('#new-comment-parent-id').val()
+        ParentID: parentId
     };
     $.ajax({
         url: '/add_comment',
@@ -104,4 +109,126 @@ function addComment() {
             console.error(status + " | " + errorMsg + " | " + jqxhr);
         }
     });
+}
+
+function editComment(commentId) {
+
+    text = $('#comment-text-input').val();
+
+    if (text == '') {
+        showError('Текст коментария не может быть пустым');
+    }
+
+    model = {
+        CommentID: commentId,
+        NewText: text
+    };
+    $.ajax({
+        url: '/edit_comment',
+        method: 'post',
+        data: model,
+        success: function (result) {
+            if (result.success) {
+                getCommentsContainer();
+            }
+            else if (result.error) {
+                console.error(result.error);
+                showError(result.error);
+            }
+        },
+        error: function (jqxhr, status, errorMsg) {
+            console.error(status + " | " + errorMsg + " | " + jqxhr);
+        }
+    });
+}
+
+function prepareToEditCommentText(commentId) {
+    text = $('#comment-text-' + commentId).text().trim();
+    $('#comment-text-input').val(text);
+    $('#comment-text-submit').text("Изменить комментарий");
+    $('#comment-text-submit').off();
+    $('#comment-text-submit').on('click', function (e) {
+        e.preventDefault();
+        editComment(commentId);
+    });
+    addRowStatusEditingCommentToDOM(text);
+}
+
+function addRowStatusEditingCommentToDOM(oldText) {
+    if (!$('div').is('#comment-editing-status-row')) {
+        $('#comment-form-block').prepend(getRowStatusEditingCommentHTML(oldText));
+        $('#close-status-row-btn').on("click", function (e) {
+            e.preventDefault();
+            cleanNewCommentForm();
+        });
+    }
+}
+
+function removeRowStatusEditingCommentFromDOM() {
+    $('#comment-editing-status-row').remove();
+}
+
+function getRowStatusEditingCommentHTML(oldText) {
+    result = '<div id="comment-editing-status-row">';
+    result += '<div>Редактирование комментария:</div>';
+    result += '<button id="close-status-row-btn">X</button>';
+    result += '<div>' + oldText + '</div>';
+    result += '</div>';
+    return result;
+}
+
+function cleanNewCommentForm() {
+    removeRowStatusEditingCommentFromDOM();
+    $('#comment-text-input').val('');
+    $('#comment-text-submit').text("Оставить комментарий");
+    $('#comment-text-submit').off();
+    $('#comment-text-submit').on('click', function (e) {
+        e.preventDefault();
+        addComment(null);
+    });
+    removeRowStatusResponceCommentFromDOM();
+
+}
+
+function showError(text) {
+    $('#error-text').text(text);
+    $('#error-text').show(1000, function () {
+        setTimeout(function () {
+            $('#error-text').hide(500);
+        }, 5000);
+    });
+}
+
+function prepareResponceCommentText(parentCommentId) {
+    parentText = $('#comment-text-' + parentCommentId).text().trim();
+    addRowStatusResponceCommentToDOM(parentText);
+    $('#comment-text-submit').text("Ответить");
+    $('#comment-text-submit').off();
+    $('#comment-text-submit').on('click', function (e) {
+        e.preventDefault();
+        addComment(parentCommentId);
+    });
+}
+
+function addRowStatusResponceCommentToDOM(oldText) {
+    if (!$('div').is('#comment-responce-status-row')) {
+        $('#comment-form-block').prepend(getRowStatusResponceCommentHTML(oldText));
+        $('#close-status-row-btn').on("click", function (e) {
+            e.preventDefault();
+            cleanNewCommentForm();
+        });
+    }
+}
+
+function getRowStatusResponceCommentHTML(parentText) {
+    result = '<div id="comment-responce-status-row">';
+    result += '<div>Ответ на:</div>';
+    result += '<button id="close-status-row-btn">X</button>';
+    result += '<div>' + parentText + '</div>';
+    result += '</div>';
+    return result;
+}
+
+function removeRowStatusResponceCommentFromDOM() {
+    $('#comment-responce-status-row').remove();
 }

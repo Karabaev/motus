@@ -14,7 +14,7 @@
         <div>Ответ на:</div>
         <div><bold>@Model.Parent.AuthorName: </bold>"@Model.Parent.Text"</div>
     }
-    <div class="mdl-card__supporting-text comment-text">
+    <div id="comment-text-@Model.ID" class="mdl-card__supporting-text comment-text">
         <p>@Model.Text</p>
     </div>
     <div class="votes-count">
