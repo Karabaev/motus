@@ -143,6 +143,7 @@ function editComment(commentId) {
 }
 
 function prepareToEditCommentText(commentId) {
+    cleanNewCommentForm();
     text = $('#comment-text-' + commentId).text().trim();
     $('#comment-text-input').val(text);
     $('#comment-text-submit').text("Изменить комментарий");
@@ -200,14 +201,15 @@ function showError(text) {
 }
 
 function prepareResponceCommentText(parentCommentId) {
+    cleanNewCommentForm();
     parentText = $('#comment-text-' + parentCommentId).text().trim();
-    addRowStatusResponceCommentToDOM(parentText);
     $('#comment-text-submit').text("Ответить");
     $('#comment-text-submit').off();
     $('#comment-text-submit').on('click', function (e) {
         e.preventDefault();
         addComment(parentCommentId);
     });
+    addRowStatusResponceCommentToDOM(parentText);
 }
 
 function addRowStatusResponceCommentToDOM(oldText) {

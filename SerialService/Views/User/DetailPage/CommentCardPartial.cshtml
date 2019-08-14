@@ -32,16 +32,16 @@
         {
             if (User.Identity.GetUserId() == Model.AuthorID)
             {
-                <button class="mdl-button mdl-button--icon mdl-button--colored" onclick="prepareToEditCommentText(@Model.ID)">
+                <a href="#comment-form-block" class="mdl-button mdl-button--icon mdl-button--colored" onclick="prepareToEditCommentText(@Model.ID)">
                     <i class="material-icons">edit</i>
-                </button>
-                <button class="mdl-button mdl-button--icon mdl-button--colored" onclick="removeComment(@Model.ID)">
+                </a>
+                <a href="#comment-form-block" class="mdl-button mdl-button--icon mdl-button--colored" onclick="removeComment(@Model.ID)">
                     <i class="material-icons">delete</i>
-                </button>
+                </a>
             }
-            <button class="mdl-button mdl-button--icon mdl-button--colored" onclick="prepareResponceCommentText(@Model.ID)">
+            <a href="#comment-form-block" class="mdl-button mdl-button--icon mdl-button--colored" onclick="prepareResponceCommentText(@Model.ID)">
                 <i class="material-icons">reply</i>
-            </button>
+            </a>
         }
     </div>
 </div>

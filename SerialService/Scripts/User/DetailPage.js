@@ -96,56 +96,6 @@ window.addEventListener('DOMContentLoaded', function (e) {
 });
 
 
-/// БЛОК ФУНКЦИЙ ДЛЯ КОММЕНТОВ
-
-function removeNoCommentsMessage() {
-    $('#no-comments-message').remove();
-}
-
-function getCommentHTML(userName, dateTime, text, commentId, parentUserName, parentText) {
-
-    result = '<li>'
-    result += '<input type="hidden" value="' + commentId + '"/>'
-    result += '<div class="comment-header">'
-    result += '<span>' + dateTime + '</span> '
-    result += '<span class="comment-author-name">' + userName + '</span>'
-    result += '</div>';
-
-    if (parentUserName !== '' && parentText !== '' && parentUserName !== null && parentText !== null) {
-        result += '<div>Ответ на:</div>';
-        result += '<div><bold>' + parentUserName + ': </bold>"' + parentText + '"</div>';
-    }
-
-    result += '<div class="comment-text">' + text + '</div>'
-    result += '<div class="votes-count">+0 -0</div>'
-    result += '<div><button id="comment-like-btn" onclick="voteForComment(' + commentId + ', true)">+</button><button id="comment-dislike-btn" onclick="voteForComment(' + commentId + ', false)">-</button></div>'
-    result += '<a href="#" onclick="prepareToEditCommentText(' + commentId +')">Редактировать</a> <a href="#" onclick="removeComment(' + commentId + ')">Удалить</a>'
-    result += '<br/>'
-    result += '<a href="#" value="' + commentId + '" onclick="prepareResponceCommentText(' + commentId + ')">Ответить</a>'
-    result += '</li>';
-
-    return result;
-}
-
-function addNoCommentsMessage() {
-    if (!$('div').is('#no-comments-message')) {
-        html = '<div id="no-comments-message">Еще никто не поделися своим мнением</div>';
-        $('#comments-header').after(html);
-    }
-
-
-}
-
-
-
-//function editCommentOnDOM(commentId, newText) {
-//    $('#comment-container').find('input[type="hidden"][value="' + commentId + '"]').siblings('.comment-text').text(newText);
-//}
-
-
-
-
-
 
 
 
