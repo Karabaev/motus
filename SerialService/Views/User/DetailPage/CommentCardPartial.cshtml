@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNet.Identity;
+
+@model SerialService.ViewModels.User.ShowCommentViewModel
+
+<div class="comment-block mdl-grid mdl-card mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-shadow--2dp">
+    <input type="hidden" value="@Model.ID" />
+    <div class="mdl-grid mdl-cell--12-col">
+        <div class="mdl-cell--2-col"><img src="@Model.AuthorAvatarUrl" alt="@Model.AuthorName avatar"  /></div>
+        <div class="comment-author-name mdl-cell--10-col">@Model.AuthorName</div>
+        <div class="mdl-cell--12-col">@Model.AddDateTime.ToString("dd.MM.yyyy hh:mm")</div>
+    </div>
+    @if (Model.Parent != null)
+    {
+        <div>Ответ на:</div>
+        <div><bold>@Model.Parent.AuthorName: </bold>"@Model.Parent.Text"</div>
+    }
+    <div id="comment-text-@Model.ID" class="mdl-card__supporting-text comment-text">
+        <p>@Model.Text</p>
+    </div>
+    <div class="votes-count">
+        <button class="mdl-button motus-tools mdl-js-button mdl-button--icon" onclick="voteForComment(@Model.ID, true)">
+            <i class="like-icon material-icons">thumb_up</i>
+        </button>
+        <span id="positive-vote-count-@Model.ID" class="thump-count">@Model.PositiveVoteCount</span>
+        <button class="mdl-button motus-tools mdl-js-button mdl-button--icon" onclick="voteForComment(@Model.ID, false)">
+            <i class="like-icon material-icons">thumb_down</i>
+        </button>
+        <span id="negative-vote-count-@Model.ID" class="thump-count">@Model.NegativeVoteCount</span>
+    </div>
+    <div class="mdl-card__actions mdl-card--border">
+        @if (User.Identity.IsAuthenticated)
+        {
+            if (User.Identity.GetUserId() == Model.AuthorID)
+            {
+                <a href="#comment-form-block" class="mdl-button mdl-button--icon mdl-button--colored" onclick="prepareToEditCommentText(@Model.ID)">
+                    <i class="material-icons">edit</i>
+                </a>
+                <a href="#comment-form-block" class="mdl-button mdl-button--icon mdl-button--colored" onclick="removeComment(@Model.ID)">
+                    <i class="material-icons">delete</i>
+                </a>
+            }
+            <a href="#comment-form-block" class="mdl-button mdl-button--icon mdl-button--colored" onclick="prepareResponceCommentText(@Model.ID)">
+                <i class="material-icons">reply</i>
+            </a>
+        }
+    </div>
+</div>

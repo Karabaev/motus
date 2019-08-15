@@ -27,7 +27,7 @@
             if (comment == null)
                 return false;
 
-            return this.AuthorID == comment.AuthorID && this.Text == comment.Text;
+            return this.AuthorID == comment.AuthorID && this.Text == comment.Text && this.VideoMaterialID == comment.VideoMaterialID;
         }
     }
 }

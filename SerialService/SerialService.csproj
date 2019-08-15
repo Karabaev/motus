@@ -277,6 +277,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminToolsController.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ModeratorToolsController.cs" />
@@ -470,6 +471,8 @@
     <Content Include="Content\Other\UserContent.css" />
     <Content Include="Content\RedactorTools\EditingManger.css" />
     <Content Include="Content\RedactorTools\RedactorMenu.css" />
+    <Content Include="Content\User\Comments.css" />
+    <Content Include="Scripts\User\Comments.js" />
     <Content Include="Views\StaticPages\Error.html" />
     <Content Include="Content\Tables.css" />
     <Content Include="Content\User\CardAndPopovers.css" />
@@ -578,10 +581,13 @@
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Error\Error.cshtml" />
     <Content Include="Views\Account\PrivacyPolicy.cshtml" />
+    <Content Include="Views\User\DetailPage\CommentCardPartial.cshtml" />
+    <Content Include="Views\User\DetailPage\CommentContainerPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Scripts\Comments\" />
+    <Folder Include="Views\Comments\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
