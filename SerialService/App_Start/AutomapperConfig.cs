@@ -66,8 +66,7 @@
             .ForMember(dvm => dvm.SerialSeasonsCount, opt => opt.MapFrom(vm => vm.SerialSeasons.Count()))
             .ForMember(dvm => dvm.LastEpisodeTime, opt => opt.MapFrom(vm => vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)))
             .ForMember(dvm => dvm.LastEpisodeTranslator, opt => opt.MapFrom(vm => vm.SerialSeasons.FirstOrDefault(_vm => _vm.LastEpisodeTime == vm.SerialSeasons.Max(ss => ss.LastEpisodeTime)).Translation.Name))
-            .ForMember(dvm => dvm.IframeUrl, opt => opt.MapFrom(vm => vm.IframeUrl))
-            .ForMember(dvm => dvm.Comments, opt => opt.MapFrom(vm => vm.Comments));
+            .ForMember(dvm => dvm.IframeUrl, opt => opt.MapFrom(vm => vm.IframeUrl));
 
             config += cfg => cfg.CreateMap<RegisterViewModel, ApplicationUser>()
             .ForMember(rvm => rvm.UserName, opt => opt.MapFrom(vm => vm.UserName))

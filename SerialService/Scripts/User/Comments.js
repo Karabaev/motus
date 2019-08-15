@@ -19,6 +19,11 @@ function getCommentsContainer() {
                     e.preventDefault();
                     addComment(null);
                 });
+                hideComments(3);
+                $('#show-all-comments-ref').on('click', function (e) {
+                    e.preventDefault();
+                    showAllComments();
+                });
             }
         },
         error: function (jqxhr, status, errorMsg) {
@@ -233,4 +238,20 @@ function getRowStatusResponceCommentHTML(parentText) {
 
 function removeRowStatusResponceCommentFromDOM() {
     $('#comment-responce-status-row').remove();
+}
+
+function hideComments(visibleCount) {
+    $('#comment-container').each(function () {
+        $(this).find('.comment-block').slice(visibleCount).hide();
+    });
+
+
+}
+
+function showAllComments() {
+    $('#comment-container').each(function () {
+        $(this).find('.comment-block').show();
+    });
+
+    $('#show-all-comments-ref').hide();
 }

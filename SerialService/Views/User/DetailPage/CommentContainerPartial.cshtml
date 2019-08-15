@@ -9,9 +9,14 @@
 else
 {
     <div id="comment-container">
-        @foreach (var item in Model.OrderBy(c => c.AddDateTime))
-        {
-            @Html.Partial("../User/DetailPage/CommentCardPartial", item)
+        @{
+            foreach (var item in Model.OrderByDescending(c => c.AddDateTime))
+            {
+                @Html.Partial("../User/DetailPage/CommentCardPartial", item)
+            }
+            <div>
+                <a id="show-all-comments-ref" href="#">Показать все комментарии</a>
+            </div>
         }
     </div>
 }
