@@ -15,5 +15,9 @@
         bool RemoveVote(int? id, bool isPositiveMark);
         bool InvertVote(int? id, bool fromPositive);
         bool EditText(int id, string newText, string userId);
+
+        event CommentStateHandler OnCreate;
+        event CommentStateHandler OnChange;
+        event CommentStateHandler OnRemove;
     }
 }

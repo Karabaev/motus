@@ -10,15 +10,20 @@
     using Infrastructure.Core;
     using DAL.Context;
     using Infrastructure.Core.Extensions;
+    using Infrastructure.EventArgs;
+
+    public delegate void CommentStateHandler(CommentEventArgs args);
 
     public class CommentService : ICommentService
     {
+        public event CommentStateHandler OnCreate;
+        public event CommentStateHandler OnChange;
+        public event CommentStateHandler OnRemove;
+
         public CommentService(ApplicationDbContext context)
         {
             Repository = new CommentRepository(context);
         }
-
-        public IRepository<Comment> Repository { get; set; }
 
         public bool Create(Comment entity)
         {
@@ -29,6 +34,10 @@
                 throw new EntryAlreadyExistsException();
 
             bool result = this.Repository.AddEntity(entity);
+
+            if (result)
+                this.OnCreate(new CommentEventArgs(entity));
+
             return result;
         }
 
@@ -85,7 +94,12 @@
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            return this.Repository.RemoveEntity(entity.ID);
+            bool result = this.Repository.RemoveEntity(entity.ID);
+
+            if (result)
+                this.OnRemove(new CommentEventArgs(entity));
+
+            return result;
         }
 
         public EntityList<Comment> GetWithCondition(Func<Comment, bool> predicate)
@@ -224,7 +238,15 @@
                 throw new EntryAlreadyExistsException();
 
             comment.Text = newText;
-            return this.Repository.UpdateEntity(comment);
+
+            bool result = this.Repository.UpdateEntity(comment);
+
+            if (result)
+                this.OnChange(new CommentEventArgs(comment));
+
+            return result;
         }
+
+        public IRepository<Comment> Repository { get; set; }
     }
 }

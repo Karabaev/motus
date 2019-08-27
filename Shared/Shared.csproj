@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="INotificationClient.cs" />
+    <Compile Include="Mail\IMailClient.cs" />
     <Compile Include="Mail\MailClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -344,6 +344,8 @@
     <Compile Include="Infrastructure\ElasticSearch\FilterData.cs" />
     <Compile Include="Infrastructure\ElasticSearch\SearchWrapper.cs" />
     <Compile Include="Infrastructure\ElasticSearch\MotusElasticsearch.cs" />
+    <Compile Include="Infrastructure\EventArgs\CommentEventArgs.cs" />
+    <Compile Include="Infrastructure\EventArgs\IEventArgs.cs" />
     <Compile Include="Infrastructure\ExceptionHandlerAttribute.cs" />
     <Compile Include="Infrastructure\Exceptions\AccessDeniedException.cs" />
     <Compile Include="Infrastructure\Exceptions\EntryNotFoundException.cs" />
