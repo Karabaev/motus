@@ -24,6 +24,7 @@ function getCommentsContainer() {
                     e.preventDefault();
                     showAllComments();
                 });
+                componentHandler.upgradeDom();
             }
         },
         error: function (jqxhr, status, errorMsg) {

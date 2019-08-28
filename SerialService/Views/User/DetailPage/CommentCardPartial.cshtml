@@ -2,10 +2,10 @@
 
 @model SerialService.ViewModels.User.ShowCommentViewModel
 
-<div class="comment-block mdl-grid mdl-card mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-shadow--2dp">
+<div class="comment-block mdl-grid mdl-card mdl-cell mdl-cell--3-offset-desktop mdl-cell--6-col mdl-cell--4-col-tablet mdl-shadow--2dp">
     <input type="hidden" value="@Model.ID" />
     <div class="mdl-grid mdl-cell--12-col">
-        <div class="mdl-cell--2-col"><img src="@Model.AuthorAvatarUrl" alt="@Model.AuthorName avatar"  /></div>
+        <div class="mdl-cell--2-col"><img src="@Model.AuthorAvatarUrl" alt="@Model.AuthorName avatar" /></div>
         <div class="comment-author-name mdl-cell--10-col">@Model.AuthorName</div>
         <div class="mdl-cell--12-col">@Model.AddDateTime.ToString("dd.MM.yyyy hh:mm")</div>
     </div>
