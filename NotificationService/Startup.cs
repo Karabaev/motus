@@ -38,6 +38,10 @@
                 app.UseDeveloperExceptionPage();
             }
 
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
             app.UseMvc();
         }
     }

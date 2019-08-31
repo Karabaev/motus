@@ -4,7 +4,7 @@
 	using System.Threading.Tasks;
 	using System.Net.Mail;
 	using System.Net;
-    using Exceptions;
+    using System.Collections.Generic;
 	using NLog;
 
 	/// <summary>
@@ -151,7 +151,7 @@
             }
         }
 
-        public void SendMessageToManyDestinations(string[] destinations, string caption, string message)
+        public void SendMessageToManyDestinations(IEnumerable<string> destinations, string caption, string message)
         {
             string destinationsStr = string.Join(" ", destinations);
             MailMessage mailMessage = new MailMessage(senderMail, new MailAddress(destinationsStr));
@@ -173,7 +173,7 @@
             }
         }
 
-        public async Task SendMessageToManyDestinationsAsync(string[] destinations, string caption, string message)
+        public async Task SendMessageToManyDestinationsAsync(IEnumerable<string> destinations, string caption, string message)
         {
             string destinationsStr = string.Join(" ", destinations);
             MailMessage mailMessage = new MailMessage(senderMail, new MailAddress(destinationsStr));
