@@ -169,25 +169,27 @@
             </div>
         }
     </div>
-    <div class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card">
-        <div class="mdl-card__title">
-            <h2 id="comments-header" class="mdl-card__title-text">Комментарии</h2>
-        </div>
-       
 
+    <div class="mdl-grid mdl-card mdl-shadow--2dp mdl-cell--12-col comments-container">
         @if (User.Identity.IsAuthenticated)
         {
-            <div id="comment-form-block mdl-card__supporting-text mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-shadow--2dp">
+            <div class="mdl-cell mdl-cell--3-col-desktop">
+                <button id="comment-form-selector-toggle" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect">
+                    Оставить комментарий
+                </button>
+            </div>
+            <div id="comment-form-block" class="mdl-grid mdl-card mdl-cell mdl-cell--6-col-desktop mdl-cell--4-col-tablet mdl-shadow--2dp">
                 <input type="hidden" id="new-comment-parent-id" />
-                <div class="mdl-textfield mdl-js-textfield mdl-card__supporting-text">
-                    <textarea id="comment-text-input" class="mdl-textfield__input" type="text" rows="3"></textarea>
+                <div class="mdl-textfield mdl-js-textfield mdl-card__supporting-text mdl-cell--12-col">
+                    <textarea id="comment-text-input" class="mdl-textfield__input" type="text" rows="3" style="resize: none"></textarea>
                     <label class="mdl-textfield__label" for="comment-text-input">Текст комментария...</label>
                 </div>
-                <div class="mdl-card__actions">
-                    <button type="button" id="comment-text-submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                        Оставить комментарий
+                <div class="mdl-card__actions mdl-card__actions">
+                    <button type="button" id="comment-text-submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect">
+                        Отправить
                     </button>
                 </div>
+                <div class="mdl-cell--12-col"><span style="display:none" class="error"></span></div>
                 <div id="error-text" class="error"></div>
             </div>
         }
@@ -197,7 +199,7 @@
                 Только авторизованные пользователи могут оставлять комментарии
             </div>
         }
-        <div id="comments"></div>
+        <div id="comments" class="mdl-cell mdl-cell--6-col-desktop mdl-cell--4-col-tablet"></div>
 
     </div>
 </div>

@@ -1,5 +1,9 @@
 ﻿$(document).ready(function () {
     getCommentsContainer();
+    $('#comment-form-selector-toggle').on('click', function (e) {
+        toggleNewCommentBlock();
+    });
+    $('#comment-form-block').hide();
 });
 
 function getCommentsContainer() {
@@ -91,6 +95,7 @@ function addComment(parentId) {
 
     if (text === '') {
         showError('Текст коментария не может быть пустым');
+        return;
     }
 
     model = {
@@ -187,7 +192,7 @@ function getRowStatusEditingCommentHTML(oldText) {
 function cleanNewCommentForm() {
     removeRowStatusEditingCommentFromDOM();
     $('#comment-text-input').val('');
-    $('#comment-text-submit').text("Оставить комментарий");
+    $('#comment-text-submit').text("Отправить");
     $('#comment-text-submit').off();
     $('#comment-text-submit').on('click', function (e) {
         e.preventDefault();
@@ -255,4 +260,8 @@ function showAllComments() {
     });
 
     $('#show-all-comments-ref').hide();
+}
+
+function toggleNewCommentBlock() {
+    $('#comment-form-block').toggle(1000);
 }

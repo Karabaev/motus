@@ -17,6 +17,8 @@
         margin-left: 3px;
     }
 
-/*#comments-header {
-    margin: auto;
-}*/
+.error {
+    color: #d50000;
+    font-size: 12px;
+    margin-top: 3px;
+}
