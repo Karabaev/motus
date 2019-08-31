@@ -1,6 +1,5 @@
 ﻿@model IEnumerable<SerialService.ViewModels.User.ShowCommentViewModel>
 
-<h2 id="comments-header" class="mdl-cell--5-offset-desktop mdl-cell--2-col-desktop">Комментарии</h2>
 @if (Model != null && !Model.Any())
 {
     <div id="no-comments-message">Еще никто не поделися своим мнением</div>
@@ -8,40 +7,15 @@
 }
 else
 {
-    <div id="comment-container">
-        @{
-            foreach (var item in Model.OrderByDescending(c => c.AddDateTime))
-            {
-                @Html.Partial("../User/DetailPage/CommentCardPartial", item)
-            }
-            <div>
-                <a id="show-all-comments-ref" href="#">Показать все комментарии</a>
-            </div>
+<div id="comment-container mdl-card">
+    @{
+        foreach (var item in Model.OrderByDescending(c => c.AddDateTime))
+        {
+            @Html.Partial("../User/DetailPage/CommentCardPartial", item)
         }
-    </div>
-}
-@if (User.Identity.IsAuthenticated)
-{
-    <div id="comment-form-block mdl-card mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-shadow--2dp">
-        <input type="hidden" id="new-comment-parent-id" />
-        <div class="mdl-card__title"></div>
-        <div class="mdl-card__media"></div>
-        <div class="mdl-card__supporting-text"></div>
-        <div class="mdl-card__actions"></div>
-        <div class="mdl-textfield mdl-js-textfield">
-            <textarea id="comment-text-input" class="mdl-textfield__input" type="text" rows="3"></textarea>
-            <label class="mdl-textfield__label" for="comment-text-input">Текст комментария...</label>
+        <div>
+            <a id="show-all-comments-ref" href="#">Показать все комментарии</a>
         </div>
-
-        <button type="button" id="comment-text-submit">
-            Оставить комментарий
-        </button>
-        <div id="error-text" class="error"></div>
-    </div>
-}
-else
-{
-    <div>
-        Только авторизованные пользователи могут оставлять комментарии
-    </div>
+    }
+</div>
 }

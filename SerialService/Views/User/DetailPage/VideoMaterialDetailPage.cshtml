@@ -169,7 +169,37 @@
             </div>
         }
     </div>
-    <div id="comments" class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card"></div>
+    <div class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card">
+        <div class="mdl-card__title">
+            <h2 id="comments-header" class="mdl-card__title-text">Комментарии</h2>
+        </div>
+       
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div id="comment-form-block mdl-card__supporting-text mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-shadow--2dp">
+                <input type="hidden" id="new-comment-parent-id" />
+                <div class="mdl-textfield mdl-js-textfield mdl-card__supporting-text">
+                    <textarea id="comment-text-input" class="mdl-textfield__input" type="text" rows="3"></textarea>
+                    <label class="mdl-textfield__label" for="comment-text-input">Текст комментария...</label>
+                </div>
+                <div class="mdl-card__actions">
+                    <button type="button" id="comment-text-submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                        Оставить комментарий
+                    </button>
+                </div>
+                <div id="error-text" class="error"></div>
+            </div>
+        }
+        else
+        {
+            <div>
+                Только авторизованные пользователи могут оставлять комментарии
+            </div>
+        }
+        <div id="comments"></div>
+
+    </div>
 </div>
 <script src="~/Scripts/User/Mark.js"></script>
 <script src="~/Scripts/User/Subscribe.js"></script>
