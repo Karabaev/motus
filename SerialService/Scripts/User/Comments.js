@@ -3,7 +3,6 @@
     $('#comment-form-selector-toggle').on('click', function (e) {
         toggleNewCommentBlock();
     });
-    $('#comment-form-block').hide();
 });
 
 function getCommentsContainer() {
@@ -263,5 +262,11 @@ function showAllComments() {
 }
 
 function toggleNewCommentBlock() {
-    $('#comment-form-block').toggle(1000);
+    $('#comment-form-block').toggle(0, function () {
+        if ($('#comment-form-block').is(':visible')) {
+            $('#comments').addClass('mdl-cell--3-offset');
+        } else {
+            $('#comments').removeClass('mdl-cell--3-offset');
+        }
+    });
 }

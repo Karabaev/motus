@@ -170,7 +170,7 @@
         }
     </div>
 
-    <div class="mdl-grid mdl-card mdl-shadow--2dp mdl-cell--12-col comments-container">
+    <div class="mdl-grid mdl-card mdl-shadow--2dp mdl-cell--12-col motus-comments-container">
         @if (User.Identity.IsAuthenticated)
         {
             <div class="mdl-cell mdl-cell--3-col-desktop">
@@ -178,7 +178,7 @@
                     Оставить комментарий
                 </button>
             </div>
-            <div id="comment-form-block" class="mdl-grid mdl-card mdl-cell mdl-cell--6-col-desktop mdl-cell--4-col-tablet mdl-shadow--2dp">
+            <div id="comment-form-block" style="display:none;" class="mdl-grid mdl-card mdl-cell mdl-cell--6-col-desktop mdl-cell--4-col-tablet mdl-shadow--2dp">
                 <input type="hidden" id="new-comment-parent-id" />
                 <div class="mdl-textfield mdl-js-textfield mdl-card__supporting-text mdl-cell--12-col">
                     <textarea id="comment-text-input" class="mdl-textfield__input" type="text" rows="3" style="resize: none"></textarea>
