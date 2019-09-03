@@ -35,7 +35,7 @@
                 return Json(new { error = "Чтобы оставить комментарий, необходимо авторизоваться." });
 
             if (!ModelState.IsValid)
-                return Json(new { error = "Заполнены не все поля." });
+                return Json(new { error = "Ошибка валидации комментария." });
 
             Comment comment = Mapper.Map<AddCommentViewModel, Comment>(model);
             comment.AuthorID = HttpContext.User.Identity.GetUserId();

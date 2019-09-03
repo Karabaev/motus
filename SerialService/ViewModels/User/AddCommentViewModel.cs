@@ -5,7 +5,8 @@
 
     public class AddCommentViewModel
     {
-        [Required]
+        [Required ]
+        [StringLength(350, MinimumLength = 1)]
         public string Text { get; set; }
         public int? ParentID { get; set; }
         [Required]

@@ -39,6 +39,34 @@
         border: 1px solid;
     }
 .motus-comments-author-name {
-    margin-right: 10%;
+    margin-right: 10px;
     font-weight: bold;
 }
+
+
+.motus-comment-responce-parent-quote {
+    border: 2px solid #337AB7;
+    font-size: 16px;
+    font-style: italic;
+    margin: 8px 15px 15px 8px;
+    padding: 8px 12px;
+    position: relative;
+    box-shadow: 10px 10px 0 0 #337AB7;
+}
+
+    .motus-comment-responce-parent-quote cite {
+        color: #337AB7;
+        font-size: 15px;
+        padding-top: 10px;
+        display: block;
+        text-align: right;
+    }
+    .motus-comment-responce-parent-quote:after {
+        content: '';
+        margin-left: 0;
+    }
+    .motus-comment-responce-parent-quote::before {
+        position: absolute;
+        left: 0;
+        content: "";
+    }

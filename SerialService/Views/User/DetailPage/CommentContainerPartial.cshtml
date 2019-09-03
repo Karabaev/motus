@@ -2,20 +2,17 @@
 
 @if (Model != null && !Model.Any())
 {
-    <div id="no-comments-message">Еще никто не поделися своим мнением</div>
+    <div id="no-comments-message">Еще никто не поделился своим мнением</div>
     <div id="comment-container"></div>
 }
 else
 {
-<div id="comment-container">
-    @{
-        foreach (var item in Model.OrderByDescending(c => c.AddDateTime))
-        {
-            @Html.Partial("../User/DetailPage/CommentCardPartial", item)
+    <div id="comment-container">
+        @{
+            foreach (var item in Model.OrderByDescending(c => c.AddDateTime))
+            {
+                @Html.Partial("../User/DetailPage/CommentCardPartial", item)
+            }
         }
-        <div>
-            <a id="show-all-comments-ref" href="#">Показать все комментарии</a>
-        </div>
-    }
-</div>
+    </div>
 }
