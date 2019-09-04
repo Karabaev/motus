@@ -82,7 +82,7 @@
             if (comment == null)
                 return Json(new { error = "Комментарий не найден." });
 
-            if (comment.AuthorID != User.Identity.GetUserId())
+            if (comment.AuthorID != User.Identity.GetUserId() && (!User.IsInRole("Admin") || !User.IsInRole("Moderator")))
                 return Json(new { error = "Нельзя удалить не свой комментарий." });
 
             if (this.unitOfWork.Comments.Remove(comment))
