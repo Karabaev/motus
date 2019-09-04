@@ -519,7 +519,7 @@
         public ActionResult PrivacyPolicy()
         {
             ViewBag.Url = string.Format("{0}{1}", ConfigurationManager.AppSettings["MainDomainName"], this.GetCurrentURL());
-            ViewBag.UpdateDate = "04 Июля 2019 года";
+            ViewBag.UpdateDate = "4 сентября 2019 года";
             ViewBag.SupportEmail = ConfigurationManager.AppSettings["MainDomainName"];
             return View();
         }
