@@ -1,9 +1,8 @@
 ﻿@model IEnumerable<SerialService.ViewModels.User.ShowCommentViewModel>
 
-<h2 id="comments-header" class="mdl-cell">Комментарии</h2>
 @if (Model != null && !Model.Any())
 {
-    <div id="no-comments-message">Еще никто не поделися своим мнением</div>
+    <div id="no-comments-message">Еще никто не поделился своим мнением</div>
     <div id="comment-container"></div>
 }
 else
@@ -14,27 +13,7 @@ else
             {
                 @Html.Partial("../User/DetailPage/CommentCardPartial", item)
             }
-            <div>
-                <a id="show-all-comments-ref" href="#">Показать все комментарии</a>
-            </div>
         }
     </div>
-}
-@if (User.Identity.IsAuthenticated)
-{
-    <div id="comment-form-block">
-        <input type="hidden" id="new-comment-parent-id" />
-        <textarea id="comment-text-input"></textarea>
-        <button type="button" id="comment-text-submit">
-            Оставить комментарий
-        </button>
-        <div id="error-text" class="error"></div>
-    </div>
-
-}
-else
-{
-    <div>
-        Только авторизованные пользователи могут оставлять комментарии
-    </div>
+    <a id="show-all-comments-ref" class="mdl-cell--4-offset-desktop mdl-cell--5-col-desktop"  href="#">Показать все комментарии</a>
 }

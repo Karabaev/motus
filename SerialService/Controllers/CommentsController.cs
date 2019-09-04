@@ -35,7 +35,7 @@
                 return Json(new { error = "Чтобы оставить комментарий, необходимо авторизоваться." });
 
             if (!ModelState.IsValid)
-                return Json(new { error = "Заполнены не все поля." });
+                return Json(new { error = "Ошибка валидации комментария." });
 
             Comment comment = Mapper.Map<AddCommentViewModel, Comment>(model);
             comment.AuthorID = HttpContext.User.Identity.GetUserId();
@@ -82,7 +82,7 @@
             if (comment == null)
                 return Json(new { error = "Комментарий не найден." });
 
-            if (comment.AuthorID != User.Identity.GetUserId())
+            if (comment.AuthorID != User.Identity.GetUserId() && (!User.IsInRole("Admin") || !User.IsInRole("Moderator")))
                 return Json(new { error = "Нельзя удалить не свой комментарий." });
 
             if (this.unitOfWork.Comments.Remove(comment))

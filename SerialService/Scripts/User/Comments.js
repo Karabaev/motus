@@ -1,5 +1,8 @@
 ﻿$(document).ready(function () {
     getCommentsContainer();
+    $('#comment-form-selector-toggle').on('click', function (e) {
+        toggleNewCommentBlock();
+    });
 });
 
 function getCommentsContainer() {
@@ -19,11 +22,10 @@ function getCommentsContainer() {
                     e.preventDefault();
                     addComment(null);
                 });
-                hideComments(3);
-                $('#show-all-comments-ref').on('click', function (e) {
-                    e.preventDefault();
-                    showAllComments();
-                });
+                componentHandler.upgradeDom();
+                readmoreSelected($('#comment-container [id^="comment-text-"]'), 90);  
+                readmoreSelected($('.motus-comment-responce-parent-quote__text'), 50); 
+                hideComments(1);
             }
         },
         error: function (jqxhr, status, errorMsg) {
@@ -90,6 +92,12 @@ function addComment(parentId) {
 
     if (text === '') {
         showError('Текст коментария не может быть пустым');
+        return;
+    }
+
+    if (text.length > 350) {
+        showError('Текст коментария не может быть длиннее 350 символов');
+        return;
     }
 
     model = {
@@ -104,6 +112,7 @@ function addComment(parentId) {
         success: function (result) {
             if (result.success) {
                 getCommentsContainer();
+                cleanNewCommentForm();
             }
             else if (result.error) {
                 console.error(result.error);
@@ -120,8 +129,14 @@ function editComment(commentId) {
 
     text = $('#comment-text-input').val();
 
-    if (text == '') {
+    if (text === '') {
         showError('Текст коментария не может быть пустым');
+        return;
+    }
+
+    if (text.length > 350) {
+        showError('Текст коментария не может быть длиннее 350 символов');
+        return;
     }
 
     model = {
@@ -135,6 +150,7 @@ function editComment(commentId) {
         success: function (result) {
             if (result.success) {
                 getCommentsContainer();
+                cleanNewCommentForm();
             }
             else if (result.error) {
                 console.error(result.error);
@@ -149,9 +165,10 @@ function editComment(commentId) {
 
 function prepareToEditCommentText(commentId) {
     cleanNewCommentForm();
+    showNewCommentBlock();
     text = $('#comment-text-' + commentId).text().trim();
     $('#comment-text-input').val(text);
-    $('#comment-text-submit').text("Изменить комментарий");
+    $('#comment-text-submit').text("Изменить");
     $('#comment-text-submit').off();
     $('#comment-text-submit').on('click', function (e) {
         e.preventDefault();
@@ -163,6 +180,7 @@ function prepareToEditCommentText(commentId) {
 function addRowStatusEditingCommentToDOM(oldText) {
     if (!$('div').is('#comment-editing-status-row')) {
         $('#comment-form-block').prepend(getRowStatusEditingCommentHTML(oldText));
+        readmoreSelected($('#edit-old-text'), 90);
         $('#close-status-row-btn').on("click", function (e) {
             e.preventDefault();
             cleanNewCommentForm();
@@ -175,10 +193,14 @@ function removeRowStatusEditingCommentFromDOM() {
 }
 
 function getRowStatusEditingCommentHTML(oldText) {
-    result = '<div id="comment-editing-status-row">';
-    result += '<div>Редактирование комментария:</div>';
-    result += '<button id="close-status-row-btn">X</button>';
-    result += '<div>' + oldText + '</div>';
+    result = '<div id="comment-editing-status-row" class="mdl-grid mdl-cell--12-col-desktop">';
+    result += '<div class="mdl-cell mdl-cell--3-col-desktop">Исходный текст:</div>';
+    result += '<div class="mdl-cell mdl-cell--8-offset-desktop mdl-cell--1-col-desktop">';
+    result += '<a id ="close-status-row-btn" class="mdl-button mdl-button--icon mdl-button--colored">';
+    result += '<i class="material-icons">close</i>';
+    result += '</a>';
+    result += '</div>';
+    result += '<div id="edit-old-text" class="mdl-card__supporting-text"><p>' + oldText + '</p></div>';
     result += '</div>';
     return result;
 }
@@ -186,13 +208,14 @@ function getRowStatusEditingCommentHTML(oldText) {
 function cleanNewCommentForm() {
     removeRowStatusEditingCommentFromDOM();
     $('#comment-text-input').val('');
-    $('#comment-text-submit').text("Оставить комментарий");
+    $('#comment-text-submit').text("Отправить");
     $('#comment-text-submit').off();
     $('#comment-text-submit').on('click', function (e) {
         e.preventDefault();
         addComment(null);
     });
     removeRowStatusResponceCommentFromDOM();
+    $('#comment-form-block .readmore-ref').remove();  
 
 }
 
@@ -207,6 +230,7 @@ function showError(text) {
 
 function prepareResponceCommentText(parentCommentId) {
     cleanNewCommentForm();
+    showNewCommentBlock();
     parentText = $('#comment-text-' + parentCommentId).text().trim();
     $('#comment-text-submit').text("Ответить");
     $('#comment-text-submit').off();
@@ -220,6 +244,7 @@ function prepareResponceCommentText(parentCommentId) {
 function addRowStatusResponceCommentToDOM(oldText) {
     if (!$('div').is('#comment-responce-status-row')) {
         $('#comment-form-block').prepend(getRowStatusResponceCommentHTML(oldText));
+        readmoreSelected($('#responce-parent-text'), 90);
         $('#close-status-row-btn').on("click", function (e) {
             e.preventDefault();
             cleanNewCommentForm();
@@ -228,10 +253,14 @@ function addRowStatusResponceCommentToDOM(oldText) {
 }
 
 function getRowStatusResponceCommentHTML(parentText) {
-    result = '<div id="comment-responce-status-row">';
-    result += '<div>Ответ на:</div>';
-    result += '<button id="close-status-row-btn">X</button>';
-    result += '<div>' + parentText + '</div>';
+    result = '<div id="comment-responce-status-row" class="mdl-grid mdl-cell--12-col-desktop">';
+    result += '<div class="mdl-cell mdl-cell--2-col-desktop">В ответ на:</div>';
+    result += '<div class="mdl-cell mdl-cell--9-offset-desktop mdl-cell--1-col-desktop">';
+    result += '<a id ="close-status-row-btn" class="mdl-button mdl-button--icon mdl-button--colored">';
+    result += '<i class="material-icons">close</i>';
+    result += '</a>';
+    result += '</div>';
+    result += '<div id="responce-parent-text" class="mdl-card__supporting-text"><p>' + parentText + '</p></div>';
     result += '</div>';
     return result;
 }
@@ -240,18 +269,51 @@ function removeRowStatusResponceCommentFromDOM() {
     $('#comment-responce-status-row').remove();
 }
 
+function showNewCommentBlock() {
+    $('#comment-form-block').show(0, function () {
+        $('#comments').addClass('mdl-cell--3-offset');
+    });
+}
+
+function toggleNewCommentBlock() {
+    $('#comment-form-block').toggle(0, function () {
+        if ($('#comment-form-block').is(':visible')) {
+            $('#comments').addClass('mdl-cell--3-offset');
+        } else {
+            $('#comments').removeClass('mdl-cell--3-offset');
+        }
+    });
+}
+
+function readmoreSelected(selected, maxHeight) {
+    selected.readmore({
+        maxHeight: maxHeight,
+        speed: 200,
+        moreLink: '<a href="#" class="readmore-ref mdl-cell--4-offset-desktop mdl-cell--4-desktop">Просмотреть полностью</a>',
+        lessLink: '<a href="#" class="readmore-ref mdl-cell--5-offset-desktop mdl-cell--3-desktop">Свернуть</a>'
+    });
+}
+
 function hideComments(visibleCount) {
     $('#comment-container').each(function () {
         $(this).find('.comment-block').slice(visibleCount).hide();
     });
-
-
+    $('#show-all-comments-ref').text('Показать все комментарии');
+    $('#show-all-comments-ref').removeClass('mdl-cell--5-offset-desktop');
+    $('#show-all-comments-ref').addClass('mdl-cell--4-offset-desktop');
+    $('#show-all-comments-ref').on('click', function (e) {
+        showAllComments();
+    });
 }
 
 function showAllComments() {
     $('#comment-container').each(function () {
         $(this).find('.comment-block').show();
     });
-
-    $('#show-all-comments-ref').hide();
+    $('#show-all-comments-ref').removeClass('mdl-cell--4-offset-desktop');
+    $('#show-all-comments-ref').addClass('mdl-cell--5-offset-desktop');
+    $('#show-all-comments-ref').text('Скрыть');
+    $('#show-all-comments-ref').on('click', function (e) {
+        hideComments(1);
+    });
 }

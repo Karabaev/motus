@@ -2,46 +2,64 @@
 
 @model SerialService.ViewModels.User.ShowCommentViewModel
 
-<div class="comment-block mdl-grid mdl-card mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-shadow--2dp">
+<div class="comment-block mdl-grid mdl-cell mdl-cell--12-col-desktop mdl-card mdl-shadow--2dp">
     <input type="hidden" value="@Model.ID" />
-    <div class="mdl-grid mdl-cell--12-col">
-        <div class="mdl-cell--2-col"><img src="@Model.AuthorAvatarUrl" alt="@Model.AuthorName avatar"  /></div>
-        <div class="comment-author-name mdl-cell--10-col">@Model.AuthorName</div>
-        <div class="mdl-cell--12-col">@Model.AddDateTime.ToString("dd.MM.yyyy hh:mm")</div>
+    <div class="mdl-grid mdl-cell mdl-cell--12-col-desktop">
+        <div class="mdl-cell mdl-cell--2-col-desktop motus-comment-avatar-cell">
+            <div>
+                <img src="@Model.AuthorAvatarUrl" alt="@Model.AuthorName avatar" />
+            </div>
+        </div>
+
+        <div class="mdl-cell mdl-cell--7-col-desktop">
+            <span class="motus-comments-author-name">@Model.AuthorName</span>
+            <span style="margin-right: 10px;">Добавлен:</span>
+            <span>@Model.AddDateTime.ToString("dd.MM.yyyy hh:mm")</span>
+        </div>
+        <div class="mdl-cell mdl-cell--3-col-desktop">
+            <div class="votes-count">
+                <button class="mdl-button motus-tools mdl-js-button mdl-button--icon" onclick="voteForComment(@Model.ID, true)">
+                    <i class="like-icon material-icons">thumb_up</i>
+                </button>
+                <span id="positive-vote-count-@Model.ID" class="thump-count">@Model.PositiveVoteCount</span>
+                <button class="mdl-button motus-tools mdl-js-button mdl-button--icon" onclick="voteForComment(@Model.ID, false)">
+                    <i class="like-icon material-icons">thumb_down</i>
+                </button>
+                <span id="negative-vote-count-@Model.ID" class="thump-count">@Model.NegativeVoteCount</span>
+            </div>
+        </div>
     </div>
     @if (Model.Parent != null)
     {
-        <div>Ответ на:</div>
-        <div><bold>@Model.Parent.AuthorName: </bold>"@Model.Parent.Text"</div>
+    <div class="mdl-grid mdl-cell--12-col-desktop">
+        <blockquote class="motus-comment-responce-parent-quote mdl-cell--12-col-desktop">
+            <p class="motus-comment-responce-parent-quote__text">@Model.Parent.Text</p>
+            <cite>@Model.Parent.AuthorName</cite>
+        </blockquote>
+    </div>
     }
     <div id="comment-text-@Model.ID" class="mdl-card__supporting-text comment-text">
         <p>@Model.Text</p>
     </div>
-    <div class="votes-count">
-        <button class="mdl-button motus-tools mdl-js-button mdl-button--icon" onclick="voteForComment(@Model.ID, true)">
-            <i class="like-icon material-icons">thumb_up</i>
-        </button>
-        <span id="positive-vote-count-@Model.ID" class="thump-count">@Model.PositiveVoteCount</span>
-        <button class="mdl-button motus-tools mdl-js-button mdl-button--icon" onclick="voteForComment(@Model.ID, false)">
-            <i class="like-icon material-icons">thumb_down</i>
-        </button>
-        <span id="negative-vote-count-@Model.ID" class="thump-count">@Model.NegativeVoteCount</span>
-    </div>
-    <div class="mdl-card__actions mdl-card--border">
+    <div class="mdl-card__actions mdl-grid--no-spacing mdl-card--border">
         @if (User.Identity.IsAuthenticated)
         {
-            if (User.Identity.GetUserId() == Model.AuthorID)
+            <div class="mdl-cell mdl-cell--1-col-desktop mdl-cell--9-offset-desktop">
+                <a href="#comment-form-block" class="mdl-button mdl-button--icon mdl-button--colored" onclick="prepareResponceCommentText(@Model.ID)">
+                    <i class="material-icons">reply</i>
+                </a>
+            </div>
+            if (User.Identity.GetUserId() == Model.AuthorID || User.IsInRole("Admin") || User.IsInRole("Moderator"))
             {
-                <a href="#comment-form-block" class="mdl-button mdl-button--icon mdl-button--colored" onclick="prepareToEditCommentText(@Model.ID)">
-                    <i class="material-icons">edit</i>
-                </a>
-                <a href="#comment-form-block" class="mdl-button mdl-button--icon mdl-button--colored" onclick="removeComment(@Model.ID)">
-                    <i class="material-icons">delete</i>
-                </a>
+                <div class="mdl-cell mdl-cell--2-col-desktop ">
+                    <a href="#comment-form-block" class="mdl-button mdl-button--icon mdl-button--colored" onclick="prepareToEditCommentText(@Model.ID)">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <a href="#comment-form-block" class="mdl-button mdl-button--icon mdl-button--colored" onclick="removeComment(@Model.ID)">
+                        <i class="material-icons">delete</i>
+                    </a>
+                </div>
             }
-            <a href="#comment-form-block" class="mdl-button mdl-button--icon mdl-button--colored" onclick="prepareResponceCommentText(@Model.ID)">
-                <i class="material-icons">reply</i>
-            </a>
         }
     </div>
 </div>
