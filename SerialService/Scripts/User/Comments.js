@@ -25,6 +25,7 @@ function getCommentsContainer() {
                 componentHandler.upgradeDom();
                 readmoreSelected($('#comment-container [id^="comment-text-"]'), 90);  
                 readmoreSelected($('.motus-comment-responce-parent-quote__text'), 50); 
+                hideComments(1);
             }
         },
         error: function (jqxhr, status, errorMsg) {
@@ -290,5 +291,29 @@ function readmoreSelected(selected, maxHeight) {
         speed: 200,
         moreLink: '<a href="#" class="readmore-ref mdl-cell--4-offset-desktop mdl-cell--4-desktop">Просмотреть полностью</a>',
         lessLink: '<a href="#" class="readmore-ref mdl-cell--5-offset-desktop mdl-cell--3-desktop">Свернуть</a>'
+    });
+}
+
+function hideComments(visibleCount) {
+    $('#comment-container').each(function () {
+        $(this).find('.comment-block').slice(visibleCount).hide();
+    });
+    $('#show-all-comments-ref').text('Показать все комментарии');
+    $('#show-all-comments-ref').removeClass('mdl-cell--5-offset-desktop');
+    $('#show-all-comments-ref').addClass('mdl-cell--4-offset-desktop');
+    $('#show-all-comments-ref').on('click', function (e) {
+        showAllComments();
+    });
+}
+
+function showAllComments() {
+    $('#comment-container').each(function () {
+        $(this).find('.comment-block').show();
+    });
+    $('#show-all-comments-ref').removeClass('mdl-cell--4-offset-desktop');
+    $('#show-all-comments-ref').addClass('mdl-cell--5-offset-desktop');
+    $('#show-all-comments-ref').text('Скрыть');
+    $('#show-all-comments-ref').on('click', function (e) {
+        hideComments(1);
     });
 }
