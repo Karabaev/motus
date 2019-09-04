@@ -1,12 +1,4 @@
-﻿.mdl-card__media {
-    margin: 0;
-}
-
-    .mdl-card__media > img {
-        /*max-width: 100px;*/
-    }
-
-.mdl-card__actions {
+﻿.mdl-card__actions {
     display: flex;
     box-sizing: border-box;
     align-items: center;
@@ -45,17 +37,17 @@
 
 
 .motus-comment-responce-parent-quote {
-    border: 2px solid #337AB7;
+    border: 2px solid #ca2d40;
     font-size: 16px;
     font-style: italic;
     margin: 8px 15px 15px 8px;
     padding: 8px 12px;
     position: relative;
-    box-shadow: 10px 10px 0 0 #337AB7;
+    box-shadow: 10px 10px 0 0 #ca2d40;
 }
 
     .motus-comment-responce-parent-quote cite {
-        color: #337AB7;
+        color: #ca2d40;
         font-size: 15px;
         padding-top: 10px;
         display: block;
