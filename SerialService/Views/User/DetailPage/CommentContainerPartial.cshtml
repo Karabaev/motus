@@ -1,11 +1,6 @@
 ﻿@model IEnumerable<SerialService.ViewModels.User.ShowCommentViewModel>
 
-@if (Model != null && !Model.Any())
-{
-    <div id="no-comments-message">Еще никто не поделился своим мнением</div>
-    <div id="comment-container"></div>
-}
-else
+@if (Model != null && Model.Any())
 {
     <div id="comment-container">
         @{
@@ -15,5 +10,8 @@ else
             }
         }
     </div>
-    <a id="show-all-comments-ref" class="mdl-cell--4-offset-desktop mdl-cell--5-col-desktop"  href="#">Показать все комментарии</a>
+    if (Model.Count() > 1)
+    {
+        <a id="show-all-comments-ref" class="mdl-cell--4-offset-desktop mdl-cell--5-col-desktop" href="#">Показать все комментарии</a>
+    }
 }
