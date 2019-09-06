@@ -461,6 +461,10 @@
     <Content Include="Content\Logo\30h\h30.png" />
     <Content Include="Content\Logo\logo-image.svg" />
     <Content Include="Content\Logo\motus-logo.svg" />
+    <Content Include="Content\mdl-v.1.3.0\material.css" />
+    <Content Include="Content\mdl-v.1.3.0\material.js" />
+    <Content Include="Content\mdl-v.1.3.0\material.min.css" />
+    <Content Include="Content\mdl-v.1.3.0\material.min.js" />
     <Content Include="Content\mdl-v1.1.2\material.css" />
     <Content Include="Content\mdl-v1.1.2\material.js" />
     <Content Include="Content\mdl-v1.1.2\material.min.css" />
@@ -471,11 +475,13 @@
     <Content Include="Content\Other\UserContent.css" />
     <Content Include="Content\RedactorTools\EditingManger.css" />
     <Content Include="Content\RedactorTools\RedactorMenu.css" />
+    <Content Include="Content\reset.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\Tables.css" />
     <Content Include="Content\User\Comments.css" />
     <Content Include="Scripts\Readmore\readmore.min.js" />
     <Content Include="Scripts\User\Comments.js" />
     <Content Include="Views\StaticPages\Error.html" />
-    <Content Include="Content\Tables.css" />
     <Content Include="Content\User\CardAndPopovers.css" />
     <Content Include="Content\User\DetailPage.css" />
     <Content Include="Content\User\Index.css" />
@@ -485,7 +491,6 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="Scripts\AccountForms\CommonForm.js" />
     <Content Include="Scripts\AccountForms\ForgotPasswordForm.js" />
     <Content Include="Scripts\AccountForms\LoginForm.js" />
@@ -504,6 +509,11 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\mdl-v.1.3.0\bower.json" />
+    <Content Include="Content\mdl-v.1.3.0\LICENSE" />
+    <Content Include="Content\mdl-v.1.3.0\material.min.css.map" />
+    <Content Include="Content\mdl-v.1.3.0\material.min.js.map" />
+    <Content Include="Content\mdl-v.1.3.0\package.json" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
