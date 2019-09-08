@@ -144,7 +144,7 @@
                 if (season == null)
                 {
                     Task.Run(() => this.logger.Error("SaveViewTime(SaveViewTimeViewModel). Сезон Номер: {0} ИД видеоматериала: {1} не найден", model.SeasonNumber ?? 1, model.VideoMaterialID));
-                    return this.Json(new { error = "SaveViewTime(): ошибка инициализации." });
+                    return this.Json(new { error = "SaveViewTime(): ошибка инициализации." }, JsonRequestBehavior.AllowGet);
                 }
 
                 VideoMaterialViewsByUsers entity = null;
@@ -195,17 +195,17 @@
 
                 if (result)
                 {
-                    return this.Json(new { success = "Время просмотра сохранено" });
+                    return this.Json(new { success = "Время просмотра сохранено" }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
                     Task.Run(() => this.logger.Error("SaveViewTime(SaveViewTimeViewModel). Не удалось сохранить объект {0}", entity));
-                    return this.Json(new { error = "SaveViewTime(): Не удалось сохранить время просмотра." });
+                    return this.Json(new { error = "SaveViewTime(): Не удалось сохранить время просмотра." }, JsonRequestBehavior.AllowGet);
                 }
             }
             else
             {
-                return this.Json(new { error = "SaveViewTime(): Данные некорректны." });
+                return this.Json(new { error = "SaveViewTime(): Данные некорректны." }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -218,7 +218,7 @@
 		public JsonResult IsSubscribed(int? id)
 		{
 			if (!id.HasValue)
-				return this.Json(new { Success = false, Message = "Фильм не найден." });
+				return this.Json(new { Success = false, Message = "Фильм не найден." }, JsonRequestBehavior.AllowGet);
 
 			return this.Json(new
 			{
@@ -232,47 +232,47 @@
 		public JsonResult Subscribe(int? id)
 		{
 			if (!id.HasValue)
-				return this.Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." });
+				return this.Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." }, JsonRequestBehavior.AllowGet);
 
 			ApplicationUser user = this.unitOfWork.Users.Get(this.User.Identity.GetUserId());
 
 			if (user == null)
-				return this.Json(new { Success = false, Message = "Вы должны авторизоваться." });
+				return this.Json(new { Success = false, Message = "Вы должны авторизоваться." }, JsonRequestBehavior.AllowGet);
 
 			VideoMaterial videoMaterial = this.unitOfWork.VideoMaterials.GetVisibleToUser(id);
 
 			if (videoMaterial == null)
-				return this.Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." });
+				return this.Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." }, JsonRequestBehavior.AllowGet);
 
 			if (!this.unitOfWork.VideoMaterials.AddSubscribedUser(id, user))
-				return this.Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." });
+				return this.Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." }, JsonRequestBehavior.AllowGet);
 
-			return this.Json(new { Success = true });
+			return this.Json(new { Success = true }, JsonRequestBehavior.AllowGet);
 		}
 
 		[HttpPost]
 		public JsonResult Unsubscribe(int? id)
 		{
 			if (!id.HasValue)
-				return this.Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." });
+				return this.Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." }, JsonRequestBehavior.AllowGet);
 
 			ApplicationUser user = this.unitOfWork.Users.Get(this.User.Identity.GetUserId());
 
 			if (user == null)
-				return this.Json(new { Success = false, Message = "Вы должны авторизоваться." });
+				return this.Json(new { Success = false, Message = "Вы должны авторизоваться." }, JsonRequestBehavior.AllowGet);
 
 			VideoMaterial videoMaterial = this.unitOfWork.VideoMaterials.GetVisibleToUser(id);
 
 			if (videoMaterial == null)
-				return this.Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." });
+				return this.Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." }, JsonRequestBehavior.AllowGet);
 
 			if (!this.unitOfWork.VideoMaterials.RemoveSubscribedUser(id, user))
 			{
 				Task.Run(() => this.logger.Error("Не удалось добавить запись о подписке."));
-				return this.Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." });
+				return this.Json(new { Success = false, Message = "Произошла ошибка, попробуйте позже." }, JsonRequestBehavior.AllowGet);
 			}
 
-			return this.Json(new { Success = true });
+			return this.Json(new { Success = true }, JsonRequestBehavior.AllowGet);
 		}
 
 		/// <summary>
@@ -338,7 +338,7 @@
 		/// </summary>
 		/// <param name="id"></param>
 		[HttpGet]
-		public ActionResult GetMarks(int? id)
+		public JsonResult GetMarks(int? id)
 		{
 			CountMarksViewModel countMarks = null;
 			if (id.HasValue)
@@ -364,7 +364,7 @@
 		/// <param name="mark"></param>
 		/// <returns></returns>
 		[HttpPost]
-		public ActionResult AddMark(VideoMark mark)
+		public JsonResult AddMark(VideoMark mark)
 		{
 			if (mark != null)
 			{
@@ -411,7 +411,7 @@
 
 				Task.Run(() => this.logger.Info(string.Format("{0} оценен видеоматериал с ID {1}, с IP-адреса {2}",
 					mark.Value ? "Положительно" : "Отрицательно", mark.VideoMaterialID, mark.UserIP)));
-				return this.Json(countMarks);
+				return this.Json(countMarks, JsonRequestBehavior.AllowGet);
 			}
 
 			return null;
@@ -568,15 +568,15 @@
 			else
 			{
 				Task.Run(() => this.logger.Warn(string.Format("Был введен неверный пароль для подтверждения. Завершение UserController.PersonalAccountSaveChanges.")));
-				return this.Json(new { error = "Пароль для подтверждения не правильный." });
+				return this.Json(new { error = "Пароль для подтверждения не правильный." }, JsonRequestBehavior.AllowGet);
 			}
 
 			if(errors.Length > 0)
-				return this.Json(new { error = errors.ToString(), message = advancedMessage });
+				return this.Json(new { error = errors.ToString(), message = advancedMessage }, JsonRequestBehavior.AllowGet);
 
 			user = this.unitOfWork.Users.Get(account.ID);
 
-			return this.Json(new { success = true, email = user.Email, name = user.UserName, message = advancedMessage });
+			return this.Json(new { success = true, email = user.Email, name = user.UserName, message = advancedMessage }, JsonRequestBehavior.AllowGet);
 		}
 
         public ActionResult AddExternalLogin()
@@ -610,7 +610,7 @@
 		public JsonResult UploadAvatar(string base64)
 		{
             var file = Base64ToImage(base64);
-			JsonResult badResult = this.Json(new { error = "Не удалось загрузить аватарку." });
+			JsonResult badResult = this.Json(new { error = "Не удалось загрузить аватарку." }, JsonRequestBehavior.AllowGet);
 
 			if (file == null)
 			{
@@ -639,7 +639,7 @@
             catch (Exception ex)
 			{
 				Task.Run(() => this.logger.Error(ex, "Не удалось сохранить файл аватарки " + absoluteAvatarPath));
-				return this.Json(new { error = "Не удалось загрузить файл на сервер. Попробуйте позже." });
+				return this.Json(new { error = "Не удалось загрузить файл на сервер. Попробуйте позже." }, JsonRequestBehavior.AllowGet);
 			}
 
 			string oldAvatarPath = this.unitOfWork.Users.Get(this.User.Identity.GetUserId()).AvatarURL;
@@ -660,7 +660,7 @@
 				Task.Run(() => this.logger.Warn(ex, "Не удалось удалить файл аватарки " + oldAvatarPath));
 			}
 
-			return this.Json(new { success = virtualAvatarPath });
+			return this.Json(new { success = virtualAvatarPath }, JsonRequestBehavior.AllowGet);
 		}
 
         public ActionResult Filter(FilterData data)
