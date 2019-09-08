@@ -43,6 +43,9 @@
 		[AllowAnonymous]
         public ActionResult Login(ReturnUrlViewModel model)
         {
+            if (User.Identity.IsAuthenticated)
+                return HttpNotFound();
+
             if(!ModelState.IsValid)
                 model.ReturnUrl = Url.Action("Index", "User");
 
@@ -58,6 +61,9 @@
 		[HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model)
         {
+            if (User.Identity.IsAuthenticated)
+                return HttpNotFound();
+
             StringBuilder errors = new StringBuilder();
 
             if (!this.ModelState.IsValid)
@@ -109,6 +115,7 @@
 		[HttpPost, ValidateAntiForgeryToken]
         public ActionResult LogOff(ReturnUrlViewModel model)
         {
+
             if (!ModelState.IsValid)
                 model.ReturnUrl = Url.Action("Index", "User");
 
@@ -123,6 +130,9 @@
         [AllowAnonymous]
         public ActionResult Register()
         {
+            if (User.Identity.IsAuthenticated)
+                return HttpNotFound();
+
             return this.View();
         }
 
@@ -134,6 +144,9 @@
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel model)
         {
+            if (User.Identity.IsAuthenticated)
+                return HttpNotFound();
+
             if (!model.PrivacyPolicyConfirmed)
                 return this.Json(new { error = "Вы должны подтвердить политику конфиденциальности" }, JsonRequestBehavior.AllowGet);
 
@@ -188,6 +201,9 @@
 		[AllowAnonymous]
         public ActionResult DisplayEmailToConfirmation(DisplayEmailToConfirmationViewModel model)
         {
+            if (User.Identity.IsAuthenticated)
+                return HttpNotFound();
+
             if (model == null || string.IsNullOrWhiteSpace(model.Email))
                 HttpNotFound();
 
@@ -202,6 +218,9 @@
         [AllowAnonymous]
         public ActionResult ConfirmEmail(ConfirmEmailViewModel model)
         {
+            if (User.Identity.IsAuthenticated)
+                return HttpNotFound();
+
             if (model == null || string.IsNullOrWhiteSpace(model.UserID) || string.IsNullOrWhiteSpace(model.Code))
                 return this.HttpNotFound();
 
