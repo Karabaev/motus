@@ -61,7 +61,7 @@
             StringBuilder errors = new StringBuilder();
 
             if (!this.ModelState.IsValid)
-                return this.Json(new { success = "login" });
+                return this.Json(new { success = "login" }, JsonRequestBehavior.AllowGet);
 
             ApplicationSignInManager signInManager = this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             var user = this.userService.GetByMainStringProperty(model.Email);
@@ -77,7 +77,7 @@
                         case SignInStatus.Success:
                             user.LastAuthorizationDateTime = DateTime.Now;
                             Task.Run(() => this.userService.Update(user));
-                            return this.Json(new { success = model.ReturnUrl });
+                            return this.Json(new { success = model.ReturnUrl }, JsonRequestBehavior.AllowGet);
                         case SignInStatus.LockedOut:
                             errors.Append("Учетная запись заблокирована<br/>");
                             break;
@@ -99,7 +99,7 @@
                 errors.Append("Неверный адрес email или пароль<br/>");
             }
 
-            return this.Json(new { error = errors.ToString() });
+            return this.Json(new { error = errors.ToString() }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@
         public ActionResult Register(RegisterViewModel model)
         {
             if (!model.PrivacyPolicyConfirmed)
-                return this.Json(new { error = "Вы должны подтвердить политику конфиденциальности" });
+                return this.Json(new { error = "Вы должны подтвердить политику конфиденциальности" }, JsonRequestBehavior.AllowGet);
 
             if (this.ModelState.IsValid)
             {
@@ -161,22 +161,22 @@
                         return this.Json(new
                         {
                             success = this.Url.Action("DisplayEmailToConfirmation", "Account", new DisplayEmailToConfirmationViewModel { Email = model.Email })
-                        });
+                        }, JsonRequestBehavior.AllowGet);
                         
                     }
                     else
                     {
-                        return this.Json(new { error = string.Join("<br/>", result.Errors) });
+                        return this.Json(new { error = string.Join("<br/>", result.Errors) }, JsonRequestBehavior.AllowGet);
                     }
                 }
                 catch (EntryAlreadyExistsException ex)
                 {
-                    return this.Json(new { error = ex.Message });
+                    return this.Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
                 }
             }
             else
             {
-                return this.Json(new { error = string.Join("<br/>", ModelState.Values.SelectMany(s => s.Errors.Select(e => e.ErrorMessage))) });
+                return this.Json(new { error = string.Join("<br/>", ModelState.Values.SelectMany(s => s.Errors.Select(e => e.ErrorMessage))) }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -232,7 +232,7 @@
                 ApplicationUser user = this.userService.GetByMainStringProperty(model.Email);
 
                 if (user == null)
-                    return Json(new { error = string.Format("Пользователь с email {0} не найден", model.Email) });
+                    return Json(new { error = string.Format("Пользователь с email {0} не найден", model.Email) }, JsonRequestBehavior.AllowGet);
 
                 string code = this.userService.GeneratePasswordResetToken(user.Id);
                 var callbackUrl = this.Url.Action("ResetPassword", "Account", new { UserID = user.Id, Code = code }, protocol: this.Request.Url.Scheme);
@@ -245,11 +245,11 @@
                     {
                         Email = model.Email
                     })
-                });
+                }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json(new { error = "Поле Email некорректно" });
+                return Json(new { error = "Поле Email некорректно" }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -266,10 +266,10 @@
                 var user = this.userService.GetByMainStringProperty(model.Email);
 
                 if (user == null)
-                    return Json(new { error = string.Format("Пользователь с email {0} не найден", model.Email) });
+                    return Json(new { error = string.Format("Пользователь с email {0} не найден", model.Email) }, JsonRequestBehavior.AllowGet);
 
                 if (model.Parole.CreateMD5() != user.Parole)
-                    return Json(new { error = string.Format("Введено некорректное секретное слово") });
+                    return Json(new { error = string.Format("Введено некорректное секретное слово") }, JsonRequestBehavior.AllowGet);
 
                 string code = this.userService.GeneratePasswordResetToken(user.Id);
 
@@ -277,11 +277,11 @@
                 {
                     success = Url.Action("ResetPassword", new ConfirmEmailViewModel { UserID = user.Id, Code = code })
 
-                });
+                }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json( new { error = string.Join("<br/>", ModelState.Values.SelectMany(s => s.Errors.Select(e => e.ErrorMessage))) });
+                return Json( new { error = string.Join("<br/>", ModelState.Values.SelectMany(s => s.Errors.Select(e => e.ErrorMessage))) }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -338,14 +338,14 @@
             var user = this.userService.GetByMainStringProperty(model.Email);
 
             if (user == null)
-                return Json(new { error = "Пользователь с указанным адресом эл. почты не найден" });
+                return Json(new { error = "Пользователь с указанным адресом эл. почты не найден" }, JsonRequestBehavior.AllowGet);
 
             var result = this.userService.ResetPassword(user.Id, model.Code, model.Password);
 
             if (!result.Succeeded)
-                return Json(new { error = string.Join(", ", result.Errors) });
+                return Json(new { error = string.Join(", ", result.Errors) }, JsonRequestBehavior.AllowGet);
 
-            return Json(new { success = Url.Action("ResetPasswordConfirmation") });
+            return Json(new { success = Url.Action("ResetPasswordConfirmation") }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

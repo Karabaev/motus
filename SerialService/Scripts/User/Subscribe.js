@@ -15,9 +15,11 @@ $(document).ready(function () {
                 }
             }
             else {
-                alert(data.Message);
+                console.error(data.Message);
             }
-    }).fail(function () { alert("Error"); });
+        }).fail(function () {
+            console.error('subscribed request error');
+        });
 });
 
 $('#SubscribeBtn').on('click', function (e) {
@@ -30,7 +32,7 @@ $('#SubscribeBtn').on('click', function (e) {
                 $("#UnSubscribeBtn").show();
             }
             else {
-                alert(data.Message);
+                console.error(data.Message);
             }
         },
         "json");
@@ -46,7 +48,7 @@ $('#UnSubscribeBtn').on('click', function (e) {
                 $("#UnSubscribeBtn").hide();
             }
             else {
-                alert(data.Message);
+                console.error(data.Message);
             }
         },
         "json");

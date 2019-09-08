@@ -32,10 +32,10 @@
         public JsonResult AddComment(AddCommentViewModel model)
         {
             if (!HttpContext.User.Identity.IsAuthenticated)
-                return Json(new { error = "Чтобы оставить комментарий, необходимо авторизоваться." });
+                return Json(new { error = "Чтобы оставить комментарий, необходимо авторизоваться." }, JsonRequestBehavior.AllowGet);
 
             if (!ModelState.IsValid)
-                return Json(new { error = "Ошибка валидации комментария." });
+                return Json(new { error = "Ошибка валидации комментария." }, JsonRequestBehavior.AllowGet);
 
             Comment comment = Mapper.Map<AddCommentViewModel, Comment>(model);
             comment.AuthorID = HttpContext.User.Identity.GetUserId();
@@ -51,23 +51,23 @@
                     if (comment.ParentID.HasValue)
                         parent = this.unitOfWork.Comments.Get(comment.ParentID);
 
-                    return Json(new { success = "Комментарий добавлен." });
+                    return Json(new { success = "Комментарий добавлен." }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
                     Task.Run(() => this.logger.Error("Не удалось сохранить комментарий"));
-                    return Json(new { error = "Не удалось сохранить комментарий. Обратитесь в поддержку сайта." });
+                    return Json(new { error = "Не удалось сохранить комментарий. Обратитесь в поддержку сайта." }, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (EntryAlreadyExistsException ex)
             {
                 Task.Run(() => this.logger.Error(ex));
-                return Json(new { error = "Вы уже оставляли коментарий с таким текстом в данном видеоматериале." });
+                return Json(new { error = "Вы уже оставляли коментарий с таким текстом в данном видеоматериале." }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 Task.Run(() => this.logger.Error(ex));
-                return Json(new { error = "Не удалось сохранить комментарий. Обратитесь в поддержку сайта." });
+                return Json(new { error = "Не удалось сохранить комментарий. Обратитесь в поддержку сайта." }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -75,46 +75,46 @@
         public JsonResult RemoveComment(RemoveCommentViewModel model)
         {
             if (!ModelState.IsValid)
-                return Json(new { error = "Не указан идентификатор." });
+                return Json(new { error = "Не указан идентификатор." }, JsonRequestBehavior.AllowGet);
 
             Comment comment = this.unitOfWork.Comments.Get(model.CommentID);
 
             if (comment == null)
-                return Json(new { error = "Комментарий не найден." });
+                return Json(new { error = "Комментарий не найден." }, JsonRequestBehavior.AllowGet);
 
             if (comment.AuthorID != User.Identity.GetUserId() && (!User.IsInRole("Admin") || !User.IsInRole("Moderator")))
-                return Json(new { error = "Нельзя удалить не свой комментарий." });
+                return Json(new { error = "Нельзя удалить не свой комментарий." }, JsonRequestBehavior.AllowGet);
 
             if (this.unitOfWork.Comments.Remove(comment))
-                return Json(new { success = "Комментарий удален." });
+                return Json(new { success = "Комментарий удален." }, JsonRequestBehavior.AllowGet);
             else
-                return Json(new { error = "Не удалось удалить комментарий." });
+                return Json(new { error = "Не удалось удалить комментарий." }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost, Authorize]
         public JsonResult EditComment(EditCommentViewModel model)
         {
             if (!ModelState.IsValid)
-                return Json(new { error = "Идентификатор или текст не указаны." });
+                return Json(new { error = "Идентификатор или текст не указаны." }, JsonRequestBehavior.AllowGet);
 
             try
             {
                 if (this.unitOfWork.Comments.EditText(model.CommentID, model.NewText, User.Identity.GetUserId()))
-                    return Json(new { success = model });
+                    return Json(new { success = model }, JsonRequestBehavior.AllowGet);
                 else
-                    return Json(new { error = "Не удалось изменить комментарий." });
+                    return Json(new { error = "Не удалось изменить комментарий." }, JsonRequestBehavior.AllowGet);
             }
             catch (EntryAlreadyExistsException ex)
             {
-                return Json(new { error = "Вы уже оставляли коментарий с таким текстом в данном видеоматериале." });
+                return Json(new { error = "Вы уже оставляли коментарий с таким текстом в данном видеоматериале." }, JsonRequestBehavior.AllowGet);
             }
             catch (EntryNotFoundException ex)
             {
-                return Json(new { error = ex.Message });
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
             }
             catch (AccessDeniedException ex)
             {
-                return Json(new { error = ex.Message });
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -122,7 +122,7 @@
         public JsonResult VoteForComment(VoteForCommentViewModel model)
         {
             if (!ModelState.IsValid)
-                return Json(new { error = "Неверные данные." });
+                return Json(new { error = "Неверные данные." }, JsonRequestBehavior.AllowGet);
 
             CommentMark mark = new CommentMark
             {
@@ -144,11 +144,11 @@
                         NegativeMarkCount = comment.NegativeVoteCount,
                         PositiveMarkCount = comment.PositiveVoteCount
                     };
-                    return Json(new { success = countMarks });
+                    return Json(new { success = countMarks }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    return Json(new { error = "Ошибка записи." });
+                    return Json(new { error = "Ошибка записи." }, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (EntryAlreadyExistsException ex)
@@ -168,11 +168,11 @@
                             NegativeMarkCount = comment.NegativeVoteCount,
                             PositiveMarkCount = comment.PositiveVoteCount
                         };
-                        return Json(new { success = countMarks });
+                        return Json(new { success = countMarks }, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
-                        return Json(new { error = "Ошибка записи." });
+                        return Json(new { error = "Ошибка записи." }, JsonRequestBehavior.AllowGet);
                     }
                 }
 
@@ -191,16 +191,16 @@
                             NegativeMarkCount = comment.NegativeVoteCount,
                             PositiveMarkCount = comment.PositiveVoteCount
                         };
-                        return Json(new { success = countMarks });
+                        return Json(new { success = countMarks }, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
-                        return Json(new { error = "Ошибка записи." });
+                        return Json(new { error = "Ошибка записи." }, JsonRequestBehavior.AllowGet);
                     }
                 }
             }
 
-            return Json(new { error = "Ошибка записи." });
+            return Json(new { error = "Ошибка записи." }, JsonRequestBehavior.AllowGet);
         }
 
         private readonly IAppUnitOfWork unitOfWork;
