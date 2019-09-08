@@ -91,11 +91,6 @@ $(function () {
     }
 });
 
-window.addEventListener('DOMContentLoaded', function (e) {
-    SetPlayerWindowSize();
-});
-
-
 
 
 
