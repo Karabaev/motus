@@ -13,7 +13,7 @@
 
     public class CommentMarkService : ICommentMarkService
     {
-        public CommentMarkService(ApplicationDbContext context)
+        public CommentMarkService(IDbContext context)
         {
             Repository = new CommentMarkRepository(context);
         }

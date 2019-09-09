@@ -4,11 +4,9 @@
     using Entities;
     using Microsoft.AspNet.Identity.EntityFramework;
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IDbContext
     {
-        public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false)
-        {
-        }
+        public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false) {}
 
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentMark> CommentMarks { get; set; }
@@ -61,9 +59,9 @@
             base.OnModelCreating(modelBuilder);
         }
 
-        public static ApplicationDbContext Create()
-        {
-            return new ApplicationDbContext();
-        }
+        //public static ApplicationDbContext Create()
+        //{
+        //    return new ApplicationDbContext();
+        //}
     }
 }

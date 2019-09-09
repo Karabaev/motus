@@ -20,6 +20,7 @@
     using ViewModels.Account;
     using System.IO;
     using System.Configuration;
+    using DAL;
 
     [Authorize, ExceptionHandler]
     public class AccountController : Controller
@@ -30,9 +31,9 @@
         /// Конструктор
         /// </summary>
         /// <param name="userService"></param>
-		public AccountController(IUserService userService)
+		public AccountController(IAppUnitOfWork unitOfWork)
         {
-            this.userService = userService;
+            this.userService = unitOfWork.Users;
         }
 
         /// <summary>

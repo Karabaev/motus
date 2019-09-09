@@ -14,7 +14,7 @@
     {
         public IRepository<VideoMark> Repository { get; set; }
 
-        public VideoMarkService(ApplicationDbContext context)
+        public VideoMarkService(IDbContext context)
         {
             this.Repository = new VideoMarkRepository(context);
         }

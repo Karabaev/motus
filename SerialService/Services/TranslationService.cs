@@ -13,7 +13,7 @@
     {
         public IRepository<Translation> Repository { get; set; }
 
-        public TranslationService(ApplicationDbContext context)
+        public TranslationService(IDbContext context)
         {
             Repository = new TranslationRepository(context);
         }

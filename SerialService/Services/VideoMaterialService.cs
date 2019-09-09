@@ -18,7 +18,7 @@
     {
         public IVideoMaterialRepository Repository { get; set; }
 
-        public VideoMaterialService(ApplicationDbContext context)
+        public VideoMaterialService(IDbContext context)
         {
             Repository = new VideoMaterialRepository(context);
         }

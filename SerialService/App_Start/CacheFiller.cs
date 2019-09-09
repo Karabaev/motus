@@ -4,12 +4,13 @@
     using SerialService.Infrastructure.Core;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Web.Mvc;
 
     public static class CacheFiller
     {
         public static void FilterFillCache()
         {
-            IAppUnitOfWork unitOfWork = new AppUnitOfWork();
+            IAppUnitOfWork unitOfWork = DependencyResolver.Current.GetService<IAppUnitOfWork>();
             Dictionary<string, List<string>> filterLists = new Dictionary<string, List<string>>
             {
                 {"genres",unitOfWork.Genres.GetAll().Select(g=>g.Name).ToList()},

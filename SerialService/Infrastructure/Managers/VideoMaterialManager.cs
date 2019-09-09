@@ -12,9 +12,9 @@
 
     public class VideoMaterialManager
     {
-        public VideoMaterialManager()
+        public VideoMaterialManager(IAppUnitOfWork unitOfWork)
         {
-            this.unitOfWork = AppUnitOfWork.GetInstance();
+            this.unitOfWork = unitOfWork;
         }
 
         public bool CreateNewVideoMaterial(VideoMaterial videoMaterial)

@@ -12,7 +12,7 @@
 
     public class CountryService : ICountryService
     {
-        public CountryService(ApplicationDbContext context)
+        public CountryService(IDbContext context)
         {
             Repository = new CountryRepository(context);
         }

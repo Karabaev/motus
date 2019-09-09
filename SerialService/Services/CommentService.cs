@@ -13,7 +13,7 @@
 
     public class CommentService : ICommentService
     {
-        public CommentService(ApplicationDbContext context)
+        public CommentService(IDbContext context)
         {
             Repository = new CommentRepository(context);
         }
