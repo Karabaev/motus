@@ -16,6 +16,13 @@
 
     public class VideoMaterialUrlDownloadModule : BaseModule
     {
+        public VideoMaterialUrlDownloadModule()
+        {
+            this.unitOfWork = (IAppUnitOfWork)Shared.NinjectDependencyResolver.Instance.GetService(
+                                                                typeof(IAppUnitOfWork));
+
+        }
+
         public int DownloadListByUrl(string url, string selector, string authorEmail)
         {
             Task.Run(() => this.logger.Info($"Начало загрузки информации о фильмах их списка {url}"));
@@ -185,7 +192,7 @@
             }
         }
 
-        private readonly IAppUnitOfWork unitOfWork = AppUnitOfWork.GetInstance();
+        private readonly IAppUnitOfWork unitOfWork;
         private readonly InfoAgentService infoAgentService = new InfoAgentService();
     }
 }

@@ -14,7 +14,7 @@
     {
         public IRepository<Theme> Repository { get; set; }
 
-        public ThemeService(ApplicationDbContext context)
+        public ThemeService(IDbContext context)
         {
             Repository = new ThemeRepository(context);
         }

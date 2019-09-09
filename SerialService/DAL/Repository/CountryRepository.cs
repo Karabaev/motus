@@ -9,19 +9,19 @@
 
     public class CountryRepository : ICountryRepository
     {
-        public CountryRepository(ApplicationDbContext context)
+        public CountryRepository(IDbContext context)
         {
-            this.DB = context;
+            this.db = context;
         }
 
         public EntityList<Country> GetAllEntities()
         {
-            return this.DB.Countries.ToEntityList();
+            return this.db.Countries.ToEntityList();
         }
 
         public Country GetEntity(int id)
         {
-            return this.DB.Countries.FirstOrDefault(p => p.ID == id);
+            return this.db.Countries.FirstOrDefault(p => p.ID == id);
         }
 
         public bool AddEntity(Country entity)
@@ -29,7 +29,7 @@
             if (entity == null)
                 return false;
 
-            this.DB.Countries.Add(entity);
+            this.db.Countries.Add(entity);
             return this.SaveChanges();
         }
 
@@ -38,7 +38,7 @@
             if (entity == null)
                 return false;
 
-            Country cache = this.DB.Countries.FirstOrDefault(p => p.ID == entity.ID);
+            Country cache = this.db.Countries.FirstOrDefault(p => p.ID == entity.ID);
 
             if (cache == null)
                 return false;
@@ -54,21 +54,21 @@
 
         public bool RemoveEntity(int id)
         {
-            this.DB.Countries.Remove(this.DB.Countries.FirstOrDefault(e => e.ID == id));
+            this.db.Countries.Remove(this.db.Countries.FirstOrDefault(e => e.ID == id));
             return this.SaveChanges();
         }
 
         public bool RemoveEntity(Country entity)
         {
-            this.DB.Countries.Remove(entity);
+            this.db.Countries.Remove(entity);
             return this.SaveChanges();
         }
 
         public bool SaveChanges()
         {
-            return this.DB.SaveChanges() > 0;
+            return this.db.SaveChanges() > 0;
         }
 
-        private readonly ApplicationDbContext DB;
+        private readonly IDbContext db;
     }
 }

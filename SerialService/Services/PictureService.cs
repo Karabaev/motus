@@ -14,7 +14,7 @@
     {
         public IRepository<Picture> Repository { get; set; }
 
-        public PictureService(ApplicationDbContext context)
+        public PictureService(IDbContext context)
         {
             Repository = new PictureRepository(context);
         }

@@ -11,7 +11,12 @@
     public class SitemapGenerator
     {
         const string domian = "https://motus-cinema.ru/";
-        IAppUnitOfWork uow = new AppUnitOfWork();
+        private readonly IAppUnitOfWork uow;
+
+        public SitemapGenerator()
+        {
+            this.uow = DependencyResolver.Current.GetService<IAppUnitOfWork>();
+        }
 
         public string GetSitemapDocument(IEnumerable<SitemapNode> sitemapNodes)
         {

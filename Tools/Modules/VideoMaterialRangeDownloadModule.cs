@@ -16,6 +16,12 @@
 
     public class VideoMaterialRangeDownloadModule : BaseModule
     {
+        public VideoMaterialRangeDownloadModule()
+        {
+            this.unitOfWork = (IAppUnitOfWork)Shared.NinjectDependencyResolver.Instance.GetService(
+                                                                typeof(IAppUnitOfWork));
+
+        }
         private int DownloadAllVideoMaterials(int startKpId, int endKpId, string authorEmail)
         {
             Task.Run(() => this.logger.Info("Начало загрузки информации о фильмах с Кинопоиск ID {0}-{1}", startKpId, endKpId));
@@ -181,7 +187,7 @@
             Task.Run(() => this.logger.Fatal("Потрачено времени на проверку обновлений: {0}", result));
         }
 
-        private readonly IAppUnitOfWork unitOfWork = AppUnitOfWork.GetInstance();
+        private readonly IAppUnitOfWork unitOfWork;
         private readonly InfoAgentService infoAgentService = new InfoAgentService();
     }
 }

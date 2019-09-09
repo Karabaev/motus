@@ -26,6 +26,12 @@ namespace Tools.Modules
 	/// </summary>
 	public class VideoMaterialUpdateModule : BaseModule
     {
+        public VideoMaterialUpdateModule()
+        {
+            this.unitOfWork = (IAppUnitOfWork)NinjectDependencyResolver.Instance.GetService(
+                                                                            typeof(IAppUnitOfWork));
+        }
+
 		/// <summary>
 		/// Проверить обновления всех видеоматериалов, помеченных флагом проверки обновлений, обновить в случае необходимости и оповестить подписчиков.
 		/// </summary>
@@ -368,7 +374,7 @@ namespace Tools.Modules
 
 		private MailClient mailClient;
 		private readonly InfoAgentService infoAgent = new InfoAgentService();
-		private readonly IAppUnitOfWork unitOfWork = AppUnitOfWork.GetInstance();
+		private readonly IAppUnitOfWork unitOfWork;
 		private readonly ConfigManager configManager = ConfigManager.GetInstance();
 	}
 }

@@ -12,6 +12,11 @@
 
     public class MoonwalkDownloadModule : BaseModule
     {
+        public MoonwalkDownloadModule()
+        {
+            this.unitOfWork = (IAppUnitOfWork)NinjectDependencyResolver.Instance.GetService(
+                                                                            typeof(IAppUnitOfWork));
+        }
         /// <summary>
         /// Получить лист объектов FilmInof по всей базе Мунвалка.
         /// </summary>
@@ -126,7 +131,7 @@
             Task.Run(() => this.logger.Fatal("Потрачено времени на проверку обновлений: {0}", result));
         }
 
-        private readonly IAppUnitOfWork unitOfWork = AppUnitOfWork.GetInstance();
+        private readonly IAppUnitOfWork unitOfWork;
         private readonly Service service = new Service();
     }
     

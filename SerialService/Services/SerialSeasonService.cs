@@ -16,7 +16,7 @@
     {
         public IRepository<SerialSeason> Repository { get; set; }
 
-		public SerialSeasonService(ApplicationDbContext context)
+		public SerialSeasonService(IDbContext context)
 		{
 			this.Repository = new SerialSeasonRepository(context);
 		}

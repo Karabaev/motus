@@ -21,7 +21,7 @@
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
 			NinjectDependencyResolver ninject = new NinjectDependencyResolver(new StandardKernel());
 			DependencyResolver.SetResolver(ninject);
-			AutoMapperConfig.AutoMapperInit();
+            AutoMapperConfig.AutoMapperInit();
 			CacheFiller.FilterFillCache();
 			ElasticIndex.Index(DependencyResolver.Current.GetService<IAppUnitOfWork>());
 		}

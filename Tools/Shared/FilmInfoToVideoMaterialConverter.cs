@@ -14,7 +14,9 @@
     {
         public static VideoMaterial Convert(FilmInfo info, string authorMail)
         {
-            VideoMaterialManager manager = new VideoMaterialManager();
+            VideoMaterialManager manager = new VideoMaterialManager(
+                                        (IAppUnitOfWork)NinjectDependencyResolver.Instance.GetService(
+                                                                    typeof(IAppUnitOfWork)));
 
             bool watchForUpdates = info.IsSerial.HasValue && info.IsSerial.Value ? true : false;
             List<SerialSeasonInitializer> seasonInitializerList = new List<SerialSeasonInitializer>();

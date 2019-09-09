@@ -10,14 +10,14 @@ namespace SerialService.Services
 {
     public class RoleService : IRoleService
     {
-        private ApplicationDbContext DB;
+        private IDbContext db;
         private RoleManager<IdentityRole> roleManager;
         private RoleStore<IdentityRole> roleStore;
 
-        public RoleService(ApplicationDbContext context)
+        public RoleService(IDbContext context)
         {
-            this.DB = context;
-            this.roleStore = new RoleStore<IdentityRole>(context);
+            this.db = context;
+            this.roleStore = new RoleStore<IdentityRole>((ApplicationDbContext)context);
             this.roleManager  = new RoleManager<IdentityRole>(roleStore);
         }
 

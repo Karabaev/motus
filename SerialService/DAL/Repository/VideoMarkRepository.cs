@@ -9,19 +9,19 @@
 
     public class VideoMarkRepository : IVideoMarkRepository
     {
-        public VideoMarkRepository(ApplicationDbContext context)
+        public VideoMarkRepository(IDbContext context)
         {
-            this.DB = context;
+            this.db = context;
         }
 
         public EntityList<VideoMark> GetAllEntities()
         {
-            return this.DB.VideoMarks.ToEntityList();
+            return this.db.VideoMarks.ToEntityList();
         }
 
         public VideoMark GetEntity(int id)
         {
-            return this.DB.VideoMarks.FirstOrDefault(p => p.ID == id);
+            return this.db.VideoMarks.FirstOrDefault(p => p.ID == id);
         }
 
         public bool AddEntity(VideoMark entity)
@@ -29,7 +29,7 @@
             if (entity == null)
                 return false;
 
-            this.DB.VideoMarks.Add(entity);
+            this.db.VideoMarks.Add(entity);
             return this.SaveChanges();
         }
 
@@ -38,7 +38,7 @@
             if (entity == null)
                 return false;
 
-            VideoMark cache = this.DB.VideoMarks.FirstOrDefault(p => p.ID == entity.ID);
+            VideoMark cache = this.db.VideoMarks.FirstOrDefault(p => p.ID == entity.ID);
 
             if (cache == null)
                 return false;
@@ -54,21 +54,21 @@
 
         public bool RemoveEntity(int id)
         {
-            this.DB.VideoMarks.Remove(this.DB.VideoMarks.FirstOrDefault(e => e.ID == id));
+            this.db.VideoMarks.Remove(this.db.VideoMarks.FirstOrDefault(e => e.ID == id));
             return this.SaveChanges();
         }
 
         public bool RemoveEntity(VideoMark entity)
         {
-            this.DB.VideoMarks.Remove(entity);
+            this.db.VideoMarks.Remove(entity);
             return this.SaveChanges();
         }
 
         public bool SaveChanges()
         {
-            return this.DB.SaveChanges() > 0;
+            return this.db.SaveChanges() > 0;
         }
 
-        private readonly ApplicationDbContext DB;
+        private readonly IDbContext db;
     }
 }

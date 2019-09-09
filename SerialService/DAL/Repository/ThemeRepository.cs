@@ -9,19 +9,19 @@
 
     public class ThemeRepository : IThemeRepository
     {
-        public ThemeRepository(ApplicationDbContext context)
+        public ThemeRepository(IDbContext context)
         {
-            this.DB = context;
+            this.db = context;
         }
 
         public EntityList<Theme> GetAllEntities()
         {
-            return this.DB.Themes.ToEntityList();
+            return this.db.Themes.ToEntityList();
         }
 
         public Theme GetEntity(int id)
         {
-            return this.DB.Themes.FirstOrDefault(p => p.ID == id);
+            return this.db.Themes.FirstOrDefault(p => p.ID == id);
         }
 
         public bool AddEntity(Theme entity)
@@ -29,7 +29,7 @@
             if (entity == null)
                 return false;
 
-            this.DB.Themes.Add(entity);
+            this.db.Themes.Add(entity);
             return this.SaveChanges();
         }
 
@@ -38,7 +38,7 @@
             if (entity == null)
                 return false;
 
-            Theme cache = this.DB.Themes.FirstOrDefault(p => p.ID == entity.ID);
+            Theme cache = this.db.Themes.FirstOrDefault(p => p.ID == entity.ID);
 
             if (cache == null)
                 return false;
@@ -54,21 +54,21 @@
 
         public bool RemoveEntity(int id)
         {
-            this.DB.Themes.Remove(this.DB.Themes.FirstOrDefault(e => e.ID == id));
+            this.db.Themes.Remove(this.db.Themes.FirstOrDefault(e => e.ID == id));
             return this.SaveChanges();
         }
 
         public bool RemoveEntity(Theme entity)
         {
-            this.DB.Themes.Remove(entity);
+            this.db.Themes.Remove(entity);
             return this.SaveChanges();
         }
 
         public bool SaveChanges()
         {
-            return this.DB.SaveChanges() > 0;
+            return this.db.SaveChanges() > 0;
         }
 
-        private readonly ApplicationDbContext DB;
+        private readonly IDbContext db;
     }
 }

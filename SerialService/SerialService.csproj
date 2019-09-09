@@ -285,6 +285,7 @@
     <Compile Include="DAL\AppUnitOfWork.cs" />
     <Compile Include="DAL\Context\ApplicationDbContext.cs" />
     <Compile Include="Controllers\RedactorToolsController.cs" />
+    <Compile Include="DAL\Context\IDbContext.cs" />
     <Compile Include="DAL\Entities\ApplicationUser.cs" />
     <Compile Include="DAL\Entities\Comment.cs" />
     <Compile Include="DAL\Entities\CommentMark.cs" />

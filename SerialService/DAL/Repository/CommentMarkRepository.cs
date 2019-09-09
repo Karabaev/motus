@@ -8,19 +8,19 @@
 
     public class CommentMarkRepository : ICommentMarkRepository
     {
-        public CommentMarkRepository(ApplicationDbContext context)
+        public CommentMarkRepository(IDbContext context)
         {
-            this.DB = context;
+            this.db = context;
         }
 
         public EntityList<CommentMark> GetAllEntities()
         {
-             return this.DB.CommentMarks.ToEntityList();
+             return this.db.CommentMarks.ToEntityList();
         }
 
         public CommentMark GetEntity(int id)
         {
-            return this.DB.CommentMarks.FirstOrDefault(p => p.ID == id);
+            return this.db.CommentMarks.FirstOrDefault(p => p.ID == id);
         }
 
         public bool AddEntity(CommentMark entity)
@@ -28,7 +28,7 @@
             if (entity == null)
                 return false;
 
-            this.DB.CommentMarks.Add(entity);
+            this.db.CommentMarks.Add(entity);
             return this.SaveChanges();
         }
 
@@ -37,7 +37,7 @@
             if (entity == null)
                 return false;
 
-            CommentMark cache = this.DB.CommentMarks.FirstOrDefault(p => p.ID == entity.ID);
+            CommentMark cache = this.db.CommentMarks.FirstOrDefault(p => p.ID == entity.ID);
 
             if (cache == null)
                 return false;
@@ -53,21 +53,21 @@
 
         public bool RemoveEntity(int id)
         {
-            this.DB.CommentMarks.Remove(this.DB.CommentMarks.FirstOrDefault(e => e.ID == id));
+            this.db.CommentMarks.Remove(this.db.CommentMarks.FirstOrDefault(e => e.ID == id));
             return this.SaveChanges();
         }
 
         public bool RemoveEntity(CommentMark entity)
         {
-            this.DB.CommentMarks.Remove(entity);
+            this.db.CommentMarks.Remove(entity);
             return this.SaveChanges();
         }
 
         public bool SaveChanges()
         {
-             return this.DB.SaveChanges() > 0;
+             return this.db.SaveChanges() > 0;
         }
 
-        private readonly ApplicationDbContext DB;
+        private readonly IDbContext db;
     }
 }

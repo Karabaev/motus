@@ -9,19 +9,19 @@
 
     public class SerialSeasonRepository : ISerialSeasonRepository
     {
-        public SerialSeasonRepository(ApplicationDbContext context)
+        public SerialSeasonRepository(IDbContext context)
         {
-            this.DB = context;
+            this.db = context;
         }
 
         public EntityList<SerialSeason> GetAllEntities()
         {
-            return this.DB.SerialSeasons.ToEntityList();
+            return this.db.SerialSeasons.ToEntityList();
         }
 
         public SerialSeason GetEntity(int id)
         {
-            return this.DB.SerialSeasons.FirstOrDefault(p => p.ID == id);
+            return this.db.SerialSeasons.FirstOrDefault(p => p.ID == id);
         }
 
         public bool AddEntity(SerialSeason entity)
@@ -29,7 +29,7 @@
             if (entity == null)
                 return false;
 
-            this.DB.SerialSeasons.Add(entity);
+            this.db.SerialSeasons.Add(entity);
             return this.SaveChanges();
         }
 
@@ -38,7 +38,7 @@
             if (entity == null)
                 return false;
 
-            SerialSeason cache = this.DB.SerialSeasons.FirstOrDefault(p => p.ID == entity.ID);
+            SerialSeason cache = this.db.SerialSeasons.FirstOrDefault(p => p.ID == entity.ID);
 
             if (cache == null)
                 return false;
@@ -54,21 +54,21 @@
 
         public bool RemoveEntity(int id)
         {
-            this.DB.SerialSeasons.Remove(this.DB.SerialSeasons.FirstOrDefault(e => e.ID == id));
+            this.db.SerialSeasons.Remove(this.db.SerialSeasons.FirstOrDefault(e => e.ID == id));
             return this.SaveChanges();
         }
 
         public bool RemoveEntity(SerialSeason entity)
         {
-            this.DB.SerialSeasons.Remove(entity);
+            this.db.SerialSeasons.Remove(entity);
             return this.SaveChanges();
         }
 
         public bool SaveChanges()
         {
-            return this.DB.SaveChanges() > 0;
+            return this.db.SaveChanges() > 0;
         }
 
-        private readonly ApplicationDbContext DB;
+        private readonly IDbContext db;
     }
 }

@@ -13,7 +13,7 @@
 
     public class PersonService : IPersonService
     {
-        public PersonService(ApplicationDbContext context)
+        public PersonService(IDbContext context)
         {
             Repository = new PersonRepository(context);
         }
