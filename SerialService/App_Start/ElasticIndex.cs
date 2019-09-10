@@ -2,13 +2,14 @@
 {
 	using SerialService.DAL;
 	using SerialService.Infrastructure.ElasticSearch;
+    using System.Threading.Tasks;
 
-	public static class ElasticIndex
+    public static class ElasticIndex
     {
-        public static void Index(IAppUnitOfWork unitOfWork)
+        public static async Task IndexAsync(IAppUnitOfWork unitOfWork)
         {
             var materialForIndex = unitOfWork.VideoMaterials.ElasticGetAll();
-            MotusElasticsearch.Index(materialForIndex);
+            await MotusElasticsearch.IndexAsync(materialForIndex);
         }
 	}
 }

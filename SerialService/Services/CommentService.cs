@@ -20,7 +20,7 @@
         public event CommentStateHandler OnChange;
         public event CommentStateHandler OnRemove;
 
-        public CommentService(ApplicationDbContext context)
+        public CommentService(IDbContext context)
         {
             Repository = new CommentRepository(context);
         }

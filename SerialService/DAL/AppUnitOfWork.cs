@@ -24,14 +24,19 @@
 
         private static IAppUnitOfWork instance;
 
-        private ApplicationDbContext DB = new ApplicationDbContext();
+        private IDbContext db;
+
+        public AppUnitOfWork(IDbContext context)
+        {
+            this.db = context;
+        }
 
         public ICommentService Comments
         {
             get
             {
                 if (this.commentService == null)
-                    this.commentService = new CommentService(DB);
+                    this.commentService = new CommentService(db);
 
                 return this.commentService;
             }
@@ -42,7 +47,7 @@
             get
             {
                 if (this.commentMarkService == null)
-                    this.commentMarkService = new CommentMarkService(DB);
+                    this.commentMarkService = new CommentMarkService(db);
 
                 return this.commentMarkService;
             }
@@ -53,7 +58,7 @@
             get
             {
                 if(this.videoMaterialService == null)
-                    this.videoMaterialService = new VideoMaterialService(DB);
+                    this.videoMaterialService = new VideoMaterialService(db);
 
                 return this.videoMaterialService;
             }
@@ -64,7 +69,7 @@
             get
             {
                 if (this.personService == null)
-                    this.personService = new PersonService(DB);
+                    this.personService = new PersonService(db);
 
                 return this.personService;
             }
@@ -75,7 +80,7 @@
             get
             {
                 if (this.countryService == null)
-                    this.countryService = new CountryService(DB);
+                    this.countryService = new CountryService(db);
 
                 return this.countryService;
             }
@@ -86,7 +91,7 @@
             get
             {
                 if (this.pictureService == null)
-                    this.pictureService = new PictureService(DB);
+                    this.pictureService = new PictureService(db);
 
                 return this.pictureService;
             }
@@ -97,7 +102,7 @@
             get
             {
                 if (this.genreService == null)
-                    this.genreService = new GenreService(DB);
+                    this.genreService = new GenreService(db);
 
                 return this.genreService;
             }
@@ -108,7 +113,7 @@
             get
             {
                 if (this.themeService == null)
-                    this.themeService = new ThemeService(DB);
+                    this.themeService = new ThemeService(db);
 
                 return this.themeService;
             }
@@ -119,7 +124,7 @@
             get
             {
                 if (this.translationService == null)
-                    this.translationService = new TranslationService(DB);
+                    this.translationService = new TranslationService(db);
 
                 return this.translationService;
             }
@@ -130,7 +135,7 @@
             get
             {
                 if (this.userService == null)
-                    this.userService = new UserService(DB);
+                    this.userService = new UserService(db);
 
                 return this.userService;
             }
@@ -141,9 +146,9 @@
             get
             {
                 if (this.videoMarkService == null)
-                    this.videoMarkService = new VideoMarkService(this.DB);
+                    this.videoMarkService = new VideoMarkService(this.db);
 
-                return new VideoMarkService(DB);
+                return new VideoMarkService(db);
             }
         }
 
@@ -152,7 +157,7 @@
             get
             {
                 if(this.roleService == null)
-                    this.roleService = new RoleService(DB);
+                    this.roleService = new RoleService(db);
 
                 return this.roleService;
             }
@@ -163,7 +168,7 @@
 			get
 			{
 				if (this.serialSeasonService == null)
-					this.serialSeasonService = new SerialSeasonService(this.DB);
+					this.serialSeasonService = new SerialSeasonService(this.db);
 
 				return this.serialSeasonService;
 			}
@@ -174,16 +179,16 @@
             get
             {
                 if (this.videoMaterialViewsByUsersService == null)
-                    this.videoMaterialViewsByUsersService = new VideoMaterialViewsByUsersService(this.DB);
+                    this.videoMaterialViewsByUsersService = new VideoMaterialViewsByUsersService(this.db);
 
                 return this.videoMaterialViewsByUsersService;
             }
         }
 
-        public static IAppUnitOfWork GetInstance()
+        public static IAppUnitOfWork GetInstance(IDbContext context)
         {
             if (AppUnitOfWork.instance == null)
-                AppUnitOfWork.instance = new AppUnitOfWork();
+                AppUnitOfWork.instance = new AppUnitOfWork(context);
 
             return AppUnitOfWork.instance;
         }
@@ -196,7 +201,7 @@
             {
                 if (disposing)
                 {
-                    DB.Dispose();
+                    db.Dispose();
                 }
                 this.disposed = true;
             }

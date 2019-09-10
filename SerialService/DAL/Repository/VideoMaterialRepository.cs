@@ -9,28 +9,28 @@
 
     public class VideoMaterialRepository : IVideoMaterialRepository
     {
-        public VideoMaterialRepository(ApplicationDbContext context)
+        public VideoMaterialRepository(IDbContext context)
         {
-            this.DB = context;
+            this.db = context;
         }
 
         public EntityList<VideoMaterial> GetAllEntities()
         {
-            return this.DB.VideoMaterials.ToEntityList();
+            return this.db.VideoMaterials.ToEntityList();
         }
 
         public VideoMaterial GetEntity(int id)
         {
-            return this.DB.VideoMaterials.FirstOrDefault(p => p.ID == id);
+            return this.db.VideoMaterials.FirstOrDefault(p => p.ID == id);
         }
         /// <summary>
         /// Метод "неленивой закгрузки" материала
         /// </summary>
         public VideoMaterial GetEntityNotLazyLoad(int id)
         {
-            this.DB.Configuration.LazyLoadingEnabled = false;
-            this.DB.Configuration.ProxyCreationEnabled = false;
-            var result = this.DB.VideoMaterials
+            ((ApplicationDbContext)this.db).Configuration.LazyLoadingEnabled = false;
+            ((ApplicationDbContext)this.db).Configuration.ProxyCreationEnabled = false;
+            var result = this.db.VideoMaterials
                 .Include(vm => vm.Actors)
                 .Include(vm => vm.FilmMakers)
                 .Include(vm => vm.Countries)
@@ -51,7 +51,7 @@
             if (entity == null)
                 return false;
 
-            this.DB.VideoMaterials.Add(entity);
+            this.db.VideoMaterials.Add(entity);
             return this.SaveChanges();
         }
         /// <summary>
@@ -76,21 +76,21 @@
 
         public bool RemoveEntity(int id)
         {
-            this.DB.VideoMaterials.Remove(this.DB.VideoMaterials.FirstOrDefault(e => e.ID == id));
+            this.db.VideoMaterials.Remove(this.db.VideoMaterials.FirstOrDefault(e => e.ID == id));
             return this.SaveChanges();
         }
 
         public bool RemoveEntity(VideoMaterial enity)
         {
-            this.DB.VideoMaterials.Remove(enity);
+            this.db.VideoMaterials.Remove(enity);
             return this.SaveChanges();
         }
 
         public bool SaveChanges()
         {
-            return this.DB.SaveChanges() > 0;
+            return this.db.SaveChanges() > 0;
         }
 
-        private readonly ApplicationDbContext DB;
+        private readonly IDbContext db;
     }
 }

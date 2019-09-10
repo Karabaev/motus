@@ -12,8 +12,9 @@
     using Microsoft.AspNet.Identity.EntityFramework;
 	using Infrastructure;
 	using App_Start;
+    using System.Threading.Tasks;
 
-	[ExceptionHandler]
+    [ExceptionHandler]
 	public class AdminToolsController : Controller
     {
         IAppUnitOfWork _unitOfWork;
@@ -135,11 +136,11 @@
             return Json(new { result = result });
         }
 
-		public JsonResult UpdateElasticIndex()
+		public async Task<JsonResult> UpdateElasticIndexAsync()
 		{
 			try
 			{
-				ElasticIndex.Index(this._unitOfWork);
+				await ElasticIndex.IndexAsync(this._unitOfWork);
 
 				return Json(new { Message = "Индекс Эластика обновлен." });
 			}

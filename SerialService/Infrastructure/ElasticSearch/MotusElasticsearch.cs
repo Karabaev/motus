@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using SerialService.Models;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Клиент для обращения к ElasticSearch
@@ -108,36 +109,34 @@
         /// Индексировать элементы
         /// </summary>
         /// <param name="models">Набор элементов ElasticVideoMaterial</param>
-        public static void Index(IEnumerable<ElasticVideoMaterial> models)
+        public static async Task IndexAsync(IEnumerable<ElasticVideoMaterial> models)
         {
             if (models == null || !models.Any())
-            {
                 return;
-            }
-            //TODO: В данный момент индексация производится циклом, однако в последствии рекомендуется заменить с использованеим IndexMany()
+
             int count = 1;
-            foreach (var model in models)
+            models.ToList().ForEach(item =>
             {
-                //Пустые поля и null приводят к отмене индексации
-                if (string.IsNullOrEmpty(model.OriginalTitle))
+                if (string.IsNullOrEmpty(item.OriginalTitle))
+                    item.OriginalTitle = " ";
+
+                List<string> suggestArr = new List<string>
                 {
-                    model.OriginalTitle = " ";
-                }
-                List<string> suggestArr = new List<string> { model.OriginalTitle, model.Title};
-                suggestArr = suggestArr.Concat(model.ActorNames)
-                          .Concat(model.FilmMakerNames)
-                          .Concat(model.ThemeNames)
-                          .ToList();
-                model.Suggest = new CompletionField
-                {
-                    Input = suggestArr
+                    item.OriginalTitle,
+                    item.Title
                 };
-                client.Index(model,i=>i.Index(index));
+                suggestArr = suggestArr.Concat(item.ActorNames)
+                          .Concat(item.FilmMakerNames)
+                          .Concat(item.ThemeNames)
+                          .ToList();
+                item.Suggest = new CompletionField { Input = suggestArr };
                 count++;
-            };
+            });
+
+            await client.IndexManyAsync(models, index);
             StoreSize = count;
 
-            var updateIndexSettingsResponse = client.UpdateIndexSettings(index, u => u
+            var updateIndexSettingsResponse = await client.UpdateIndexSettingsAsync(index, u => u
                 .IndexSettings(di => di
                     .Setting("index.max_result_window", StoreSize)
                 )

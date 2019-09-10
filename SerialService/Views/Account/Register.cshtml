@@ -10,7 +10,7 @@
     <div class="mdl-card__supporting-text">
         Зарегистрируйся, подписывайся на сериал и будь в курсе выхода новых серий.
     </div>
-    <div class="acc-form-container mdl-cell--10-col mdl-cell--12-col-phone mdl-grid">
+    <div class="acc-form-container mdl-cell--12-col mdl-grid">
         <form method="post" id="reg-form" class="mdl-cell--12-col" data-ajax="true">
             @Html.AntiForgeryToken()
             <div class="mdl-textfield mdl-js-textfield mdl-cell--12-col">
@@ -37,10 +37,12 @@
                 <label class="mdl-textfield__label" for="secret-word">Секретное слово...</label>
                 <span class="mdl-textfield__error">Слово должно состоять из букв</span>
             </div>
-            <div class="mdl-checkbox mdl-cell--12-col">
+            <div class="mdl-checkbox mdl-cell--12-col" style="margin-top: 5px; margin-bottom: 20px;">
                 <input class="mdl-checkbox__input" required type="checkbox" id="confirmCheck" />
                 <input type="hidden" name="PrivacyPolicyConfirmed" id="confirmHidden"/>
-                <label class="mdl-checkbox__label" for="confirm">С <a href="/privacy_policy">политикой конфиденциальности</a> согласен</label>
+                <label class="mdl-checkbox__label" for="confirm" style="font-size: 13px;">
+                    С <a href="/privacy_policy">политикой конфиденциальности</a> согласен
+                </label>
             </div>
             <div class="mdl-cell--12-col"><span style="display:none" class="error"></span></div>
         </form>

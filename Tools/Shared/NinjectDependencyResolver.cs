@@ -1,24 +1,21 @@
-﻿namespace SerialService.Infrastructure
+﻿namespace Tools.Shared
 {
     using System;
     using System.Collections.Generic;
-    using System.Web.Mvc;
     using Ninject;
-    using DAL.Repository;
-    using Services.Interfaces;
-    using Services;
-    using DAL.Context;
-    using DAL;
+    using SerialService.DAL.Context;
+    using SerialService.DAL;
 
-    public class NinjectDependencyResolver : IDependencyResolver
+    public class NinjectDependencyResolver
     {
-        private IKernel kernel;
+        private readonly IKernel kernel;
 
-        public NinjectDependencyResolver(IKernel kernel)
+        private NinjectDependencyResolver()
         {
-            this.kernel = kernel;
+            this.kernel = new StandardKernel();
             this.AddBindings();
         }
+
         /// <summary>
         /// Возвращает реализацию
         /// </summary>
@@ -43,5 +40,18 @@
             this.kernel.Bind<IDbContext>().To<ApplicationDbContext>().InTransientScope();
             this.kernel.Bind<IAppUnitOfWork>().To<AppUnitOfWork>().InTransientScope();
         }
+
+        public static NinjectDependencyResolver Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new NinjectDependencyResolver();
+
+                return instance;
+            }
+        }
+
+        private static NinjectDependencyResolver instance;
     }
 }

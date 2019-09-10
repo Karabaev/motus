@@ -8,19 +8,19 @@
 
     public class CommentRepository : ICommentRepository
     {
-        public CommentRepository(ApplicationDbContext context)
+        public CommentRepository(IDbContext context)
         {
-            this.DB = context;
+            this.db = context;
         }
 
         public EntityList<Comment> GetAllEntities()
         {
-            return this.DB.Comments.ToEntityList();
+            return this.db.Comments.ToEntityList();
         }
 
         public Comment GetEntity(int id)
         {
-            return this.DB.Comments.FirstOrDefault(p => p.ID == id);
+            return this.db.Comments.FirstOrDefault(p => p.ID == id);
         }
 
         public bool AddEntity(Comment entity)
@@ -28,7 +28,7 @@
             if (entity == null)
                 return false;
 
-            this.DB.Comments.Add(entity);
+            this.db.Comments.Add(entity);
             bool result = this.SaveChanges();
             return result;
         }
@@ -38,7 +38,7 @@
             if (entity == null)
                 return false;
 
-            Comment cache = this.DB.Comments.FirstOrDefault(p => p.ID == entity.ID);
+            Comment cache = this.db.Comments.FirstOrDefault(p => p.ID == entity.ID);
 
             if (cache == null)
                 return false;
@@ -54,21 +54,21 @@
 
         public bool RemoveEntity(int id)
         {
-            this.DB.Comments.Remove(this.DB.Comments.FirstOrDefault(e => e.ID == id));
+            this.db.Comments.Remove(this.db.Comments.FirstOrDefault(e => e.ID == id));
             return this.SaveChanges();
         }
 
         public bool RemoveEntity(Comment entity)
         {
-            this.DB.Comments.Remove(entity);
+            this.db.Comments.Remove(entity);
             return this.SaveChanges();
         }
 
         public bool SaveChanges()
         {
-            return this.DB.SaveChanges() > 0;
+            return this.db.SaveChanges() > 0;
         }
 
-        private readonly ApplicationDbContext DB;
+        private readonly IDbContext db;
     }
 }

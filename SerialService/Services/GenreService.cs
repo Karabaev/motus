@@ -11,7 +11,7 @@
 
     public class GenreService : IGenreService
     {
-        public GenreService(ApplicationDbContext context)
+        public GenreService(IDbContext context)
         {
             Repository = new GenreRepository(context);
         }

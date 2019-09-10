@@ -9,19 +9,19 @@
 
     public class PictureRepository : IPictureRepository
     {
-        public PictureRepository(ApplicationDbContext context)
+        public PictureRepository(IDbContext context)
         {
-            this.DB = context;
+            this.db = context;
         }
 
         public EntityList<Picture> GetAllEntities()
         {
-            return this.DB.Pictures.ToEntityList();
+            return this.db.Pictures.ToEntityList();
         }
 
         public Picture GetEntity(int id)
         {
-            return this.DB.Pictures.FirstOrDefault(p => p.ID == id);
+            return this.db.Pictures.FirstOrDefault(p => p.ID == id);
         }
 
         public bool AddEntity(Picture entity)
@@ -29,7 +29,7 @@
             if (entity == null)
                 return false;
 
-            this.DB.Pictures.Add(entity);
+            this.db.Pictures.Add(entity);
             return this.SaveChanges();
         }
 
@@ -38,7 +38,7 @@
             if (entity == null)
                 return false;
 
-            Picture cache = this.DB.Pictures.FirstOrDefault(p => p.ID == entity.ID);
+            Picture cache = this.db.Pictures.FirstOrDefault(p => p.ID == entity.ID);
 
             if (cache == null)
                 return false;
@@ -54,21 +54,21 @@
 
         public bool RemoveEntity(int id)
         {
-            this.DB.Pictures.Remove(this.DB.Pictures.FirstOrDefault(e => e.ID == id));
+            this.db.Pictures.Remove(this.db.Pictures.FirstOrDefault(e => e.ID == id));
             return this.SaveChanges();
         }
 
         public bool RemoveEntity(Picture entity)
         {
-            this.DB.Pictures.Remove(entity);
+            this.db.Pictures.Remove(entity);
             return this.SaveChanges();
         }
 
         public bool SaveChanges()
         {
-            return this.DB.SaveChanges() > 0;
+            return this.db.SaveChanges() > 0;
         }
 
-        private readonly ApplicationDbContext DB;
+        private readonly IDbContext db;
     }
 }

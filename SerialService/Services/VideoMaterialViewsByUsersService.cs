@@ -18,7 +18,7 @@
     {
         public VideoMaterialViewsByUsersRepository Repository { get; set; }
 
-        public VideoMaterialViewsByUsersService(ApplicationDbContext context)
+        public VideoMaterialViewsByUsersService(IDbContext context)
         {
             Repository = new VideoMaterialViewsByUsersRepository(context);
         }

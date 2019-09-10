@@ -10,7 +10,9 @@
         public override void Launch()
         {
             this.logger.Info("Запуск модуля {0}", this.Name);
-            IAppUnitOfWork unitOfWork = AppUnitOfWork.GetInstance();
+            IAppUnitOfWork unitOfWork = (IAppUnitOfWork)NinjectDependencyResolver.Instance.GetService(
+                                                                typeof(IAppUnitOfWork));
+
             int serialCount = 0;
             int filmCount = 0;
             int errorCount = 0;

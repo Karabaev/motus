@@ -20,9 +20,9 @@
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static ApplicationUserManager Create(ApplicationDbContext context)
+        public static ApplicationUserManager Create(IDbContext context)
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context));
+            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>((ApplicationDbContext)context));
 
             // Настройка логики проверки имен пользователей
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)

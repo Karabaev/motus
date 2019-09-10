@@ -13,7 +13,7 @@
 
     public class MvcApplication : System.Web.HttpApplication
     {
-        protected void Application_Start()
+        protected async void Application_Start()
         {
 			Database.SetInitializer(new AppDbInitializer());
 			AreaRegistration.RegisterAllAreas();
@@ -21,9 +21,9 @@
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
 			NinjectDependencyResolver ninject = new NinjectDependencyResolver(new StandardKernel());
 			DependencyResolver.SetResolver(ninject);
-			AutoMapperConfig.AutoMapperInit();
+            AutoMapperConfig.AutoMapperInit();
 			CacheFiller.FilterFillCache();
-			ElasticIndex.Index(DependencyResolver.Current.GetService<IAppUnitOfWork>());
+			await ElasticIndex.IndexAsync(DependencyResolver.Current.GetService<IAppUnitOfWork>());
 		}
     }
 }

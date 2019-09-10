@@ -8,6 +8,11 @@
 
     public class IFrameUrlInitializerModule : BaseModule
     {
+        public IFrameUrlInitializerModule()
+        {
+            this.unitOfWork = (IAppUnitOfWork)NinjectDependencyResolver.Instance.GetService(
+                                                                            typeof(IAppUnitOfWork));
+        }
         public override void Launch()
         {
             foreach (var item in unitOfWork.VideoMaterials.GetAll())
@@ -43,6 +48,6 @@
         }
 
         private readonly InfoAgentService service = new InfoAgentService();
-        private readonly IAppUnitOfWork unitOfWork = AppUnitOfWork.GetInstance();
+        private readonly IAppUnitOfWork unitOfWork;
     }
 }

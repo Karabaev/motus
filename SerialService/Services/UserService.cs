@@ -15,10 +15,10 @@
 
     public class UserService : IUserService // todo: надо полностью перевести логику на сервис
     {
-        private ApplicationDbContext context;
+        private IDbContext context;
         private ApplicationUserManager manager;
 
-        public UserService(ApplicationDbContext context)
+        public UserService(IDbContext context)
         {
             this.context = context;
             this.manager = ApplicationUserManager.Create(context);

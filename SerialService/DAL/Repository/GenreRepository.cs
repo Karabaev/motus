@@ -9,19 +9,19 @@
 
     public class GenreRepository : IGenreRepository
     {
-        public GenreRepository(ApplicationDbContext context)
+        public GenreRepository(IDbContext context)
         {
-            this.DB = context;
+            this.db = context;
         }
 
         public EntityList<Genre> GetAllEntities()
         {
-            return this.DB.Genres.ToEntityList();
+            return this.db.Genres.ToEntityList();
         }
 
         public Genre GetEntity(int id)
         {
-            return this.DB.Genres.FirstOrDefault(p => p.ID == id);
+            return this.db.Genres.FirstOrDefault(p => p.ID == id);
         }
 
         public bool AddEntity(Genre entity)
@@ -29,7 +29,7 @@
             if (entity == null)
                 return false;
 
-            this.DB.Genres.Add(entity);
+            this.db.Genres.Add(entity);
             return this.SaveChanges();
         }
 
@@ -38,7 +38,7 @@
             if (entity == null)
                 return false;
 
-            Genre cache = this.DB.Genres.FirstOrDefault(p => p.ID == entity.ID);
+            Genre cache = this.db.Genres.FirstOrDefault(p => p.ID == entity.ID);
 
             if (cache == null)
                 return false;
@@ -54,22 +54,22 @@
 
         public bool RemoveEntity(int id)
         {
-            this.DB.Genres.Remove(this.DB.Genres.FirstOrDefault(e => e.ID == id));
+            this.db.Genres.Remove(this.db.Genres.FirstOrDefault(e => e.ID == id));
             return this.SaveChanges();
         }
 
         public bool RemoveEntity(Genre entity)
         {
-            this.DB.Genres.Remove(entity);
+            this.db.Genres.Remove(entity);
             return this.SaveChanges();
         }
 
         public bool SaveChanges()
         {
-            return this.DB.SaveChanges() > 0;
+            return this.db.SaveChanges() > 0;
         }
 
-        private readonly ApplicationDbContext DB;
+        private readonly IDbContext db;
 
     }
 }

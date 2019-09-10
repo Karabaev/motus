@@ -9,19 +9,19 @@
 
     public class PersonRepository : IPersonRepository
     {
-        public PersonRepository(ApplicationDbContext context)
+        public PersonRepository(IDbContext context)
         {
-            this.DB = context;
+            this.db = context;
         }
 
         public EntityList<Person> GetAllEntities()
         {
-            return this.DB.People.ToEntityList();
+            return this.db.People.ToEntityList();
         }
 
         public Person GetEntity(int id)
         {
-            return this.DB.People.FirstOrDefault(p => p.ID == id);
+            return this.db.People.FirstOrDefault(p => p.ID == id);
         }
 
         public bool AddEntity(Person entity)
@@ -29,7 +29,7 @@
             if (entity == null)
                 return false;
 
-            this.DB.People.Add(entity);
+            this.db.People.Add(entity);
             return this.SaveChanges();
         }
 
@@ -38,7 +38,7 @@
             if (entity == null)
                 return false;
 
-            Person cache = this.DB.People.FirstOrDefault(p => p.ID == entity.ID);
+            Person cache = this.db.People.FirstOrDefault(p => p.ID == entity.ID);
 
             if (cache == null)
                 return false;
@@ -54,21 +54,21 @@
 
         public bool RemoveEntity(int id)
         {
-            this.DB.People.Remove(this.DB.People.FirstOrDefault(e => e.ID == id));
+            this.db.People.Remove(this.db.People.FirstOrDefault(e => e.ID == id));
             return this.SaveChanges();
         }
 
         public bool RemoveEntity(Person entity)
         {
-            this.DB.People.Remove(entity);
+            this.db.People.Remove(entity);
             return this.SaveChanges();
         }
 
         public bool SaveChanges()
         {
-            return this.DB.SaveChanges() > 0;
+            return this.db.SaveChanges() > 0;
         }
 
-        private readonly ApplicationDbContext DB;
+        private readonly IDbContext db;
     }
 }

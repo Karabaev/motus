@@ -15,8 +15,13 @@
     public class VideoMaterialBlockedCleanModule : BaseModule
     {
         private readonly InfoAgentService infoAgent = new InfoAgentService();
-        private readonly IAppUnitOfWork unitOfWork = AppUnitOfWork.GetInstance();
+        private readonly IAppUnitOfWork unitOfWork;
 
+        public VideoMaterialBlockedCleanModule()
+        {
+            this.unitOfWork = (IAppUnitOfWork)Shared.NinjectDependencyResolver.Instance.GetService(
+                                                                typeof(IAppUnitOfWork));
+        }
         /// <summary>
         /// Изменить статус недоступных через API фильмов на Rejected
         /// </summary>
