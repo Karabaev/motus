@@ -13,7 +13,7 @@
 
     public class MvcApplication : System.Web.HttpApplication
     {
-        protected void Application_Start()
+        protected async void Application_Start()
         {
 			Database.SetInitializer(new AppDbInitializer());
 			AreaRegistration.RegisterAllAreas();
@@ -23,7 +23,7 @@
 			DependencyResolver.SetResolver(ninject);
             AutoMapperConfig.AutoMapperInit();
 			CacheFiller.FilterFillCache();
-			ElasticIndex.Index(DependencyResolver.Current.GetService<IAppUnitOfWork>());
+			await ElasticIndex.IndexAsync(DependencyResolver.Current.GetService<IAppUnitOfWork>());
 		}
     }
 }
