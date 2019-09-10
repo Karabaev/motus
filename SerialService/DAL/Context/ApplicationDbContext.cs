@@ -20,6 +20,7 @@
         public DbSet<Country> Countries { get; set; }
         public DbSet<SerialSeason> SerialSeasons { get; set; }
         public DbSet<VideoMaterialViewsByUsers> VideoMaterialViewsByUsers { get; set; }
+        public DbSet<UserParam> UserParams { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -55,6 +56,7 @@
 
             modelBuilder.Entity<CommentMark>().Property(cm => cm.CommentID).IsRequired();
 
+            modelBuilder.Entity<ApplicationUser>().HasMany(au => au.Params).WithRequired(p => p.User).HasForeignKey(p => p.UserID);
 
             base.OnModelCreating(modelBuilder);
         }

@@ -32,5 +32,7 @@
 		ISerialSeasonService SerialSeasons { get; }
 
         IVideoMaterialViewsByUsersService VideoMaterialViewsByUsers { get; }
+
+        IUserParamService UserParams { get; }
     }
 }

@@ -35,7 +35,7 @@
 
             bool result = this.Repository.AddEntity(entity);
 
-            if (result)
+            if (this.OnCreate != null && result)
                 this.OnCreate(new CommentEventArgs(entity));
 
             return result;
@@ -96,7 +96,7 @@
 
             bool result = this.Repository.RemoveEntity(entity.ID);
 
-            if (result)
+            if (this.OnRemove != null && result)
                 this.OnRemove(new CommentEventArgs(entity));
 
             return result;
@@ -241,7 +241,7 @@
 
             bool result = this.Repository.UpdateEntity(comment);
 
-            if (result)
+            if (this.OnChange != null && result)
                 this.OnChange(new CommentEventArgs(comment));
 
             return result;

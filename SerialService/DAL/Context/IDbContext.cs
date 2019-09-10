@@ -21,6 +21,7 @@
         DbSet<Country> Countries { get; set; }
         DbSet<SerialSeason> SerialSeasons { get; set; }
         DbSet<VideoMaterialViewsByUsers> VideoMaterialViewsByUsers { get; set; }
+        DbSet<UserParam> UserParams { get; set; }
 
         int SaveChanges();
     }
