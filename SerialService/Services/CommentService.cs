@@ -11,6 +11,7 @@
     using DAL.Context;
     using Infrastructure.Core.Extensions;
     using Infrastructure.EventArgs;
+    using Shared.Enums;
 
     public delegate void CommentStateHandler(CommentEventArgs args);
 
@@ -36,7 +37,7 @@
             bool result = this.Repository.AddEntity(entity);
 
             if (result)
-                this.OnCreate(new CommentEventArgs(entity));
+                this.OnCreate(new CommentEventArgs(entity, EntityEventTypes.Create));
 
             return result;
         }
@@ -97,7 +98,7 @@
             bool result = this.Repository.RemoveEntity(entity.ID);
 
             if (result)
-                this.OnRemove(new CommentEventArgs(entity));
+                this.OnRemove(new CommentEventArgs(entity, EntityEventTypes.Remove));
 
             return result;
         }
@@ -242,7 +243,7 @@
             bool result = this.Repository.UpdateEntity(comment);
 
             if (result)
-                this.OnChange(new CommentEventArgs(comment));
+                this.OnChange(new CommentEventArgs(comment, EntityEventTypes.Change));
 
             return result;
         }

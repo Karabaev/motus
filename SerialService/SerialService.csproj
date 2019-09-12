@@ -357,6 +357,8 @@
     <Compile Include="Infrastructure\Helpers\TextEnumerationBuilder.cs" />
     <Compile Include="Infrastructure\Helpers\TranslationAddHelper.cs" />
     <Compile Include="Infrastructure\Helpers\UserTokenGenerator.cs" />
+    <Compile Include="Infrastructure\Managers\INotificationManager.cs" />
+    <Compile Include="Infrastructure\Managers\NotificationManager.cs" />
     <Compile Include="Infrastructure\Managers\SerialSeasonInitializer.cs" />
     <Compile Include="Infrastructure\Managers\VideoMaterialInitializer.cs" />
     <Compile Include="Infrastructure\Managers\VideoMaterialManager.cs" />
