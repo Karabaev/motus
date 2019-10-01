@@ -345,8 +345,6 @@
     <Compile Include="Infrastructure\ElasticSearch\FilterData.cs" />
     <Compile Include="Infrastructure\ElasticSearch\SearchWrapper.cs" />
     <Compile Include="Infrastructure\ElasticSearch\MotusElasticsearch.cs" />
-    <Compile Include="Infrastructure\EventArgs\CommentEventArgs.cs" />
-    <Compile Include="Infrastructure\EventArgs\IEventArgs.cs" />
     <Compile Include="Infrastructure\ExceptionHandlerAttribute.cs" />
     <Compile Include="Infrastructure\Exceptions\AccessDeniedException.cs" />
     <Compile Include="Infrastructure\Exceptions\EntryNotFoundException.cs" />
@@ -357,8 +355,6 @@
     <Compile Include="Infrastructure\Helpers\TextEnumerationBuilder.cs" />
     <Compile Include="Infrastructure\Helpers\TranslationAddHelper.cs" />
     <Compile Include="Infrastructure\Helpers\UserTokenGenerator.cs" />
-    <Compile Include="Infrastructure\Managers\INotificationManager.cs" />
-    <Compile Include="Infrastructure\Managers\NotificationManager.cs" />
     <Compile Include="Infrastructure\Managers\SerialSeasonInitializer.cs" />
     <Compile Include="Infrastructure\Managers\VideoMaterialInitializer.cs" />
     <Compile Include="Infrastructure\Managers\VideoMaterialManager.cs" />
@@ -386,6 +382,10 @@
     <Compile Include="Migrations\201908062014093_OneToManyCommentsRelationShip.cs" />
     <Compile Include="Migrations\201908062014093_OneToManyCommentsRelationShip.Designer.cs">
       <DependentUpon>201908062014093_OneToManyCommentsRelationShip.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909130804085_UserCommentNotification.cs" />
+    <Compile Include="Migrations\201909130804085_UserCommentNotification.Designer.cs">
+      <DependentUpon>201909130804085_UserCommentNotification.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -630,6 +630,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908062014093_OneToManyCommentsRelationShip.resx">
       <DependentUpon>201908062014093_OneToManyCommentsRelationShip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909130804085_UserCommentNotification.resx">
+      <DependentUpon>201909130804085_UserCommentNotification.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>

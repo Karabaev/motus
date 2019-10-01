@@ -9,6 +9,7 @@
     using ViewModels.RedactorTools;
     using ViewModels.Account;
     using ViewModels.User;
+    using Shared.EntityActions.Model;
 
     public class AutoMapperConfig
     {
@@ -112,16 +113,21 @@
             .ForMember(dvm => dvm.Description, opt => opt.MapFrom(vm => vm.Text.Substring(0, Math.Min(vm.Text.Length, 100))))
             .ForMember(dvm => dvm.PosterURL, opt => opt.MapFrom(vm => vm.Pictures.FirstOrDefault(p => p.IsPoster).URL));
 
-            //config += cfg => cfg.CreateMap<Comment, AddCommentViewModel>()
-            //.ForMember(acvm => acvm.Text, opt => opt.MapFrom(c => c.Text))
-            //.ForMember(acvm => acvm.AuthorID, opt => opt.MapFrom(c => c.AuthorID))
-            //.ForMember(acvm => acvm.ParentID, opt => opt.MapFrom(c => c.ParentID))
-            //.ForMember(acvm => acvm.VideoMaterialID, opt => opt.MapFrom(c => c.VideoMaterialID));
-
             config += cfg => cfg.CreateMap<AddCommentViewModel, Comment>()
             .ForMember(c => c.Text, opt => opt.MapFrom(acvm => acvm.Text))
             .ForMember(c => c.ParentID, opt => opt.MapFrom(acvm => acvm.ParentID))
             .ForMember(c => c.VideoMaterialID, opt => opt.MapFrom(acvm => acvm.VideoMaterialID));
+
+            config += cfg => cfg.CreateMap<Comment, CommentEntityActionsModel>()
+            .ForMember(ceam => ceam.ID, opt => opt.MapFrom(c => c.ID))
+            .ForMember(ceam => ceam.Text, opt => opt.MapFrom(c => c.Text))
+            .ForMember(ceam => ceam.AuthorID, opt => opt.MapFrom(c => c.AuthorID))
+            .ForMember(ceam => ceam.ParentID, opt => opt.MapFrom(c => c.ParentID))
+            .ForMember(ceam => ceam.MaterialID, opt => opt.MapFrom(c => c.VideoMaterialID))
+            .ForMember(ceam => ceam.ParentAuthorEmail, opt => opt.MapFrom(c => c.Parent.Author.Email))
+            .ForMember(ceam => ceam.MaterialTitle, opt => opt.MapFrom(c => c.VideoMaterial.Title))
+            .ForMember(ceam => ceam.AuthorName, opt => opt.MapFrom(c => c.Author.UserName))
+            .ForMember(ceam => ceam.ParentAuthorName, opt => opt.MapFrom(c => c.Parent.Author.UserName));
 
             Mapper.Initialize(config);
         }
