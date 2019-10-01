@@ -50,6 +50,7 @@
             entity.RegisterDateTime = DateTime.Now;
 			entity.ChangeDateTime = entity.RegisterDateTime;
 			entity.Parole = entity.Parole.CreateMD5();
+            entity.IsSubscribedOnComments = true;
             IdentityResult result = this.manager.Create(entity, pass);
 
             if (!result.Succeeded)

@@ -6,8 +6,8 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using ViewModels.Email;
-    using Shared.Mail; 
+    using Shared.Mail;
+    using Shared.Notification.Model;
 
     [ApiController]
     public class EmailController : ControllerBase
@@ -17,11 +17,12 @@
             this.mailClient = client;
         }
 
-        
         [HttpPost("email/send")]
-        public async Task<IActionResult> SendMessageAsync([FromBody] SendMessageViewModel model)
+        public async Task<IActionResult> SendMessageAsync([FromBody] SendMessageModel model)
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrWhiteSpace(model.Body) 
+                || string.IsNullOrWhiteSpace(model.Caption)
+                || model.Destinations == null || !model.Destinations.Any())
                 return new JsonResult(new { error = "Одно из полей невалидно" });
 
             try

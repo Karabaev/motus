@@ -55,15 +55,7 @@
             modelBuilder.Entity<Comment>().HasMany(c => c.Marks).WithRequired(m => m.Comment).HasForeignKey(m => m.CommentID);
 
             modelBuilder.Entity<CommentMark>().Property(cm => cm.CommentID).IsRequired();
-
-            modelBuilder.Entity<ApplicationUser>().HasMany(au => au.Params).WithRequired(p => p.User).HasForeignKey(p => p.UserID);
-
             base.OnModelCreating(modelBuilder);
         }
-
-        //public static ApplicationDbContext Create()
-        //{
-        //    return new ApplicationDbContext();
-        //}
     }
 }

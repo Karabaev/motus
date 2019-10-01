@@ -24,7 +24,7 @@
         public virtual List<VideoMark> VideoMarks { get; set; }
         public virtual List<VideoMaterialViewsByUsers> VideoMaterialsViews { get; set; }
         public virtual List<Comment> Comments { get; set; }
-        public virtual List<UserParam> Params { get; set; }
+        public bool IsSubscribedOnComments { get; set; }
 
         public override bool Equals(object obj)
         {

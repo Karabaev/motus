@@ -1,6 +1,7 @@
 ﻿namespace SerialService.Services
 {
     using System;
+    using System.Web.Mvc;
     using System.Collections.Generic;
     using System.Linq;
     using DAL.Entities;
@@ -10,19 +11,17 @@
     using Infrastructure.Core;
     using DAL.Context;
     using Infrastructure.Core.Extensions;
-    using Infrastructure.EventArgs;
-
-    public delegate void CommentStateHandler(CommentEventArgs args);
+    using Shared.Notification;
+    using Shared.EntityActions;
+    using Shared.EntityActions.Model;
+    using AutoMapper;
 
     public class CommentService : ICommentService
     {
-        public event CommentStateHandler OnCreate;
-        public event CommentStateHandler OnChange;
-        public event CommentStateHandler OnRemove;
-
         public CommentService(IDbContext context)
         {
             Repository = new CommentRepository(context);
+            this.notificationManager = DependencyResolver.Current.GetService<INotificationManager>();
         }
 
         public bool Create(Comment entity)
@@ -35,8 +34,12 @@
 
             bool result = this.Repository.AddEntity(entity);
 
-            if (this.OnCreate != null && result)
-                this.OnCreate(new CommentEventArgs(entity));
+            if(result)
+            {
+                var model = Mapper.Map<CommentEntityActionsModel>(entity);
+                var args = new CommentEntityActionsArgs(model, EntityActionTypes.Create);
+                this.notificationManager.EmailNotification(args);
+            }
 
             return result;
         }
@@ -79,16 +82,6 @@
             return this.GetAll().FirstOrDefault(predicate);
         }
 
-        public bool Remove(Country entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public EntityList<Country> GetWithCondition(Func<Country, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Remove(Comment entity)
         {
             if (entity == null)
@@ -96,8 +89,12 @@
 
             bool result = this.Repository.RemoveEntity(entity.ID);
 
-            if (this.OnRemove != null && result)
-                this.OnRemove(new CommentEventArgs(entity));
+            if (result)
+            {
+                var model = Mapper.Map<CommentEntityActionsModel>(entity);
+                var args = new CommentEntityActionsArgs(model, EntityActionTypes.Remove);
+                this.notificationManager.EmailNotification(args);
+            }
 
             return result;
         }
@@ -238,15 +235,19 @@
                 throw new EntryAlreadyExistsException();
 
             comment.Text = newText;
-
             bool result = this.Repository.UpdateEntity(comment);
 
-            if (this.OnChange != null && result)
-                this.OnChange(new CommentEventArgs(comment));
+            if (result)
+            {
+                var model = Mapper.Map<CommentEntityActionsModel>(newComment);
+                var args = new CommentEntityActionsArgs(model, EntityActionTypes.Change);
+                this.notificationManager.EmailNotification(args);
+            }
 
             return result;
         }
 
         public IRepository<Comment> Repository { get; set; }
+        private readonly INotificationManager notificationManager;    
     }
 }
