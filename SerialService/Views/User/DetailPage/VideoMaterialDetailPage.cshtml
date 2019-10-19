@@ -17,9 +17,13 @@
 @Html.HiddenFor(m => m.ID, new { id = "material-id" })
 <div class="content">
     <div class="mdl-grid mdl-shadow--2dp mdl-cell--12-col mdl-card player-container">
-        <div class="player">
+        @*<div class="player">
             <div id="visearch"></div>
-        </div>
+        </div>*@
+        @*<div id="yohoho" data-kinopoisk="@Model.KinopoiskID"></div>
+        <script src="//yohoho.cc/yo.js"></script>*@
+        <div id="yohoho" data-player="moonwalk,hdgo,videocdn,kodik,videospider,torrent" data-kinopoisk="@Model.KinopoiskID" style="width: 100%; height: 50%"></div>
+        <script src="https://yohoho.cc/yo.js"></script>
     </div>
     <div class="mdl-grid mdl-shadow--2dp info-container mdl-card mdl-cell--12-col" style="overflow:visible">
         <div class="mdl-grid">
