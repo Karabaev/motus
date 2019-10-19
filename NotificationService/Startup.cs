@@ -29,7 +29,7 @@
             {
                 c.SwaggerDoc("v1", new Info() { Title = "My API", Version = "v1" });
             });
-            services.AddTransient<IMailClient>(c => new MailClient("", 500, "", "", "", "", true));
+            services.AddTransient<IMailClient>(c => new MailClient("smtp.yandex.ru", 25, "info@motus-cinema.com", "Motus cinema", "info@motus-cinema.com", "buffalo2016", true));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
