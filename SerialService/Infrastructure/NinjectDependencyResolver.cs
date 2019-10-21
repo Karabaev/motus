@@ -4,11 +4,10 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
     using Ninject;
-    using DAL.Repository;
-    using Services.Interfaces;
-    using Services;
     using DAL.Context;
     using DAL;
+    using Shared.Notification;
+    using System.Linq;
 
     public class NinjectDependencyResolver : IDependencyResolver
     {
@@ -42,6 +41,8 @@
         {
             this.kernel.Bind<IDbContext>().To<ApplicationDbContext>().InTransientScope();
             this.kernel.Bind<IAppUnitOfWork>().To<AppUnitOfWork>().InTransientScope();
+            this.kernel.Bind<INotificationManager>().To<NotificationManager>()
+            .WithConstructorArgument("adminEmails", ((IAppUnitOfWork)this.GetService(typeof(IAppUnitOfWork))).Users.GetByRole("Admin").Select(u => u.Email));
         }
     }
 }

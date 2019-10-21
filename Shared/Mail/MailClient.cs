@@ -4,13 +4,14 @@
 	using System.Threading.Tasks;
 	using System.Net.Mail;
 	using System.Net;
+    using System.Collections.Generic;
 	using NLog;
 
 	/// <summary>
 	/// Класс для работы с почтой.
 	/// </summary>
-	public class MailClient
-	{
+	public class MailClient : IMailClient
+    {
 		/// <summary>
 		/// Инициализирует объект в памяти.
 		/// </summary>
@@ -106,8 +107,98 @@
 			}
 		}
 
-		private readonly MailAddress senderMail;
+        #region INotificationClient
+
+        public void SendMessage(string destination, string caption, string message)
+        { 
+            MailMessage mailMessage = new MailMessage(senderMail, new MailAddress(destination));
+            mailMessage.Subject = caption;
+            mailMessage.Body = message;
+            mailMessage.IsBodyHtml = true;
+
+            try
+            {
+                this.smtpClient.Send(mailMessage);
+            }
+            catch (SmtpFailedRecipientsException ex)
+            {
+                Task.Run(() => this.logger.Error(ex, "Не удалось отправить сообщение на электронную почту {0}", destination));
+            }
+            catch (SmtpException ex)
+            {
+                Task.Run(() => this.logger.Error(ex, "Не удалось отправить сообщение на электронную почту {0}", destination));
+            }
+        }
+
+        public async Task SendMessageAsync(string destination, string caption, string message)
+        {
+            MailMessage mailMessage = new MailMessage(senderMail, new MailAddress(destination));
+            mailMessage.Subject = caption;
+            mailMessage.Body = message;
+            mailMessage.IsBodyHtml = true;
+
+            try
+            {
+                this.smtpClient.SendAsync(mailMessage, null);
+            }
+            catch (SmtpFailedRecipientsException ex)
+            {
+                await Task.Run(() => this.logger.Error(ex, "Не удалось отправить сообщение на электронную почту {0}", destination));
+            }
+            catch (SmtpException ex)
+            {
+                await Task.Run(() => this.logger.Error(ex, "Не удалось отправить сообщение на электронную почту {0}", destination));
+            }
+        }
+
+        public void SendMessageToManyDestinations(IEnumerable<string> destinations, string caption, string message)
+        {
+            string destinationsStr = string.Join(" ", destinations);
+            MailMessage mailMessage = new MailMessage(senderMail, new MailAddress(destinationsStr));
+            mailMessage.Subject = caption;
+            mailMessage.Body = message;
+            mailMessage.IsBodyHtml = true;
+
+            try
+            {
+                this.smtpClient.Send(mailMessage);
+            }
+            catch (SmtpFailedRecipientsException ex)
+            {
+                Task.Run(() => this.logger.Error(ex, $"Не удалось отправить сообщение на электронные почты {destinationsStr}"));
+            }
+            catch (SmtpException ex)
+            {
+                Task.Run(() => this.logger.Error(ex, $"Не удалось отправить сообщение на электронные почты {destinationsStr}"));
+            }
+        }
+
+        public async Task SendMessageToManyDestinationsAsync(IEnumerable<string> destinations, string caption, string message)
+        {
+            string destinationsStr = string.Join(" ", destinations);
+            MailMessage mailMessage = new MailMessage(senderMail, new MailAddress(destinationsStr));
+            mailMessage.Subject = caption;
+            mailMessage.Body = message;
+            mailMessage.IsBodyHtml = true;
+
+            try
+            {
+                this.smtpClient.SendAsync(mailMessage, null);
+            }
+            catch (SmtpFailedRecipientsException ex)
+            {
+                await Task.Run(() => this.logger.Error(ex, $"Не удалось отправить сообщение на электронные почты {destinationsStr}"));
+            }
+            catch (SmtpException ex)
+            {
+                await Task.Run(() => this.logger.Error(ex, $"Не удалось отправить сообщение на электронные почты {destinationsStr}"));
+            }
+        }
+
+        #endregion
+
+        private readonly MailAddress senderMail;
 		private readonly SmtpClient smtpClient;
 		private readonly Logger logger;
-	}
+    }
 }

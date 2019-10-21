@@ -1,6 +1,7 @@
 ﻿namespace SerialService.Services
 {
     using System;
+    using System.Web.Mvc;
     using System.Collections.Generic;
     using System.Linq;
     using DAL.Entities;
@@ -10,15 +11,19 @@
     using Infrastructure.Core;
     using DAL.Context;
     using Infrastructure.Core.Extensions;
+    using Shared.Notification;
+    using Shared.EntityActions;
+    using Shared.EntityActions.Model;
+    using AutoMapper;
+    using NLog;
 
     public class CommentService : ICommentService
     {
         public CommentService(IDbContext context)
         {
             Repository = new CommentRepository(context);
+            this.notificationManager = DependencyResolver.Current.GetService<INotificationManager>();
         }
-
-        public IRepository<Comment> Repository { get; set; }
 
         public bool Create(Comment entity)
         {
@@ -29,6 +34,21 @@
                 throw new EntryAlreadyExistsException();
 
             bool result = this.Repository.AddEntity(entity);
+
+            if(result)
+            {
+                try
+                {
+                    var model = Mapper.Map<CommentEntityActionsModel>(entity);
+                    var args = new CommentEntityActionsArgs(model, EntityActionTypes.Create);
+                    this.notificationManager.EmailNotification(args);
+                }
+                catch(Exception ex)
+                {
+                    this.logger.Error(ex, "Не удалось отправить оповещение на почту админам");
+                }
+            }
+
             return result;
         }
 
@@ -70,22 +90,21 @@
             return this.GetAll().FirstOrDefault(predicate);
         }
 
-        public bool Remove(Country entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public EntityList<Country> GetWithCondition(Func<Country, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Remove(Comment entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            return this.Repository.RemoveEntity(entity.ID);
+            bool result = this.Repository.RemoveEntity(entity.ID);
+
+            if (result)
+            {
+                var model = Mapper.Map<CommentEntityActionsModel>(entity);
+                var args = new CommentEntityActionsArgs(model, EntityActionTypes.Remove);
+                this.notificationManager.EmailNotification(args);
+            }
+
+            return result;
         }
 
         public EntityList<Comment> GetWithCondition(Func<Comment, bool> predicate)
@@ -224,7 +243,20 @@
                 throw new EntryAlreadyExistsException();
 
             comment.Text = newText;
-            return this.Repository.UpdateEntity(comment);
+            bool result = this.Repository.UpdateEntity(comment);
+
+            if (result)
+            {
+                var model = Mapper.Map<CommentEntityActionsModel>(newComment);
+                var args = new CommentEntityActionsArgs(model, EntityActionTypes.Change);
+                this.notificationManager.EmailNotification(args);
+            }
+
+            return result;
         }
+
+        public IRepository<Comment> Repository { get; set; }
+        private readonly INotificationManager notificationManager;
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
     }
 }

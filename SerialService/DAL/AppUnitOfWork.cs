@@ -21,6 +21,7 @@
         private IVideoMarkService videoMarkService;
         private IRoleService roleService;
         private IVideoMaterialViewsByUsersService videoMaterialViewsByUsersService;
+        private IUserParamService userParamService;
 
         private static IAppUnitOfWork instance;
 
@@ -182,6 +183,17 @@
                     this.videoMaterialViewsByUsersService = new VideoMaterialViewsByUsersService(this.db);
 
                 return this.videoMaterialViewsByUsersService;
+            }
+        }
+
+        public IUserParamService UserParams
+        {
+            get
+            {
+                if (this.userParamService == null)
+                    this.userParamService = new UserParamService(this.db);
+
+                return this.userParamService;
             }
         }
 

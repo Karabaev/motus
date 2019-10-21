@@ -9,9 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KPParser", "KinoPoiskParser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoAgent", "InfoAgent\InfoAgent.csproj", "{1A57A926-D37D-45DE-8216-6E1271B2F568}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Tools\Tools.csproj", "{47C7AAE4-65DF-4C65-9643-A0A83E42119B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools", "Tools\Tools.csproj", "{47C7AAE4-65DF-4C65-9643-A0A83E42119B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{5C22B0C3-D603-4C71-9EE7-9F8BA3E21F41}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService", "NotificationService\NotificationService.csproj", "{0FEBB26B-2084-4D44-AD4B-922383B930D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{5C22B0C3-D603-4C71-9EE7-9F8BA3E21F41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C22B0C3-D603-4C71-9EE7-9F8BA3E21F41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C22B0C3-D603-4C71-9EE7-9F8BA3E21F41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FEBB26B-2084-4D44-AD4B-922383B930D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FEBB26B-2084-4D44-AD4B-922383B930D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FEBB26B-2084-4D44-AD4B-922383B930D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FEBB26B-2084-4D44-AD4B-922383B930D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

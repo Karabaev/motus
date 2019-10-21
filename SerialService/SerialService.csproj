@@ -301,14 +301,17 @@
     <Compile Include="DAL\Entities\SerialSeason.cs" />
     <Compile Include="DAL\Entities\Theme.cs" />
     <Compile Include="DAL\Entities\Translation.cs" />
+    <Compile Include="DAL\Entities\UserParam.cs" />
     <Compile Include="DAL\Entities\VideoMark.cs" />
     <Compile Include="DAL\Entities\VideoMaterial.cs" />
     <Compile Include="DAL\Entities\VideoMaterialViewsByUsers.cs" />
     <Compile Include="DAL\IAppUnitOfWork.cs" />
     <Compile Include="DAL\Repository\ApplicationUserManager.cs" />
     <Compile Include="DAL\Repository\CommentMarkRepository.cs" />
+    <Compile Include="DAL\Repository\UserParamRepository.cs" />
     <Compile Include="DAL\Repository\CommentRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\IApplicationUserManager.cs" />
+    <Compile Include="DAL\Repository\Interfaces\IUserParamRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\ICommentRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\ICommentMarkRepository.cs" />
     <Compile Include="DAL\Repository\Interfaces\ICountryRepository.cs" />
@@ -383,6 +386,14 @@
     <Compile Include="Migrations\201908062014093_OneToManyCommentsRelationShip.Designer.cs">
       <DependentUpon>201908062014093_OneToManyCommentsRelationShip.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909130804085_UserCommentNotification.cs" />
+    <Compile Include="Migrations\201909130804085_UserCommentNotification.Designer.cs">
+      <DependentUpon>201909130804085_UserCommentNotification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910011818073_Notification.cs" />
+    <Compile Include="Migrations\201910011818073_Notification.Designer.cs">
+      <DependentUpon>201910011818073_Notification.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ElasticVideoMaterial.cs" />
@@ -392,8 +403,10 @@
     <Compile Include="Services\Interfaces\ICommentMarkService.cs" />
     <Compile Include="Services\Interfaces\ICommentService.cs" />
     <Compile Include="Services\Interfaces\IRoleService.cs" />
+    <Compile Include="Services\Interfaces\IUserParamService.cs" />
     <Compile Include="Services\Interfaces\IVideoMaterialViewsByUsersService.cs" />
     <Compile Include="Services\RoleService.cs" />
+    <Compile Include="Services\UserParamService.cs" />
     <Compile Include="Services\VideoMaterialViewsByUsersService.cs" />
     <Compile Include="Sitemap\SitemapGenerator.cs" />
     <Compile Include="Sitemap\SitemapNode.cs" />
@@ -626,6 +639,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908062014093_OneToManyCommentsRelationShip.resx">
       <DependentUpon>201908062014093_OneToManyCommentsRelationShip.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909130804085_UserCommentNotification.resx">
+      <DependentUpon>201909130804085_UserCommentNotification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910011818073_Notification.resx">
+      <DependentUpon>201910011818073_Notification.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
