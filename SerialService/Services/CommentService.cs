@@ -15,6 +15,7 @@
     using Shared.EntityActions;
     using Shared.EntityActions.Model;
     using AutoMapper;
+    using NLog;
 
     public class CommentService : ICommentService
     {
@@ -36,9 +37,16 @@
 
             if(result)
             {
-                var model = Mapper.Map<CommentEntityActionsModel>(entity);
-                var args = new CommentEntityActionsArgs(model, EntityActionTypes.Create);
-                this.notificationManager.EmailNotification(args);
+                try
+                {
+                    var model = Mapper.Map<CommentEntityActionsModel>(entity);
+                    var args = new CommentEntityActionsArgs(model, EntityActionTypes.Create);
+                    this.notificationManager.EmailNotification(args);
+                }
+                catch(Exception ex)
+                {
+                    this.logger.Error(ex, "Не удалось отправить оповещение на почту админам");
+                }
             }
 
             return result;
@@ -248,6 +256,7 @@
         }
 
         public IRepository<Comment> Repository { get; set; }
-        private readonly INotificationManager notificationManager;    
+        private readonly INotificationManager notificationManager;
+        private readonly Logger logger = LogManager.GetCurrentClassLogger();
     }
 }

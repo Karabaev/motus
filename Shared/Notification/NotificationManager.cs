@@ -69,7 +69,6 @@
             catch (Exception ex)
             {
                 this.logger.Error(ex, "Ошибка при запросе к сервису оповещений");
-
             }
 
         }
@@ -81,18 +80,20 @@
 
         private void GetMessageAndCaptionText(CommentEntityActionsArgs args, out string message, out string caption)
         {
+            string userName = string.IsNullOrWhiteSpace(args.Sender.AuthorName) ? "Юзер" : args.Sender.AuthorName;
+
             switch (args.Type)
             {
                 case EntityActionTypes.Create:
-                    message = $"{args.Sender.AuthorName} ({args.Sender.AuthorID}) оставил новый комментарий: \"{args.Sender.Text}\" к видеоматериалу {args.Sender.MaterialID}";
+                    message = $"{userName} ({args.Sender.AuthorID}) оставил новый комментарий: \"{args.Sender.Text}\" к видеоматериалу {args.Sender.MaterialID}";
                     caption = NotificationStrings.GetString(StringNames.Comment_created_caption_admin);
                     break;
                 case EntityActionTypes.Change:
-                    message = $"{args.Sender.AuthorName} ({args.Sender.AuthorID}) изменил текст комментария на: \"{args.Sender.Text}\" к видеоматериалу {args.Sender.MaterialID}";
+                    message = $"{userName} ({args.Sender.AuthorID}) изменил текст комментария на: \"{args.Sender.Text}\" к видеоматериалу {args.Sender.MaterialID}";
                     caption = NotificationStrings.GetString(StringNames.Comment_changed_caption_admin);
                     break;
                 case EntityActionTypes.Remove:
-                    message = $"{args.Sender.AuthorName} ({args.Sender.AuthorID}) удалил свой комментарий: \"{args.Sender.Text}\" из видеоматериала {args.Sender.MaterialID}";
+                    message = $"{userName} ({args.Sender.AuthorID}) удалил свой комментарий: \"{args.Sender.Text}\" из видеоматериала {args.Sender.MaterialID}";
                     caption = NotificationStrings.GetString(StringNames.Comment_removed_caption_admin);
                     break;
                 default:
